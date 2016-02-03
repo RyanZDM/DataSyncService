@@ -1,0 +1,9 @@
+1. Add the following files into project
+	FileMisc.h/cpp, IoAPI.h/c, Unzip.h/c, Unzipper.h/cpp, ZConf.h, zip.h/c, Zipper.h/cpp, ZLib.h, ZDll.lib
+
+2. Change the setting of "Precompiled eaders" to "Not using precompiled eaders" for the files below to 
+	FileMisc.cpp, IoAPI.c, Unzip.c, UnZipper.cpp, Zip.c, Zipper.c
+
+3. #include <ZLib\Zipper.h> or #include <ZLib\UnZipper.h>
+
+4. Call the functioins of CZipper or CUnzipper

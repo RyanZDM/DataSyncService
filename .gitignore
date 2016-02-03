@@ -1,0 +1,50 @@
+CommonNet/bak/*
+DataSyncService/ipch/*
+DataSyncService/[Dd]ebug*/*
+DataSyncService/[Rr]elease*/*
+
+# Ignore Windows Thumbnails
+Thumbs.db
+
+# Ignore Built Visual Studio Files
+*.obj
+*.pdb
+*.user
+*.aps
+*.dbmdl
+*.pch
+*.vspscc
+*.vssscc
+*_i.c
+*_p.c
+*_i.h
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.tlog
+[Bb]in/*
+[Dd]eploy
+[Tt]est[Ii]mages
+[Dd]ebug*/*
+*.lib
+*.sbr
+obj/
+[Rr]elease*/*
+*.sdf
+
+# Ignore Local ReSharper Files
+_ReSharper*/
+[Tt]est[Rr]esult*
+[Ll]ogs
+COPYERRORS.*
+InstallUtil.InstallLog
+*.ccexclude
+
+# Ignore KDiff Original Files - Created on merges
+*.orig
+
