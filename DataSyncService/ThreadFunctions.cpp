@@ -133,7 +133,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 	//myDB.RemoveAllItems();
 	//myDB.Disconnect();
 
-	BOOL bLastDBConnecctFlag = TRUE;			// We think the database connected
+	BOOL bLastDBConnecctFlag = FALSE;
 	BOOL bLastOPCConnectFlag = FALSE;
 	while (TRUE == g_bKeepWork)
 	{
@@ -142,8 +142,10 @@ unsigned __stdcall OPCDataSyncThread(void*)
 			CMyDB db;
 			if (db.Connect())
 			{
+				if (!bLastDBConnecctFlag)
+					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Database connected."), dwThreadID);
+
 				bLastDBConnecctFlag = TRUE;
-				g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Database connected."), dwThreadID);
 				if (!g_OPCClient.IsConnected())
 				{
 					INT nRet = Init();
@@ -154,9 +156,11 @@ unsigned __stdcall OPCDataSyncThread(void*)
 
 						throw E_CONNECTION_BROKE;
 					}
+										
+					if (!bLastOPCConnectFlag)
+						g_Logger.VForceLog(_T("[OPCDataSyncThread]:%d OPC Server connected."), dwThreadID);
 
 					bLastOPCConnectFlag = TRUE;
-					g_Logger.VForceLog(_T("[OPCDataSyncThread]:%d OPC Server connected."), dwThreadID);
 				}
 
 				LPGROUPINFO pGroup = g_OPCClient.GetGroup();
@@ -233,7 +237,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 			return -1;
 		}
 
-		HANDLE hExitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+		hExitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 		g_vhThreadExitEvents.push_back(hExitEvent);
 
 		TCHAR szTimeStr[30] = { _T('\0') };

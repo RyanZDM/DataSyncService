@@ -403,10 +403,6 @@ void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
 										   _ConnectionPtr&	pConn,
 										   LPCTSTR		pcszIdentifierTag)
 {
-	//temp
-	m_Logger.VLog(_T("Called me from %d."), GetCurrentThreadId());
-	return;
-
 	const int MAX_LEN = 512;
 	TCHAR szMsg[MAX_LEN] = { _T('\0') };
 
