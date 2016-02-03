@@ -1,4 +1,0 @@
-https://msdn.microsoft.com/en-us/library/ms712362(v=vs.85).aspx
-
-Should use:
-C:\Windows\SysWOW64\odbcad32.exe

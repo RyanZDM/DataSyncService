@@ -289,4 +289,5 @@ BOOL CSysParams::GetStringValue(_RecordsetPtr pRS, LONG lIndex, LPTSTR *ppBuf, D
 	*ppBuf = new TCHAR[len];
 	_tcscpy_s(*ppBuf, len, itemId);
 	
+	return TRUE;
 }

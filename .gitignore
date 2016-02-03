@@ -27,6 +27,7 @@ Thumbs.db
 *.ilk
 *.log
 *.tlog
+*.opensdf
 [Bb]in/*
 [Dd]eploy
 [Tt]est[Ii]mages
