@@ -24,6 +24,28 @@ CProfileOperator::~CProfileOperator()
 {
 }
 
+BOOL CProfileOperator::GetBool(LPCTSTR lpAppName, LPCTSTR lpKeyName, BOOL bDefault)
+{	
+	TCHAR szBuf[10];
+	GetPrivateProfileString(lpAppName, lpKeyName, NULL, szBuf, sizeof(szBuf) / sizeof(szBuf[0]), m_szIniFilename);
+
+	if (_tcslen(szBuf) == 0)
+		return bDefault;
+
+	return (_tcsicmp(szBuf, _T("true")) == 0);
+}
+
+INT CProfileOperator::GetInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, INT nDefault)
+{
+	TCHAR szBuf[40];
+	GetPrivateProfileString(lpAppName, lpKeyName, NULL, szBuf, sizeof(szBuf) / sizeof(szBuf[0]), m_szIniFilename);
+
+	if (_tcslen(szBuf) == 0)
+		return nDefault;
+
+	return _ttol(szBuf);
+}
+
 DWORD CProfileOperator::GetString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpDefault, LPTSTR lpReturnedString, DWORD nSize)
 {
 	return GetPrivateProfileString(lpAppName, lpKeyName, lpDefault, lpReturnedString, nSize, m_szIniFilename);

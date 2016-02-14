@@ -79,7 +79,7 @@ void CheckLogFileCount(LPVOID pFileName)
 		do 
 		{
 			_tsplitpath_s(FindData.name, NULL, 0, NULL, 0, szName, _MAX_FNAME, NULL, 0);
-			if (0 != StrCmpI(szName, szFname))
+			if (0 != _tcsicmp(szName, szFname))
 			{
 				LPCTSTR pNum = szName + dwNameLen;
 				if (pNum)
@@ -236,13 +236,13 @@ void CLogUtil::Initialize()
 	TCHAR val[10];
 
 	GetPrivateProfileString(_T("LogCfg"), _T("Enabled"), _T("true"), val, 10, _T("LogCfg.ini"));
-	m_bEnabled = ( (StrCmpI(val, _T("true")) == 0) || (StrCmpI(val, _T("1")) == 0) );
+	m_bEnabled = ((_tcsicmp(val, _T("true")) == 0) || (_tcscmp(val, _T("1")) == 0));
 	GetPrivateProfileString(_T("LogCfg"), _T("AutoShowMsg"), _T("false"), val, 10, _T("LogCfg.ini"));
-	m_bAutoShowMsg = ( (StrCmpI(val, _T("true")) == 0) || (StrCmpI(val, _T("1")) == 0) );
+	m_bAutoShowMsg = ((_tcsicmp(val, _T("true")) == 0) || (_tcscmp(val, _T("1")) == 0));
 	GetPrivateProfileString(_T("LogCfg"), _T("ShowTieMsg"), _T("false"), val, 10, _T("LogCfg.ini"));
-	m_bShowTipMsg = ( (StrCmpI(val, _T("true")) == 0) || (StrCmpI(val, _T("1")) == 0) );
+	m_bShowTipMsg = ((_tcsicmp(val, _T("true")) == 0) || (_tcscmp(val, _T("1")) == 0));
 	GetPrivateProfileString(_T("LogCfg"), _T("ShowMsgInConsole"), _T("false"), val, 10, _T("LogCfg.ini"));
-	m_bShowInConsole = ( (StrCmpI(val, _T("true")) == 0) || (StrCmpI(val, _T("1")) == 0) );
+	m_bShowInConsole = ((_tcsicmp(val, _T("true")) == 0) || (_tcsicmp(val, _T("1")) == 0));
 
 	TCHAR szEventStr[50];
 	SYSTEMTIME systemtime;	

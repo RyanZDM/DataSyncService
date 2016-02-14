@@ -112,8 +112,9 @@ INT Init()
 	TString msg;
 	for (vector<LPITEMINFO>::const_iterator it = vItems.begin(); it != vItems.end(); it++)
 	{
-		LPITEMINFO p = *it;
+		LPITEMINFO p = *it;		
 		msg.append(p->pItemID).append(_T(","));
+		delete p;
 	}
 	g_Logger.VForceLog(_T("[%d] item(s) found in database, [%d] item(s) were added successfully.\n%s"), nItemCount, nAddedItems, msg.c_str());
 
@@ -135,11 +136,11 @@ unsigned __stdcall OPCDataSyncThread(void*)
 
 	BOOL bLastDBConnecctFlag = FALSE;
 	BOOL bLastOPCConnectFlag = FALSE;
+	CMyDB db;
 	while (TRUE == g_bKeepWork)
 	{
 		try
-		{
-			CMyDB db;
+		{			
 			if (db.Connect())
 			{
 				if (!bLastDBConnecctFlag)
@@ -176,7 +177,10 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					}
 				}	// end if (pGroup)
 
-				db.Disconnect();
+				if (!g_SysParams.IsKeepDbConnection())
+				{
+					db.Disconnect();
+				}
 			}
 			else		// Failed to connect to db
 			{
@@ -201,7 +205,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 		{
 			g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again."), dwThreadID);			
 		}
-		
+
 		// Sleep
 		if (TRUE == g_bKeepWork)
 		{
@@ -217,7 +221,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 		}
 
 	}	// end while (TRUE == g_bKeepWork)
-		
+
 	g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Thread exit."), dwThreadID);
 	SetEvent(hExitEvent);
 	return 0;
@@ -247,10 +251,10 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 			_tcsftime(szTimeStr, sizeof(szTimeStr) / sizeof(szTimeStr[0]), _T("Run at time: %H:%M:%S"), pTime);
 		}
 		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread started for timer task [%s], interval=%d. %s")
-							, dwThreadID
-							, pTask->m_szName.c_str()
-							, pTask->GetInterval()
-							, szTimeStr);
+			, dwThreadID
+			, pTask->m_szName.c_str()
+			, pTask->GetInterval()
+			, szTimeStr);
 
 		if (pTime)		// Run at fixed time
 		{
@@ -273,11 +277,11 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 	}
 	__finally
 	{
-		if (!pTask)
+		if (pTask)
 		{
 			delete pTask;
 		}
-				
+
 		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread exit."), dwThreadID);
 		if (hExitEvent)
 			SetEvent(hExitEvent);
@@ -297,8 +301,14 @@ INT SetupTimelyTasks()
 	for (vector<CTimerTask*>::const_iterator vi = vTasks.begin(); vi != vTasks.end(); vi++)
 	{
 		CTimerTask *pTask = *vi;
-		if (!pTask || !pTask->m_bEnabled)
+		if (!pTask)
 			continue;
+
+		if (!pTask->m_bEnabled)
+		{
+			delete pTask;
+			continue;
+		}
 
 		nTasks++;
 		// The pointer to task will be releasd before thread exit
@@ -406,11 +416,8 @@ INT GetTimerTasks(vector<CTimerTask*> &vTasks)
 		po.GetString(szSection.c_str(), _T("RunAtFixedTime"), NULL, szBuf, dwLen);
 		pTask->ParseTimeString(szBuf);
 
-		po.GetString(szSection.c_str(), _T("Interval"), _T("0"), szBuf, dwLen);
-		pTask->SetInterval(_tstol(szBuf));
-
-		po.GetString(szSection.c_str(), _T("Enable"), _T("false"), szBuf, dwLen);
-		pTask->m_bEnabled = (StrCmpI(szBuf, _T("true")) == 0);
+		pTask->SetInterval(po.GetInt(szSection.c_str(), _T("Interval"), 0));				
+		pTask->m_bEnabled = po.GetBool(szSection.c_str(), _T("Enable"), FALSE);
 
 		vTasks.push_back(pTask);
 	}

@@ -207,7 +207,7 @@ public:
 	_variant_t GetSingleValue(LPCTSTR pcszCommand, LONG lCommandType = adCmdText);
 	INT GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lCommandType = adCmdText);
 	LONG GetSingleLongValue(LPCTSTR szCommand, LONG lCommandType = adCmdText);
-	BOOL GetSingleBoolValue(LPCTSTR szCommand, LONG lCommandType = adCmdText);
+	BOOL GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommandType = adCmdText);
 	DOUBLE GetSingleDoubleValue(LPCTSTR szCommand, BYTE nScale, LONG lCommandType = adCmdText);	
 	DECIMAL GetSingleDecimalValue(LPCTSTR szCommand, LONG lCommandType = adCmdText);
 	BOOL SetDBType(DWORD dwDBType);													// 设置与连接数据库的类型

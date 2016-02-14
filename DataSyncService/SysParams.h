@@ -15,32 +15,26 @@ using namespace std;
 
 #include "OPCClient.h"
 
-#define LOCK_WAIT_TIMEOUT		1000			// 1s
-
-#define ERR_SUCCESS				0
-#define ERR_LOCK_TIMEOUT		-200
-
-#define DEFAULT_QRY_INTERVAL		60000		// 60 seconds
-#define DEFAULT_LOG_FLAG			true	// false
-#define DEFAULT_ITEMS_EACHTIME		100
-
 class CSysParams  
 {
-public:	
+public:		
 	INT GetItemList(vector<LPITEMINFO>& vList);
-	BOOL EnableLog(bool bFlag);
+	BOOL EnableLog(BOOL bFlag);
 	BOOL SetRemoteMachine(LPWSTR pName);
 	BOOL SetQueryInterval(long interval);
 	BOOL SetOPCServerProgID(LPCWSTR pName);
 	INT RefreshSysParams(BOOL bLog = FALSE);
 	INT RefreshSysParams(CDBUtil &db, BOOL bLog = FALSE);
+	void KeepDbConnection(BOOL flag) { m_bKeepDbConnection = flag; }
+
 	CSysParams();
 	virtual ~CSysParams();
-
+		
 	LPCWSTR	GetRemoteMachine() { return m_wszRemoteMachine.c_str(); }
 	LPCWSTR GetOPCServerProgID() { return m_wszOPCServerProgID.c_str(); }
 	long GetQueryInterval() { return m_lQryInterval; }
-	bool IsLogEnabled() { return m_bEnableLog; }
+	BOOL IsLogEnabled() { return m_bEnableLog; }
+	BOOL IsKeepDbConnection() { return m_bKeepDbConnection; }
 
 // 消息轮询时间，查询命令发送间隔，记录日志，监控目录名称，
 private:
@@ -50,9 +44,10 @@ private:
 	BOOL	Lock(DWORD dwMilliseconds);
 	void	InitMutex();
 	long	m_lQryInterval;		// second
-	bool	m_bEnableLog;
+	BOOL	m_bEnableLog;
 	wstring	m_wszOPCServerProgID;
 	wstring	m_wszRemoteMachine;
+	BOOL	m_bKeepDbConnection;
 };
 
 #endif // !defined(AFX_SYSPARAMS_H__640CAA53_1956_4B69_9D2A_B65090686F16__INCLUDED_)

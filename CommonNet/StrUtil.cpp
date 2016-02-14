@@ -533,7 +533,7 @@ BOOL CStrUtil::GetKeyValue(string &szVal, LPCSTR pcszSource, LPCSTR pcszKey, LPC
 				for (pTemp = (LPSTR)pVal; pTemp != pFound; pTemp++)
 					szKey += *pTemp;
 
-				if (lstrcmpiA(pcszKey, szKey.c_str()) == 0)		// Found the key
+				if (_stricmp(pcszKey, szKey.c_str()) == 0)		// Found the key
 				{
 					pTemp++;			// Pointer to value
 					szVal = pTemp;
@@ -566,7 +566,7 @@ BOOL CStrUtil::GetKeyValue(wstring &wszVal, LPCWSTR pcwszSource, LPCWSTR pcwszKe
 				for (pTemp = (LPWSTR)pVal; pTemp != pFound; pTemp++)
 					szKey += *pTemp;
 
-				if (lstrcmpiW(pcwszKey, szKey.c_str()) == 0)		// Found the key
+				if (_wcsicmp(pcwszKey, szKey.c_str()) == 0)		// Found the key
 				{
 					pTemp++;			// Pointer to value
 					wszVal = pTemp;

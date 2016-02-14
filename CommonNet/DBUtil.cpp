@@ -924,7 +924,7 @@ _variant_t CDBUtil::GetSingleValue(LPCTSTR szCommand, LONG lCommandType)
 	return vRetVal;
 }
 
-BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, LONG lCommandType)
+BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommandType)
 {
 	SetLastErrorCode(ERR_NO_RECORD);
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
@@ -937,7 +937,7 @@ BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, LONG lCommandType)
 		case VT_BSTR:
 			{
 				char* pTemp = _com_util::ConvertBSTRToString((BSTR)vRetVal.pbstrVal);
-				BOOL bFlag = ( (strcmp(pTemp, "1") == 0) || (StrCmpIA(pTemp, "true") == 0) || (StrCmpIA(pTemp, "yes") == 0) );
+				BOOL bFlag = ((strcmp(pTemp, "1") == 0) || (_stricmp(pTemp, "true") == 0) || (_stricmp(pTemp, "yes") == 0));
 				delete[] pTemp;
 				return bFlag;
 			}
@@ -947,7 +947,7 @@ BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, LONG lCommandType)
 		}
 	}
 
-	return FALSE;
+	return bDefault;
 }
 
 INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lCommandType)
@@ -1283,12 +1283,12 @@ void CDBUtil::CheckSQLState(_bstr_t sqlState)
 	try
 	{
 		pState = (LPCTSTR)sqlState;			
-		if ( !StrCmpI(pState, _T("08S01"))			// 通讯链接失败
-				|| !StrCmpI(pState, _T("01002"))	// 断开连接错误
-				|| !StrCmpI(pState, _T("08001"))	// 无法连接到数据源
-				|| !StrCmpI(pState, _T("08003"))	// 连接未打开
-				|| !StrCmpI(pState, _T("08004"))	// 数据源拒绝建立连接
-				|| !StrCmpI(pState, _T("08007"))	// 在执行事务的过程中连接失败
+		if ( !_tcscmp(pState, _T("08S01"))			// 通讯链接失败
+			|| !_tcscmp(pState, _T("01002"))	// 断开连接错误
+			|| !_tcscmp(pState, _T("08001"))	// 无法连接到数据源
+			|| !_tcscmp(pState, _T("08003"))	// 连接未打开
+			|| !_tcscmp(pState, _T("08004"))	// 数据源拒绝建立连接
+			|| !_tcscmp(pState, _T("08007"))	// 在执行事务的过程中连接失败
 			)
 
 			m_bConnected = FALSE;

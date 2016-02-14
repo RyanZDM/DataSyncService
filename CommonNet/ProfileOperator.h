@@ -12,6 +12,8 @@ public:
 	CProfileOperator(LPCTSTR lpIniFile);
 	virtual ~CProfileOperator();
 
+	INT GetInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, INT nDefault);
+	BOOL GetBool(LPCTSTR lpAppName, LPCTSTR lpKeyName, BOOL bDefault = FALSE);
 	DWORD GetString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpDefault, LPTSTR lpReturnedString, DWORD nSize);
 	DWORD GetKeys(LPCTSTR lpAppName, vector<basic_string<TCHAR>> &vKeys);
 	DWORD GetSections(vector<basic_string<TCHAR>> &vKeys);

@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "Constants.h"
 #include "SysParams.h"
 #include <time.h>
 #include "LogUtil.h"
@@ -20,6 +21,7 @@ CSysParams::CSysParams()
 	m_hMutex				= NULL;
 	m_lQryInterval			= DEFAULT_QRY_INTERVAL;
 	m_bEnableLog			= DEFAULT_LOG_FLAG;
+	m_bKeepDbConnection = 0;
 
 	InitMutex();		
 }
@@ -138,21 +140,23 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 					szMsg += W2T(pTemp);
 				}
 			}
-			
-			value = db.GetSingleValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='EnableLog'"));
-			if ( (db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_BSTR) )
-			{
-				LPWSTR pTemp =(BSTR)value.pbstrVal;
-				bool bFlag = ((wcscmp(pTemp, L"1") == 0) || (StrCmpIW(pTemp, L"true") == 0));
-				if (bLog)
-				{
-					szMsg += _T("\n\tEnable log: ");
-					szMsg += (bFlag ? _T("True") : _T("False"));
-				}
 
-				EnableLog( bFlag );				
+			m_bKeepDbConnection = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='KeepDbConnection'"), m_bKeepDbConnection);			
+			if (bLog)
+			{
+				szMsg += _T("\n\tKeep DB Connection: ");
+				szMsg += (m_bKeepDbConnection ? _T("True") : _T("False"));
 			}
 			
+			BOOL bFlag = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='EnableLog'"), m_bEnableLog);
+			if (bLog)
+			{
+				szMsg += _T("\n\tEnable log: ");
+				szMsg += (bFlag ? _T("True") : _T("False"));
+			}
+
+			EnableLog( bFlag );				
+						
 			if (bLog)
 				g_Logger.ForceLog(szMsg.c_str());
 		}
@@ -183,7 +187,7 @@ BOOL CSysParams::SetQueryInterval(long interval)
 	return TRUE;
 }
 
-BOOL CSysParams::EnableLog(bool bFlag)
+BOOL CSysParams::EnableLog(BOOL bFlag)
 {
 	m_bEnableLog = bFlag;
 	g_Logger.SetEnable(bFlag);

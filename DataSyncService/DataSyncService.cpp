@@ -2,6 +2,8 @@
 
 
 #include "stdafx.h"
+#include <vld.h>
+
 #include "resource.h"
 #include "DataSyncService_i.h"
 #include <stdio.h>
@@ -9,6 +11,7 @@
 #include "LogUtil.h"
 #include "Constants.h"
 #include "ThreadFunctions.h"
+#include "ProfileOperator.h"
 
 using namespace std;
 using namespace ATL;
@@ -224,7 +227,9 @@ public :
 			// Call RunMessageLoop only if PreMessageLoop returns S_OK.
 			if (hr == S_OK)
 			{
-				RunMessageLoop();
+				//RunMessageLoop();
+				// temp
+				Sleep(60000);
 			}
 
 			// **********************************************************************************************************************
@@ -367,22 +372,8 @@ extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstan
 
 BOOL IfEnableConsoleOutput()
 {
-	BOOL ret = FALSE;
-	try
-	{
-		ATL::CRegKey keyDBParams;
-		LONG lRes = keyDBParams.Open(HKEY_LOCAL_MACHINE, _T("Software\\DataSyncService"), KEY_READ);
-		if (lRes == ERROR_SUCCESS)
-		{			
-			DWORD dwFlag;
-			if (ERROR_SUCCESS == keyDBParams.QueryDWORDValue(_T("EnableConsoleOutput"), dwFlag))
-				ret = (dwFlag > 0);
-		}
-	}
-	catch (...) {
-	}
-
-	return ret;
+	CProfileOperator po;	
+	return po.GetBool(_T("Log"), _T("EnableConsoleOutput"), FALSE);
 }
 
 void Cleanup()

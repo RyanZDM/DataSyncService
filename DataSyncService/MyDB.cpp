@@ -23,6 +23,9 @@ CMyDB::~CMyDB()
 
 BOOL CMyDB::Connect()
 {
+	if (IsConnected())
+		return TRUE;
+
 	// Note: If we want to connect to database via a ODBC,
 	// The ODBC must be a system system DSN because this is a service application runing background.
 	SetLogFileName(LOG_FILENAME);
