@@ -21,7 +21,7 @@ CSysParams::CSysParams()
 	m_hMutex				= NULL;
 	m_lQryInterval			= DEFAULT_QRY_INTERVAL;
 	m_bEnableLog			= DEFAULT_LOG_FLAG;
-	m_bKeepDbConnection = 0;
+	m_bKeepDbConnection		= DEFAULT_KEEP_DB_CONNECT;
 
 	InitMutex();		
 }

@@ -212,7 +212,14 @@ unsigned __stdcall OPCDataSyncThread(void*)
 			// To make sure the thread can exit immediately when the application is about to exit
 			if (bLastDBConnecctFlag)	// Should not refresh data from database since cannot connect to db
 			{
-				g_SysParams.RefreshSysParams();
+				if (g_SysParams.IsKeepDbConnection())
+				{
+					g_SysParams.RefreshSysParams(db);
+				}
+				else
+				{
+					g_SysParams.RefreshSysParams();
+				}
 			}
 			if (WaitForSingleObject(g_hExitEvent, g_SysParams.GetQueryInterval()) != WAIT_TIMEOUT)
 			{

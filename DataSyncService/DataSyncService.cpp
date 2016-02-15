@@ -227,9 +227,9 @@ public :
 			// Call RunMessageLoop only if PreMessageLoop returns S_OK.
 			if (hr == S_OK)
 			{
-				//RunMessageLoop();
-				// temp
-				Sleep(60000);
+				RunMessageLoop();
+				// temp for normally exit after 1 minute
+				//Sleep(60000);
 			}
 
 			// **********************************************************************************************************************
