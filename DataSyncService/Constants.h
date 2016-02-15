@@ -12,7 +12,7 @@
 #define ERR_SUCCESS						0
 #define ERR_LOCK_TIMEOUT				-200
 
-#define DEFAULT_QRY_INTERVAL			60000		// 60 seconds
+#define DEFAULT_QRY_INTERVAL			30000		// 30 seconds
 #define DEFAULT_LOG_FLAG				TRUE		// false
 #define DEFAULT_KEEP_DB_CONNECT			TRUE
 #define DEFAULT_ITEMS_EACHTIME			100

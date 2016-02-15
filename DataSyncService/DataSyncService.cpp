@@ -1,8 +1,10 @@
 // DataSyncService.cpp : Implementation of WinMain
-
+//#define _MEMORY_LEAK_CHECK_
 
 #include "stdafx.h"
+#ifdef _MEMORY_LEAK_CHECK_
 #include <vld.h>
+#endif
 
 #include "resource.h"
 #include "DataSyncService_i.h"
@@ -227,9 +229,12 @@ public :
 			// Call RunMessageLoop only if PreMessageLoop returns S_OK.
 			if (hr == S_OK)
 			{
-				RunMessageLoop();
+#ifdef _MEMORY_LEAK_CHECK_
 				// temp for normally exit after 1 minute
-				//Sleep(60000);
+				Sleep(70000);
+#else
+				RunMessageLoop();				
+#endif
 			}
 
 			// **********************************************************************************************************************

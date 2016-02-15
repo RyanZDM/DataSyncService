@@ -14,23 +14,28 @@
 
 using namespace std;
 
+// *** Global varibles ***************************************************/
 extern CLogUtil g_Logger;
 extern HANDLE	g_hExitEvent;
 extern vector<HANDLE>	g_vhThreadExitEvents;
 extern BOOL		g_bKeepWork;
 CSysParams		g_SysParams;
 COPCClient		g_OPCClient;
+// ***********************************************************************/
 
+// *** Methods Declaration ***********************************************/
 INT GetTimerTasks(vector<CTimerTask*> &vTasks);
 unsigned __stdcall TimerTaskThread(void* pParameter);
 void RunTask(LPCTSTR pcszCommand);
 void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval);
 void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &time);
+INT Init(CDBUtil &db);
+// ***********************************************************************/
 
-INT Init()
+INT Init(CDBUtil &db)
 {
 	// Get system parameters from database
-	INT nRet = g_SysParams.RefreshSysParams();
+	INT nRet = g_SysParams.RefreshSysParams(db);
 	if (ERR_SUCCESS != nRet)
 		return nRet;
 
@@ -149,7 +154,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				bLastDBConnecctFlag = TRUE;
 				if (!g_OPCClient.IsConnected())
 				{
-					INT nRet = Init();
+					INT nRet = Init(db);
 					if (nRet < 0)
 					{
 						if (bLastOPCConnectFlag)
@@ -257,11 +262,12 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 		{
 			_tcsftime(szTimeStr, sizeof(szTimeStr) / sizeof(szTimeStr[0]), _T("Run at time: %H:%M:%S"), pTime);
 		}
-		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread started for timer task [%s], interval=%d. %s")
+		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread started for timer task [%s], interval=%d. %s, Command=[%s]")
 			, dwThreadID
 			, pTask->m_szName.c_str()
 			, pTask->GetInterval()
-			, szTimeStr);
+			, szTimeStr
+			, pTask->m_szRun.c_str());
 
 		if (pTime)		// Run at fixed time
 		{
@@ -327,12 +333,16 @@ INT SetupTimelyTasks()
 
 void RunTask(LPCTSTR pcszCommand)
 {
-	DWORD dwThreadID = GetCurrentThreadId();
+	DWORD dwThreadID = GetCurrentThreadId();	
 	try
 	{
-		INT nRet = _tsystem(pcszCommand);
+		time_t begin = time(nullptr);
+		INT nRet = _tsystem(pcszCommand);		
 		if (nRet != 0)
 			throw nRet;
+
+		time_t end = time(nullptr);
+		g_Logger.VLog(_T("Ran timer task in %d seconds, command = [%s]"), difftime(end, begin), pcszCommand);
 	}
 	catch (INT nCode)		// Throw int only when the connection is broken
 	{

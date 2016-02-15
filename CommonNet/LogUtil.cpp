@@ -8,13 +8,17 @@
 #include <atlbase.h>
 #include <atlconv.h>
 #include <process.h>
-
 #include "LogUtil.h"
 #include "StrUtil.h"
-#include <shlwapi.h>
-#pragma comment(lib, "shlwapi.lib")
+
+#include <shellapi.h>
+#pragma comment(lib, "shell32.lib")
 #include <Winver.h>
 #pragma comment(lib, "Version.lib")
+
+#ifndef ARRAYSIZE
+#define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
+#endif
 
 #define VALIDATE	if (!m_bEnabled) return TRUE;
 const TCHAR *LOG_FLIENAME	= _T("c:\\log\\log.log");

@@ -9,15 +9,16 @@
 #include <stdio.h>
 #include <wchar.h>
 
-//#define _STRUTIL_USE_W_LIB
-
-#ifdef  _STRUTIL_USE_W_LIB
+#if _MSC_VER>1200 
 	#pragma comment(lib, "comsuppW.lib")
 #else
 	#pragma comment(lib, "comsupp.lib")
 #endif
 
 #pragma comment(lib, "shlwapi.lib")
+
+#define	COMP_A(s1, s2, flag)	( (flag)?(strstr((LPCSTR)s1, (LPCSTR)s2)):(StrStrIA((LPCSTR)s1, (LPCSTR)s2)) )
+#define	COMP_W(s1, s2, flag)	( (flag)?(wcsstr((LPCWSTR)s1, (LPCWSTR)s2)):(StrStrIW((LPCWSTR)s1, (LPCWSTR)s2)) )
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

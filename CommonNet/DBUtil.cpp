@@ -131,6 +131,10 @@ BOOL CDBUtil::ConnectToDB()
  *************************************************************************/
 BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUserPwd)
 {
+	// Note: If we want to connect to database via a DSN, it must be a system DSN because 
+	// this is a service application runing background. And the 32 bit "Data Source (ODBC)"
+	// program is under the directory "C:\Windows\SysWOW64" on Windowx x64 OS
+
 	//ºÏ≤‚ ‰»Î≤Œ ˝***************************************************/
 
 	//***************************************************************/

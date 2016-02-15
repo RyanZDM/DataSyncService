@@ -22,12 +22,6 @@
 #include <wtypes.h>
 #include <STDIO.H>
 
-#include <shellapi.h>
-#pragma comment(lib, "shell32.lib")
-#ifndef ARRAYSIZE
-#define ARRAYSIZE(A) (sizeof(A)/sizeof((A)[0]))
-#endif
-
 //#define MAX_FILESIZE	65535
 static const DWORD MAX_FILESIZE  = 1048576;		// 1024 * 1024
 static const DWORD MAX_BUFSIZE   = 5000;
