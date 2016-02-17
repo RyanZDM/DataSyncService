@@ -164,7 +164,7 @@ public:
 	void SetDBPtr(CDBUtil *pDB) { m_pDB = pDB; }
 	CDBUtil* GetDBPtr() { return m_pDB; }
 	BOOL IsConnected() { return m_bConnected; }
-	INT ReadItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB = TRUE, OPCITEMSTATE *pState = NULL);
+	INT ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB = TRUE, OPCITEMSTATE *pState = NULL);
 	vector<COPCItemDef*>* GetItems() { return &m_vItems; }
 	LPGROUPINFO GetGroup() { return m_pGroup; }
 	BOOL RemoveCallback();

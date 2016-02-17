@@ -15,7 +15,7 @@ class CMyDB : public CDBUtil
 {
 public:
 	INT RemoveAllItems();
-	BOOL Connect();
+	BOOL Connect(BOOL bLogComError = TRUE);
 	CMyDB();
 	virtual ~CMyDB();
 

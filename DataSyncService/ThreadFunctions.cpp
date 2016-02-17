@@ -63,10 +63,14 @@ INT Init(CDBUtil &db)
 	}
 	else													// Connect to local OPC server
 	{
-		pServer = g_OPCClient.Connect(pProgID, NULL);
+		pServer = g_OPCClient.Connect(pProgID, NULL);		
 	}
-
-	if (!pServer)
+	
+	if (pServer)
+	{
+		g_Logger.VForceLog(L"%d: Connected to OPC server [%s].", GetCurrentThreadId(), pProgID);
+	}
+	else
 	{
 		g_Logger.VForceLog(L"Failed to connect OPC server [%s]", pProgID);
 		return -1;
@@ -138,35 +142,30 @@ unsigned __stdcall OPCDataSyncThread(void*)
 	//CMyDB myDB;
 	//myDB.RemoveAllItems();
 	//myDB.Disconnect();
-
-	BOOL bLastDBConnecctFlag = FALSE;
-	BOOL bLastOPCConnectFlag = FALSE;
-	CMyDB db;
+			
+	CMyDB db;	
+	BOOL bDbConnectionBroke = TRUE;		// Actively disconnect DB does not affect this variable
+	BOOL bLastDBConnecctFlag = TRUE;
 	while (TRUE == g_bKeepWork)
 	{
 		try
 		{			
-			if (db.Connect())
+			if (db.Connect(FALSE))
 			{
-				if (!bLastDBConnecctFlag)
+				// Log only when successfully connnected to db first time or reconnected after a connection broken
+				if (bDbConnectionBroke)
 					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Database connected."), dwThreadID);
-
+				
 				bLastDBConnecctFlag = TRUE;
+				bDbConnectionBroke = FALSE;
+
 				if (!g_OPCClient.IsConnected())
 				{
 					INT nRet = Init(db);
 					if (nRet < 0)
-					{
-						if (bLastOPCConnectFlag)
-							g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Init() failed, exit thread. Error Code=%d"), dwThreadID, nRet);
-
+					{							
 						throw E_CONNECTION_BROKE;
 					}
-										
-					if (!bLastOPCConnectFlag)
-						g_Logger.VForceLog(_T("[OPCDataSyncThread]:%d OPC Server connected."), dwThreadID);
-
-					bLastOPCConnectFlag = TRUE;
 				}
 
 				LPGROUPINFO pGroup = g_OPCClient.GetGroup();
@@ -175,24 +174,29 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					g_OPCClient.SetDBPtr(&db);
 					vector<COPCItemDef*> *pvList = g_OPCClient.GetItems();
 					int nItemCnt = pvList->size();
-					int nRet = g_OPCClient.ReadItemValue(pvList, TRUE);
+					int nRet = g_OPCClient.ReadAndUpdateItemValue(pvList, TRUE);
 					if (nRet != nItemCnt)
 					{
-						g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] %d item(s) to be read, but only %d item(s) read successfully."), dwThreadID, nItemCnt, nRet);
-					}
-				}	// end if (pGroup)
+						if (!db.IsConnected())
+						{
+							// Means that the db conection is broken
+							bDbConnectionBroke = TRUE;
+						}
 
-				if (!g_SysParams.IsKeepDbConnection())
-				{
-					db.Disconnect();
-				}
+						g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] %d item(s) to be read, but only %d item(s) read successfully.\n%s")
+											, dwThreadID, nItemCnt, nRet, db.GetLastErrormsg());
+					}
+				}	// end if (pGroup)				
 			}
 			else		// Failed to connect to db
 			{
+				// Log only when first time failed to connnect to db, no log output if keep get failure while connnecting
 				if (bLastDBConnecctFlag)
-					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again. This log won't be output again until next time connected to database."), dwThreadID);
-
-				bLastDBConnecctFlag = FALSE;
+				{
+					bLastDBConnecctFlag = FALSE;
+					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again. This log won't be output again until next time connected to database.\n%s")
+											, dwThreadID, db.GetLastErrormsg());
+				}				
 			}
 		}
 		catch (LPCTSTR pMsg) 
@@ -202,30 +206,33 @@ unsigned __stdcall OPCDataSyncThread(void*)
 		catch (INT nCode)		// Throw int only when the connection is broken
 		{
 			if (E_CONNECTION_BROKE == nCode)
-				g_Logger.VForceLog(L"[OPCDataSyncThread:%d] The connection to OPC server [%s] break down. Will re-connect.pin", dwThreadID, g_SysParams.GetOPCServerProgID());
+				g_Logger.VForceLog(L"[OPCDataSyncThread:%d] The connection to OPC server [%s] break down. Will re-connect.\n%s"
+										, dwThreadID, g_SysParams.GetOPCServerProgID(), db.GetLastErrormsg());
 			else
-				g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again. Return=%d"), dwThreadID, nCode);
+				g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again. Return=%d.\n%s")
+										, dwThreadID, nCode, db.GetLastErrormsg());
 		}
 		catch (...)
 		{
-			g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again."), dwThreadID);			
+			g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again.\n%s")
+									, dwThreadID, db.GetLastErrormsg());
 		}
 
 		// Sleep
 		if (TRUE == g_bKeepWork)
 		{
 			// To make sure the thread can exit immediately when the application is about to exit
-			if (bLastDBConnecctFlag)	// Should not refresh data from database since cannot connect to db
+
+			if (db.IsConnected())
 			{
-				if (g_SysParams.IsKeepDbConnection())
-				{
-					g_SysParams.RefreshSysParams(db);
-				}
-				else
-				{
-					g_SysParams.RefreshSysParams();
-				}
+				g_SysParams.RefreshSysParams(db);
 			}
+
+			if (!g_SysParams.IsKeepDbConnection())
+			{
+				db.Disconnect();
+			}
+
 			if (WaitForSingleObject(g_hExitEvent, g_SysParams.GetQueryInterval()) != WAIT_TIMEOUT)
 			{
 				break;

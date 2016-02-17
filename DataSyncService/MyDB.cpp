@@ -21,7 +21,7 @@ CMyDB::~CMyDB()
 
 }
 
-BOOL CMyDB::Connect()
+BOOL CMyDB::Connect(BOOL bLogComError)
 {
 	if (IsConnected())
 		return TRUE;	
@@ -30,11 +30,6 @@ BOOL CMyDB::Connect()
 
 	try
 	{
-		// Get db parameters
-		TString szConnectionStr;
-		TString szUserName;
-		TString szPassword;
-		
 		try
 		{
 			SetDBType(DT_MSSQL);
@@ -50,13 +45,13 @@ BOOL CMyDB::Connect()
 			po.GetString(_T("Database"), _T("UserName"), _T("sa"), szBuf, dwLen);
 			SetUserName(szBuf);
 
-			po.GetString(_T("Database"), _T("Password"), _T(""), szBuf, dwLen);
+			po.GetString(_T("Database"), _T("Password"), NULL, szBuf, dwLen);
 			SetUserPassword(szBuf);	// TODO: dencrypt the password
 		}
 		catch (...) {
 		}
 		
-		return ConnectToDB();
+		return ConnectToDB(bLogComError);
 	}
 	catch (...)
 	{

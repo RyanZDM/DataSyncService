@@ -63,14 +63,13 @@ CDBUtil::CDBUtil(BOOL bStartEventMonitor)
 	m_Logger.SetEnable(TRUE);
 #endif
 
-	InitData();	
+	//InitData();	
 }
 
 CDBUtil::~CDBUtil()
-{
-	Disconnect();
+{	
 	try {StopConnectionEvent();} catch (...) {}
-	try {m_pConnection.Release();} catch (...){}
+	Disconnect();
 
 #ifdef _CALL_CoInitialize_
     CoUninitialize();
@@ -105,9 +104,9 @@ BOOL CDBUtil::InitData()
 	return TRUE;
 }
 
-BOOL CDBUtil::ConnectToDB()
+BOOL CDBUtil::ConnectToDB(BOOL bLogComError)
 {
-	return ConnectToDB(m_szConnStr.c_str(), m_szUserId.c_str(), m_szUserPwd.c_str());
+	return ConnectToDB(m_szConnStr.c_str(), m_szUserId.c_str(), m_szUserPwd.c_str(), bLogComError);
 }
 
 /**************************************************************************
@@ -129,7 +128,7 @@ BOOL CDBUtil::ConnectToDB()
  * 作者: 张大蒙
  * 修改日期: 2004.02.19
  *************************************************************************/
-BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUserPwd)
+BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUserPwd, BOOL bLogComError)
 {
 	// Note: If we want to connect to database via a DSN, it must be a system DSN because 
 	// this is a service application runing background. And the 32 bit "Data Source (ODBC)"
@@ -138,14 +137,12 @@ BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUs
 	//检测输入参数***************************************************/
 
 	//***************************************************************/
-	if (IsConnected())
-		Disconnect();
+	Disconnect();
 
 	try
 	{
 		try
 		{
-		if (m_pConnection == NULL)
 			m_pConnection = _ConnectionPtr("ADODB.Connection");
 		}
 		catch (_com_error cComErr1) {
@@ -190,7 +187,7 @@ BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUs
 	}
 	catch (_com_error cComErr)
 	{
-		IndicateComErrorException(cComErr, m_pConnection, _T("CDBUtil::ConnectToDB"));
+		IndicateComErrorException(cComErr, m_pConnection, _T("CDBUtil::ConnectToDB"), bLogComError);
 
 		SetLastErrorCode(ERR_CANT_CONNECT_DB);
 		return (FALSE);
@@ -340,6 +337,11 @@ BOOL CDBUtil::IsConnected()
  *************************************************************************/
 void CDBUtil::Disconnect()
 {
+	m_bConnected = FALSE;
+
+	if (!m_pConnection)
+		return;
+
 	try
 	{
 		if (m_pConnection->State)
@@ -347,19 +349,15 @@ void CDBUtil::Disconnect()
 			m_pConnection->Close();
 		}		
 	}
-	catch (...)
-	{
-		//不处理异常
-	}
+	catch (...) {}
 	
 	try
 	{
-		m_pConnection.Release();
+		m_pConnection.Release();		
 	}
-	catch (...)
-	{
-		// Do not handle the execption
-	}
+	catch (...) {}
+
+	m_pConnection = NULL;
 }
 
 /**************************************************************************
@@ -405,7 +403,8 @@ LPCTSTR CDBUtil::GetLastErrormsg()
  *************************************************************************/
 void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
 										   _ConnectionPtr&	pConn,
-										   LPCTSTR		pcszIdentifierTag)
+										   LPCTSTR		pcszIdentifierTag,
+										   BOOL			bLogComError)
 {
 	const int MAX_LEN = 512;
 	TCHAR szMsg[MAX_LEN] = { _T('\0') };
@@ -426,7 +425,7 @@ void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
 		pErr->GetSource(&bstrSource);
 		pErr->Release();
 
-		_stprintf_s(szMsg, MAX_LEN, _T("[CDBUtil] From _com_error:\nDescription : '%s'; Source : '%s'"), W2CT(_bstr_t(bstrDescription)), W2CT(_bstr_t(bstrSource)));
+		_stprintf_s(szMsg, MAX_LEN, _T("\tFrom _com_error:\n\t- Description: '%s'; \n\t- Source: '%s'"), W2CT(_bstr_t(bstrDescription)), W2CT(_bstr_t(bstrSource)));
 
 		::SysFreeString(bstrDescription);
 		::SysFreeString(bstrSource);
@@ -452,10 +451,11 @@ void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
 				LONG lNumber = pError->GetNumber();
 
 				// Check the returned SQLState and change value of m_bConnected
-				CheckSQLState(pError->GetSQLState());
+				LPCTSTR pState = (LPCTSTR)pError->GetSQLState();
+				CheckSQLState(pState);
 
-				_stprintf_s(szMsg, MAX_LEN, _T("[CDBUtil] From _Connection (%u):\nDescription : '%s'; Source : '%s', SQLState : '%s'"),
-					lIndx+1, W2CT(pError->GetDescription()), W2CT(pError->GetSource()), W2CT(pError->GetSQLState()));
+				_stprintf_s(szMsg, MAX_LEN, _T("\tFrom _Connection (%u):\n\t- Description: '%s'; \n\t- Source: '%s', \n\t- SQLState: '%s'"),
+												lIndx + 1, W2CT(pError->GetDescription()), W2CT(pError->GetSource()), pState);
 				pError->Release();
 				m_szLastErrorMsg += _T("\n");
 				m_szLastErrorMsg += szMsg;
@@ -465,7 +465,14 @@ void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
 		}
 	}
 
-	Log(m_szLastErrorMsg.c_str());
+	// If the connection is broken, release resource
+	if (!IsConnected())
+	{
+		Disconnect();
+	}
+
+	if (bLogComError)
+		Log(m_szLastErrorMsg.c_str());
 }
 
 /**************************************************************************
@@ -807,6 +814,7 @@ _RecordsetPtr CDBUtil::GetRecordset(const _variant_t & Source, CursorTypeEnum Cu
 			return pRs;
 		}
 
+		SetLastErrorCode(0);
 	}
 	catch (_com_error cComErr)
 	{		
@@ -930,7 +938,6 @@ _variant_t CDBUtil::GetSingleValue(LPCTSTR szCommand, LONG lCommandType)
 
 BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommandType)
 {
-	SetLastErrorCode(ERR_NO_RECORD);
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
 	{
@@ -956,7 +963,6 @@ BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommand
 
 INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lCommandType)
 {
-	SetLastErrorCode(ERR_NO_RECORD);
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
 	{
@@ -981,7 +987,6 @@ INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lC
 
 LONG CDBUtil::GetSingleLongValue(LPCTSTR szCommand, LONG lCommandType)
 {
-	SetLastErrorCode(ERR_NO_RECORD);
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
 	{
@@ -1022,7 +1027,6 @@ DOUBLE CDBUtil::GetSingleDoubleValue(LPCTSTR szCommand, BYTE nScale, LONG lComma
 
 DECIMAL CDBUtil::GetSingleDecimalValue(LPCTSTR szCommand, LONG lCommandType)
 {
-	SetLastErrorCode(ERR_NO_RECORD);
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
 	{
@@ -1281,29 +1285,26 @@ LONG CDBUtil::RollbackTrans()
 		return ERR_DB_NOT_OPEN;
 }
 
-void CDBUtil::CheckSQLState(_bstr_t sqlState)
-{
-	LPCTSTR pState = NULL;
-	try
+void CDBUtil::CheckSQLState(LPCTSTR pState)
+{		
+	if (!_tcscmp(pState, _T("08S01"))		// 通讯链接失败
+		|| !_tcscmp(pState, _T("01002"))	// 断开连接错误
+		|| !_tcscmp(pState, _T("08001"))	// 无法连接到数据源
+		|| !_tcscmp(pState, _T("08003"))	// 连接未打开
+		|| !_tcscmp(pState, _T("08004"))	// 数据源拒绝建立连接
+		|| !_tcscmp(pState, _T("08007"))	// 在执行事务的过程中连接失败
+		)
 	{
-		pState = (LPCTSTR)sqlState;			
-		if ( !_tcscmp(pState, _T("08S01"))			// 通讯链接失败
-			|| !_tcscmp(pState, _T("01002"))	// 断开连接错误
-			|| !_tcscmp(pState, _T("08001"))	// 无法连接到数据源
-			|| !_tcscmp(pState, _T("08003"))	// 连接未打开
-			|| !_tcscmp(pState, _T("08004"))	// 数据源拒绝建立连接
-			|| !_tcscmp(pState, _T("08007"))	// 在执行事务的过程中连接失败
-			)
-
-			m_bConnected = FALSE;
+		m_bConnected = FALSE;
 	}
-	catch (...) {
-	}
-
+	
 #ifndef _DISABLE_LOG_
-	if (!m_bConnected)
+	if (!_tcscmp(pState, _T("08S01"))		// 通讯链接失败
+		|| !_tcscmp(pState, _T("01002"))	// 断开连接错误
+		|| !_tcscmp(pState, _T("08007"))	// 在执行事务的过程中连接失败
+		)
 	{
-		m_Logger.VLog(_T("The connection to database was disconnected, SQLState=%s"), pState);
+		m_Logger.VLog(_T("[CDBUtil::CheckSQLState] The connection to database is broken, SQLState=%s"), pState);
 	}
 #endif
 

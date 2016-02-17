@@ -830,7 +830,7 @@ BOOL COPCClient::RemoveCallback()
 	return TRUE;
 }
 
-INT COPCClient::ReadItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB, OPCITEMSTATE *pState)
+INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB, OPCITEMSTATE *pState)
 {
 	if (!pvList || (!bUpdateDB && !pState))
 		return E_INVALIDARG;
@@ -845,7 +845,7 @@ INT COPCClient::ReadItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB
 	if (S_OK != (hr = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
 	{
 		CHECK_CONNECT(hr)
-		throw _T("COPCClient::ReadItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
+		throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 	}
 	
 	for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
@@ -853,7 +853,7 @@ INT COPCClient::ReadItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB
 		COPCItemDef *pItem = (COPCItemDef*)*vi;
 		if (!pItem)
 		{
-			g_Logger.ForceLog(_T("COPCClient::ReadItemValue() Failed to get pointer to COPCItemDef from vector."));
+			g_Logger.ForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to get pointer to COPCItemDef from vector."));
 			continue;
 		}
 
@@ -872,7 +872,7 @@ INT COPCClient::ReadItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB
 				}
 				else
 				{
-					g_Logger.VForceLog(_T("COPCClient::ReadItemValue() Failed to call COPCItemDef.Updata(), return=%d,"), nAffectedRows);
+					g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata(), return=%d,"), nAffectedRows);
 				}
 			}
 			else
@@ -882,7 +882,7 @@ INT COPCClient::ReadItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB
 		}
 		else
 		{
-			g_Logger.VForceLog(_T("COPCClient::ReadItemValue() Failed to call IOPCSyncIO.Read(), hr=%x, error=%x"), hr, pErrors?pErrors[0]:0);
+			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read(), hr=%x, error=%x"), hr, pErrors?pErrors[0]:0);
 		}
 
 		if (pValues)

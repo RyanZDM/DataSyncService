@@ -217,10 +217,11 @@ public:
 	BOOL SetDBName(LPCTSTR pcszDBName);												// 设置数据库名
 	BOOL SetUserName(LPCTSTR pcszUserName);											// 设置用户名
 	BOOL SetUserPassword(LPCTSTR pcszUserPwd);										// 设置用户密码	
-	BOOL ConnectToDB();
+	BOOL ConnectToDB(BOOL bLogComError = TRUE);
 	BOOL ConnectToDB(LPCTSTR pszConStr,
 					 LPCTSTR pszUserId, 
-					 LPCTSTR pszUserPwd);											// 连接数据库	
+					 LPCTSTR pszUserPwd,
+					 BOOL bLogComError = TRUE);											// 连接数据库	
 	BOOL IsConnected();																// 是否已连接数据库	
 	void Disconnect();																// 断开数据库连接	
 	virtual BOOL Init(void) { return TRUE; }
@@ -254,7 +255,7 @@ protected:
 	TString		m_szConnStr;														// 数据库连接字符串
 
 private:
-	void CheckSQLState(_bstr_t sqlState);
+	void CheckSQLState(LPCTSTR pState);
 	BOOL m_bStartEventMonitor;
 	CConnEvent	*m_pConnectEvent;
 	DWORD		m_dwConnEvt;
@@ -271,7 +272,8 @@ private:
 	void SetLastErrorMsg(TString szErrMsg);											// 设置最后一次错误消息
 	void IndicateComErrorException(_com_error&		cComErr,
 								   _ConnectionPtr&	pConn,
-								   LPCTSTR			pcszIdentifierTag);				// 生成数据库操作的错误信息
+								   LPCTSTR			pcszIdentifierTag,				// 生成数据库操作的错误信息
+								   BOOL bLogComError = TRUE);				
 	
 	BOOL GenerateConnectStr(void);													// 根据m_szServerName和m_szDBName合成连接字符串
 };
