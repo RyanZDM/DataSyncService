@@ -211,8 +211,12 @@ public :
 			// Code begin:				
 			GetProductVersion(m_Version);			
 			g_bKeepWork = TRUE;
-			g_hExitEvent = CreateEvent(NULL, TRUE, FALSE, NULL);	// The event should always be nonsignaled until the main thread exit.			
 			g_Logger.EnableConsoleOutput(IfEnableConsoleOutput());
+			g_hExitEvent = CreateEvent(NULL, TRUE, FALSE, NULL);	// The event should always be nonsignaled until the main thread exit.			
+			if (NULL == g_hExitEvent)
+			{
+				g_Logger.VForceLog(_T("Failed to create event handle, Error=%d."), GetLastError());
+			}
 			g_Logger.VForceLog(_T("\n\n*** The service [%s v%s] started *************************\nExecutable File Version:%s\n")
 								, m_szServiceName
 								, m_Version.GetProductVersionString()
@@ -368,7 +372,6 @@ public :
 
 CDataSyncServiceModule _AtlModule;
 
-//
 extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, 
 								LPTSTR /*lpCmdLine*/, int nShowCmd)
 {

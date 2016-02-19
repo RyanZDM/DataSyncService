@@ -961,8 +961,9 @@ BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommand
 	return bDefault;
 }
 
-INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lCommandType)
+INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCSTR pDefault, LPCTSTR szCommand, LONG lCommandType)
 {
+	szVal = pDefault ? pDefault : "";
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
 	{
@@ -985,7 +986,7 @@ INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lC
 	return m_nLastErrorCode;
 }
 
-LONG CDBUtil::GetSingleLongValue(LPCTSTR szCommand, LONG lCommandType)
+LONG CDBUtil::GetSingleLongValue(LPCTSTR szCommand, LONG lDefault, LONG lCommandType)
 {
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
@@ -1009,23 +1010,26 @@ LONG CDBUtil::GetSingleLongValue(LPCTSTR szCommand, LONG lCommandType)
 		}
 	}
 
-	return m_nLastErrorCode;
+	return lDefault;
 }
 
-DOUBLE CDBUtil::GetSingleDoubleValue(LPCTSTR szCommand, BYTE nScale, LONG lCommandType)
+DOUBLE CDBUtil::GetSingleDoubleValue(LPCTSTR szCommand, DOUBLE dblDefault, BYTE nScale, LONG lCommandType)
 {
-	DOUBLE dblVal;
-	DECIMAL dec;
-	dec.scale = nScale;
+	DOUBLE dblVal = dblDefault;	
+	DECIMAL decDefault;
+	CStrUtil::Double2Decimal(decDefault, dblVal);
 
-	dec = GetSingleDecimalValue(szCommand, lCommandType);
+	DECIMAL dec = GetSingleDecimalValue(szCommand, decDefault, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
+	{
+		dec.scale = nScale;
 		CStrUtil::Decimal2Doule(dblVal, dec);
+	}
 	
 	return dblVal;
 }
 
-DECIMAL CDBUtil::GetSingleDecimalValue(LPCTSTR szCommand, LONG lCommandType)
+DECIMAL CDBUtil::GetSingleDecimalValue(LPCTSTR szCommand, DECIMAL decDefault, LONG lCommandType)
 {
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
@@ -1040,7 +1044,7 @@ DECIMAL CDBUtil::GetSingleDecimalValue(LPCTSTR szCommand, LONG lCommandType)
 		}
 	}
 
-	return DECIMAL();
+	return decDefault;
 }
 
 BOOL CDBUtil::StartConnectionEvent()
@@ -1116,137 +1120,6 @@ BOOL CDBUtil::StopConnectionEvent()
 	}
 	
 	return bResult;
-}
-
-
-//-----Implement QueryInterface, AddRef, and Release---------------------
-
-STDMETHODIMP CConnEvent::QueryInterface(REFIID riid, void ** ppv) 
-
-{
-	*ppv = NULL;
-	if (riid == __uuidof(IUnknown) || 
-		riid == __uuidof(ConnectionEventsVt)) *ppv = this;
-	if (*ppv == NULL)
-		return ResultFromScode(E_NOINTERFACE);
-	AddRef();
-	return NOERROR;
-}
-STDMETHODIMP_(ULONG) CConnEvent::AddRef() 
-{
-	   return ++m_cRef; 
-}
-
-STDMETHODIMP_(ULONG) CConnEvent::Release()    
-{ 
-	if (0 != --m_cRef) return m_cRef;
-	delete this;
-	return 0;
-}
-
-STDMETHODIMP CConnEvent::raw_InfoMessage( 
-										 struct Error *pError,
-										 EventStatusEnum *adStatus,
-										 struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_BeginTransComplete( 
-												LONG TransactionLevel,
-												struct Error *pError,
-												EventStatusEnum *adStatus,
-												struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_CommitTransComplete( 
-												 struct Error *pError,
-												 EventStatusEnum *adStatus,
-												 struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_RollbackTransComplete( 
-												   struct Error *pError,
-												   EventStatusEnum *adStatus,
-												   struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_WillExecute( 
-										 BSTR *Source,
-										 CursorTypeEnum *CursorType,
-										 LockTypeEnum *LockType,
-										 long *Options,
-										 EventStatusEnum *adStatus,
-										 struct _Command *pCommand,
-										 struct _Recordset *pRecordset,
-										 struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_ExecuteComplete( 
-											 LONG RecordsAffected,
-											 struct Error *pError,
-											 EventStatusEnum *adStatus,
-											 struct _Command *pCommand,
-											 struct _Recordset *pRecordset,
-											 struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_WillConnect( 
-										 BSTR *ConnectionString,
-										 BSTR *UserID,
-										 BSTR *Password,
-										 long *Options,
-										 EventStatusEnum *adStatus,
-										 struct _Connection *pConnection)
-{
-	*adStatus = adStatusUnwantedEvent;
-	return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_ConnectComplete( 
-											 struct Error *pError,
-											 EventStatusEnum *adStatus,
-											 struct _Connection *pConnection)
-{
-		  //*adStatus = adStatusUnwantedEvent;
-	if (m_pIsConnected)
-		*m_pIsConnected = TRUE;
-	
-	int a = 0;
-		  return S_OK;
-}
-
-STDMETHODIMP CConnEvent::raw_Disconnect( 
-										EventStatusEnum *adStatus,
-										struct _Connection *pConnection)
-{
-		  //*adStatus = adStatusUnwantedEvent;
-	if (m_pIsConnected)
-		*m_pIsConnected = FALSE;
-	
-	int a = 0;
-		  return S_OK;
-}
-
-void CConnEvent::SetStatePtr(BOOL *pIsConnected)
-{
-	m_pIsConnected = pIsConnected;
 }
 
 LONG CDBUtil::BeginTrans()
@@ -1561,4 +1434,134 @@ INT CDBUtil::GetBoolean(bool &bVal, _RecordsetPtr pRs, INT nCol)
 	}
 
 	return m_nLastErrorCode;
+}
+
+//-----Implement QueryInterface, AddRef, and Release---------------------
+
+STDMETHODIMP CConnEvent::QueryInterface(REFIID riid, void ** ppv)
+
+{
+	*ppv = NULL;
+	if (riid == __uuidof(IUnknown) ||
+		riid == __uuidof(ConnectionEventsVt)) *ppv = this;
+	if (*ppv == NULL)
+		return ResultFromScode(E_NOINTERFACE);
+	AddRef();
+	return NOERROR;
+}
+STDMETHODIMP_(ULONG) CConnEvent::AddRef()
+{
+	return ++m_cRef;
+}
+
+STDMETHODIMP_(ULONG) CConnEvent::Release()
+{
+	if (0 != --m_cRef) return m_cRef;
+	delete this;
+	return 0;
+}
+
+STDMETHODIMP CConnEvent::raw_InfoMessage(
+struct Error *pError,
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_BeginTransComplete(
+	LONG TransactionLevel,
+struct Error *pError,
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_CommitTransComplete(
+struct Error *pError,
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_RollbackTransComplete(
+struct Error *pError,
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_WillExecute(
+	BSTR *Source,
+	CursorTypeEnum *CursorType,
+	LockTypeEnum *LockType,
+	long *Options,
+	EventStatusEnum *adStatus,
+struct _Command *pCommand,
+struct _Recordset *pRecordset,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_ExecuteComplete(
+	LONG RecordsAffected,
+struct Error *pError,
+	EventStatusEnum *adStatus,
+struct _Command *pCommand,
+struct _Recordset *pRecordset,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_WillConnect(
+	BSTR *ConnectionString,
+	BSTR *UserID,
+	BSTR *Password,
+	long *Options,
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	*adStatus = adStatusUnwantedEvent;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_ConnectComplete(
+struct Error *pError,
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	//*adStatus = adStatusUnwantedEvent;
+	if (m_pIsConnected)
+		*m_pIsConnected = TRUE;
+
+	int a = 0;
+	return S_OK;
+}
+
+STDMETHODIMP CConnEvent::raw_Disconnect(
+	EventStatusEnum *adStatus,
+struct _Connection *pConnection)
+{
+	//*adStatus = adStatusUnwantedEvent;
+	if (m_pIsConnected)
+		*m_pIsConnected = FALSE;
+
+	int a = 0;
+	return S_OK;
+}
+
+void CConnEvent::SetStatePtr(BOOL *pIsConnected)
+{
+	m_pIsConnected = pIsConnected;
 }

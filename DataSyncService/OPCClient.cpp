@@ -205,50 +205,55 @@ static const CATID CATID_OPCDAServer20 =
 { 0x63d5f432, 0xcfe4, 0x11d1, { 0xb2, 0xc8, 0x0, 0x60, 0x8, 0x3b, 0xa1, 0xfb } };
 // {63D5F432-CFE4-11d1-B2C8-0060083BA1FB}
 
-vector<wstring> * COPCClient::GetOPCServerList(CATID catID)
+vector<LPWSTR> & COPCClient::GetOPCServerList(CATID catID)
 {
-	m_vOPCServerList.clear();
+	ClearVector(m_vOPCServerList);
 
-	HRESULT hr;
-	try
+	m_hLastHResult = E_FAIL;
+	ICatInformation *pCat = NULL;
+	__try
 	{
-		// Get component category manager:
-		ICatInformation *pCat = NULL;
-		if (S_OK != (hr = CoCreateInstance(CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_SERVER, IID_ICatInformation, (LPVOID*)&pCat)))
+		// Get component category manager:		
+		if (S_OK != (m_hLastHResult = CoCreateInstance(CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_SERVER, IID_ICatInformation, (LPVOID*)&pCat)))
 			throw _T("COPCClient::GetOPCServerList(): Failed to call CoCreateInstance for CLSID_StdComponentCategoriesMgr");
 
 		// Enumerate registered components:
 		IEnumCLSID *pEnum = NULL;
 		CATID catIDs[1];
 		catIDs[0] = catID;		// TODO we can add some more category items such as DA 1.0, DA 3.0
-		if (S_OK != (hr = pCat->EnumClassesOfCategories(sizeof(catIDs)/sizeof(catIDs[0]), catIDs, 0, NULL, &pEnum)))
+		if (S_OK != (m_hLastHResult = pCat->EnumClassesOfCategories(sizeof(catIDs) / sizeof(catIDs[0]), catIDs, 0, NULL, &pEnum)))
 			throw _T("COPCClient::GetOPCServerList(): Failed to call EnumClassesOfCategories");
 
 		GUID guid;
 		ULONG ulFetched = 0;
-		while (S_OK == (hr = pEnum->Next(1, &guid, &ulFetched)))
+		while (S_OK == (m_hLastHResult = pEnum->Next(1, &guid, &ulFetched)))
 		{
-			wchar_t *wszProgID = NULL;
-			if (S_OK != (hr = ProgIDFromCLSID(guid, &wszProgID)))
-				throw _T("COPCClient::GetOPCServerList(): Failed to call ProgIDFromCLSID");
+			wchar_t *pProgID = NULL;
+			if (S_OK != (m_hLastHResult = ProgIDFromCLSID(guid, &pProgID)))
+			{
+				if (pProgID)
+					CoTaskMemFree(pProgID);
 
-			m_vOPCServerList.push_back(wszProgID);
+				throw _T("COPCClient::GetOPCServerList(): Failed to call ProgIDFromCLSID");
+			}
+			
+			size_t nSize = wcslen(pProgID);
+			LPWSTR pBuf = new WCHAR[nSize + 1];
+			wcscpy_s(pBuf, nSize + 1, pProgID);
+			pBuf[nSize] = L'\0';
+			m_vOPCServerList.push_back(pBuf);
 
 			// Release memory
-			CoTaskMemFree(wszProgID);
+			CoTaskMemFree(pProgID);
 		}
-	}
-	catch (LPCTSTR pMsg) 
-	{
-		g_Logger.VLog(_T("%s. HRESULT=%x"), pMsg, hr);
-		return NULL;
-	}
-	catch (...) {
-		g_Logger.VLog(_T("COPCClient::GetOPCServerList(): unspecfied error occurred. HRESULT=%x"), hr);
-		return NULL;
-	}
 
-	return &m_vOPCServerList;
+		return m_vOPCServerList;
+	}
+	__finally
+	{
+		if (pCat)
+			pCat->Release();
+	}	
 }
 
 IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
@@ -257,23 +262,23 @@ IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
 		return NULL;
 
 	CLSID OPCCLSID;
-	HRESULT hr = E_FAIL;
+	m_hLastHResult = E_FAIL;
 	try
-	{	
-		if (S_OK != (hr = CLSIDFromProgID(progID, &OPCCLSID)))
+	{
+		if (S_OK != (m_hLastHResult = CLSIDFromProgID(progID, &OPCCLSID)))
 			throw _T("COPCClient::Connect(): Failed to call CLSIDFromProgID");
 
 		MULTI_QI multiQIs[2];
 		memset(multiQIs, 0, sizeof(multiQIs));
 		multiQIs[0].pIID = &IID_IOPCServer;
 		multiQIs[1].pIID = &IID_IConnectionPointContainer;
-		if (S_OK != (hr = CoCreateInstanceEx(OPCCLSID, 
-											NULL, 
-											CLSCTX_SERVER, 
-											pCoServerInfo, 
-											sizeof(multiQIs)/sizeof(MULTI_QI),
-											multiQIs)))
- 			throw _T("COPCClient::Connect(): Failed to call CoCreateInstanceEx for OPC Server");
+		if (S_OK != (m_hLastHResult = CoCreateInstanceEx(OPCCLSID,
+			NULL,
+			CLSCTX_SERVER,
+			pCoServerInfo,
+			sizeof(multiQIs) / sizeof(MULTI_QI),
+			multiQIs)))
+			throw _T("COPCClient::Connect(): Failed to call CoCreateInstanceEx for OPC Server");
 
 		if ((S_OK != multiQIs[0].hr) || !multiQIs[0].pItf)
 			throw _T("COPCClient::Connect(): Failed to get pointer to IOPCServer");
@@ -286,8 +291,10 @@ IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
 		m_pConnectionPointContainer = (IConnectionPointContainer*)multiQIs[1].pItf;
 
 		m_bConnected = TRUE;
+
+		return m_pServer;
 	}
-	catch (LPCTSTR pMsg)
+	catch (...)
 	{
 		if (m_pConnectionPointContainer)
 		{
@@ -307,49 +314,19 @@ IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
 			m_ppUnknown = NULL;
 		}
 
-		g_Logger.VLog(_T("%s. HRESULT=%x"), pMsg, hr);
-		return NULL;
-	}
-	catch (...) 
-	{
-		if (m_pConnectionPointContainer)
-		{
-			m_pConnectionPointContainer->Release();
-			m_pConnectionPointContainer = NULL;
-		}
-
-		if (m_pServer)
-		{
-			m_pServer->Release();
-			m_pServer = NULL;
-		}
-
-		if (m_ppUnknown)
-		{
-			m_ppUnknown->Release();
-			m_ppUnknown = NULL;
-		}
-		g_Logger.VLog(_T("COPCClient::Connect(): unspecfied error occurred. HRESULT=%x"), hr);
-		return NULL;
-	}
-
-	return m_pServer;
+		throw;
+	}	
 }
 
 void COPCClient::Disconnect()
 {
 	m_bConnected = FALSE;
 
-	if (!RemoveCallback())
+	try
 	{
-		// Sometimes the callback cannot be removed, so need to release memeory by hand
-		if (m_pDataSink)
-		{
-			m_pDataSink->Release();
-			delete m_pDataSink;
-			m_pDataSink = NULL;
-		}
+		RemoveCallback();
 	}
+	catch (...) {}
 
 	if (m_pConnectionPointContainer)
 	{
@@ -395,7 +372,7 @@ LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside)
 	}
 	
 	m_pGroup = bNoReleaseOutside?pInfo:pInfo->Clone();
-	HRESULT hr = m_pServer->AddGroup(m_pGroup->wszName.c_str(),		// Name of the group. The name must be unique among the other groups created by this client. If no name (NULL), the server will generate a unique name.
+	m_hLastHResult = m_pServer->AddGroup(m_pGroup->wszName.c_str(),		// Name of the group. The name must be unique among the other groups created by this client. If no name (NULL), the server will generate a unique name.
 									m_pGroup->bActive,				// If the Group is to be created as active or not
 									m_pGroup->dwRequestedUpdateRate,// Client Specifies the fastest rate at which data changes may be sent to OnDataChange for items in this group. This also indicates the desired accuracy of Cached Data. This is intended only to control the behavior of the interface. How the server deals with the update rate and how often it actually polls the hardware internally is an implementation detail.  
 																	// Passing 0 indicates the server should use the fastest practical rate.  
@@ -417,17 +394,13 @@ LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside)
 									(LPUNKNOWN*)&(m_pGroup->pOPCItemMgt)// Where to store the returned interface pointer. NULL is returned for any FAILED HRESULT.
 								);
 
-	if (S_OK == hr)
-	{
-		//
-	}
-	else
+	if (m_hLastHResult != S_OK)
 	{
 		delete m_pGroup;
 		m_pGroup = NULL;
-		g_Logger.VLog(_T("COPCClient::AddGroup(): Failed to call IOPCServer.AddGroup. HRESULT=%x"), hr);
 
-		CHECK_CONNECT(hr);
+		CHECK_CONNECT(m_hLastHResult);
+		throw _T("COPCClient::AddGroup(): Failed to call IOPCServer.AddGroup.");
 	}
 
 	return m_pGroup;
@@ -441,12 +414,12 @@ HRESULT COPCClient::EnumerateGroups(vector<wstring> &vList, OPCENUMSCOPE dwScope
 	USES_CONVERSION;
 	vList.clear();
 	IEnumString *pEnum = NULL;
-	HRESULT hr = m_pServer->CreateGroupEnumerator(dwScope, IID_IEnumString, (LPUNKNOWN*)&pEnum);
-	if ((S_OK == hr) && pEnum)
+	m_hLastHResult = m_pServer->CreateGroupEnumerator(dwScope, IID_IEnumString, (LPUNKNOWN*)&pEnum);
+	if ((S_OK == m_hLastHResult) && pEnum)
 	{
 		LPOLESTR pStr;
 		ULONG uFetched = 0;
-		while (S_OK == (hr = pEnum->Next(1, &pStr, &uFetched)) && pStr)
+		while (S_OK == (m_hLastHResult = pEnum->Next(1, &pStr, &uFetched)) && pStr)
 		{
 			vList.push_back(wstring(pStr));
 			CoTaskMemFree(pStr);
@@ -456,7 +429,7 @@ HRESULT COPCClient::EnumerateGroups(vector<wstring> &vList, OPCENUMSCOPE dwScope
 		pEnum = NULL;
 	}
 
-	return hr;
+	return m_hLastHResult;
 }
 
 HRESULT COPCClient::RemoveGroup(LPGROUPINFO pGroup)
@@ -464,109 +437,75 @@ HRESULT COPCClient::RemoveGroup(LPGROUPINFO pGroup)
 	if (!pGroup)
 		return E_INVALIDARG;
 
-	HRESULT hr = E_FAIL;
-	if (pGroup->pOPCItemMgt)
+	m_hLastHResult = E_FAIL;
+	if (!pGroup->pOPCItemMgt)
+		return m_hLastHResult;
+
+	// Remove all items belong to this group first
+	DWORD dwCount = m_vItems.size();
+	if (dwCount > 0)
 	{
-		// Remove all items belong to this group first
-		DWORD dwCount = m_vItems.size();
-		if (dwCount > 0)
+		DWORD dwIndex = 0;
+		OPCHANDLE *phServer = (OPCHANDLE *)CoTaskMemAlloc(sizeof(OPCHANDLE) * dwCount);
+		HRESULT *pErrors = NULL;
+		for (vector<COPCItemDef*>::iterator vi = m_vItems.begin(); vi != m_vItems.end(); vi++)
 		{
-			DWORD dwIndex = 0;
-			OPCHANDLE *phServer = (OPCHANDLE *)CoTaskMemAlloc(sizeof(OPCHANDLE) * dwCount);
-			HRESULT *pErrors	= NULL;
-			for (vector<COPCItemDef*>::iterator vi = m_vItems.begin(); vi != m_vItems.end(); vi++)
+			COPCItemDef *pItem = (COPCItemDef*)*vi;
+			if (pItem)
 			{
-				COPCItemDef *pItem = (COPCItemDef*)*vi;
-				if (pItem)
-				{
-					phServer[dwIndex++] = pItem->m_hServer;
-				}
+				phServer[dwIndex++] = pItem->m_hServer;
 			}
-			
-			if (S_OK != (hr = pGroup->pOPCItemMgt->RemoveItems(dwCount, phServer, &pErrors)))
-			{
-				g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCItemMgt.RemoveItems. HRESULT=%x"), hr);
-			}
-			else
-			{
-				for (DWORD i = 0; i < dwCount; i++)
-				{
-					if (FAILED(pErrors[i]))
-					{
-						g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): IOPCItemMgt.RemoveItems() succeed, but the item #%d cannot be removed. HRESULT=%x"), i, pErrors[i]);
-					}
-				}
-			}
-			
-			CoTaskMemFree(phServer);
-			CoTaskMemFree(pErrors);
-		}		// end if (dwCount > 0)				
-		
-		// Then remove group
-		if (S_OK == (hr = m_pServer->RemoveGroup(pGroup->hServerGroup, TRUE)))
+		}
+
+		if (S_OK != (m_hLastHResult = pGroup->pOPCItemMgt->RemoveItems(dwCount, phServer, &pErrors)))
 		{
-			ClearVector(m_vItems);
-			
-			pGroup->pOPCItemMgt->Release();
-			//m_Contents.erase(pGroup);
+			g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCItemMgt.RemoveItems. HRESULT=%x"), m_hLastHResult);
 		}
 		else
 		{
-			g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCServer.RemoveGroup. HRESULT=%x"), hr);
-		}
-	}		// end if (pGroup && pGroup->pOPCItemMgt)
-/*
-	else						// Remove all private groups belong to this client
-	{
-		vector<wstring> vList;
-		hr = EnumerateGroups(vList, OPC_ENUM_PRIVATE_CONNECTIONS);
-		if (SUCCEEDED(hr))
-		{		
-			if (vList.size() > 0)
+			for (DWORD i = 0; i < dwCount; i++)
 			{
-				for (int i = 0; i < vList.size(); i++)
+				if (FAILED(pErrors[i]))
 				{
-					IOPCGroupStateMgt *pIGroupStateMgt = NULL;
-					if (S_OK == (hr = m_pServer->GetGroupByName(vList[i].c_str(), IID_IOPCGroupStateMgt, (LPUNKNOWN*)&pIGroupStateMgt)) && pIGroupStateMgt)
-					{
-						GROUPINFO group;
-						LPWSTR pszName = NULL;
-						if (S_OK == (hr = pIGroupStateMgt->GetState(&group.dwRequestedUpdateRate,
-																	&group.bActive, 
-																	&pszName, 
-																	&group.lTimeBias, 
-																	&group.fPercentDeadband, 
-																	&group.dwLCID, 
-																	&group.hClientGroup, 
-																	&group.hServerGroup)))
-						{
-							// TODO Remove all items belong to this group first
+					g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): IOPCItemMgt.RemoveItems() succeed, but the item #%d cannot be removed. HRESULT=%x"), i, pErrors[i]);
+				}
+			}
+		}
 
-							if (S_OK != (hr = m_pServer->RemoveGroup(group.hServerGroup, TRUE)))
-							{
-								g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCServer.RemoveGroup. HRESULT=%x"), hr);
-							}
-							
-							CoTaskMemFree(pszName);
-						}
-						
-						pIGroupStateMgt->Release();
-					}			
-				}	// end for
+		CoTaskMemFree(phServer);
+		CoTaskMemFree(pErrors);
+	}		// end if (dwCount > 0)				
 
-				Clear();		// Clear the vector m_vGroups since we already removed all private groups belong to this client
-			}	// end if (vList.size() > 0)
-		}	// end if (SUCCEEDED(hr))
+	// Then remove group
+	if (S_OK == (m_hLastHResult = m_pServer->RemoveGroup(pGroup->hServerGroup, TRUE)))
+	{
+		ClearVector(m_vItems);
+
+		pGroup->pOPCItemMgt->Release();
+		//m_Contents.erase(pGroup);
 	}
-*/
-	return hr;
+	else
+	{
+		g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCServer.RemoveGroup. HRESULT=%x"), m_hLastHResult);
+	}
+
+	return m_hLastHResult;
 }
 
 void COPCClient::Clear()
 {
 	m_pDB = NULL;
+
+	if (m_pDataSink)
+	{
+		m_pDataSink->Release();
+		delete m_pDataSink;
+		m_pDataSink = NULL;
+	}
+
 	Disconnect();
 
+	ClearVector(m_vOPCServerList);
 	ClearVector(m_vItems);
 }
 
@@ -602,79 +541,13 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 		pItem->dwBlobSize			= 0;
 		pItem->pBlob				= NULL;
 		pItem->vtRequestedDataType	= pItemInfo->vtRequestedDataType;
-		pItem->wReserved				= 0;
+		pItem->wReserved			= 0;
 
 		if (S_OK == AddItem(new COPCItemDef(pItem), TRUE))
 			nRet++;
 	}
 
 	return nCount;
-/*
-	hr = pGroup->pOPCItemMgt->AddItems(nCount, pItemArray, &pResults, &pErrors);
-	if (S_OK == hr)				// The operation succeeded, all items were added.
-	{
-		g_Logger.VLog(L"COPCClient::AddItems(): Successfully added %d items to group [%s].", nCount, pGroup->wszName.c_str());
-	}
-	else if (S_FALSE == hr)		// The operation completed with one or more errors. Refer to individual error returns for failure analysis.
-	{
-	}
-	else
-	{
-		nRet = -1;
-		for (int i = 0; i < nCount; i++)
-		{
-			delete ppItemDefs[i];
-			ppItemDefs[i] = NULL;
-		}
-
-		delete ppItemDefs;
-
-		g_Logger.VForceLog(_T("COPCClient::AddItems(): Failed to call IOPCItemMgt.AddItems. HRESULT=%x"), hr);
-	}
-
-	if ( (S_OK == hr) || (S_FALSE == hr) )
-	{
-		// Got the pointer to vector in m_Contents
-		vector<COPCItemDef*> *pvItems = NULL;
-		OPCContentsMap::const_iterator mi = m_Contents.find(pGroup);
-		if (mi != m_Contents.end())
-		{
-			pvItems = (vector<COPCItemDef*>*)mi->second;
-		}
-
-		if (!pvItems)
-		{
-			pvItems = new vector<COPCItemDef*>();
-			m_Contents[pGroup] = pvItems;
-		}
-
-		for (int i = 0; i < nCount; i++)
-		{
-			if (pErrors && SUCCEEDED(pErrors[i]))
-			{
-				nCount++;
-				ppItemDefs[i]->SetGroup(pGroup);
-				pvItems->push_back(ppItemDefs[i]);
-			}
-			else
-			{
-				// We will release the memory for that item
-				// Needn't to release pItemArry because COPCItemDef will handle that
-				delete ppItemDefs[i];
-				ppItemDefs[i] = NULL;
-				g_Logger.VForceLog(L"Failed to add item [%s] to group [%s]", pItemArray[i].szItemID, pGroup->wszName.c_str());
-			}
-		}
-	}
-
-	if (pResults)
-		CoTaskMemFree (pResults);
-	
-	if (pErrors)
-		CoTaskMemFree (pErrors);
-
-	return nRet;
-*/
 }
 
 HRESULT COPCClient::AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside)
@@ -723,64 +596,39 @@ DWORD COPCClient::AddCallback()
 		RemoveCallback();
 	
 	// Get connection point (IID_IOPCDataCallback interface):
-	HRESULT hr = E_FAIL;
+	m_hLastHResult = E_FAIL;
 	IConnectionPoint *pCP = NULL;
-	try
+	if (FAILED(m_hLastHResult = m_pConnectionPointContainer->FindConnectionPoint(IID_IOPCDataCallback, &pCP)))
 	{
-		//if (FAILED(hr = m_pConnectionPointContainer->FindConnectionPoint (IID_IOPCDataCallback, &pCP)))
-			throw _T("COPCClient::AddCallback: Failed to call IConnectionPointContainer.FindConnectionPoint");
-		
-		// If we succeeded to get connection point interface, create
-		// our data sink interface and advise server of it:
-		// Instantiate a new IKDataSink20:
-		if (!m_pDataSink)
-		{
-			m_pDataSink->Release();
-			delete m_pDataSink;
-		}
-		
-		m_pDataSink = new IDataSink20();
-		
-		// Add ourselves to its reference count:
-		m_pDataSink->AddRef ();
-		
-		// Advise the server of our data sink:
-		if (S_OK != (hr = pCP->Advise(m_pDataSink, &m_dwCookieDataSink20)))
-		{
-			throw _T("COPCClient::AddCallback: Failed to call IConnectionPoint.Advise");
-		}
-		
-		// We are done with the IID_IOPCDataCallback, so release
-		// (remove us from its reference count):
-		pCP->Release ();
-	}
-	catch (LPCTSTR pMsg)
-	{
-		g_Logger.VLog(_T("%s. HRESULT=%x"), pMsg, hr);
 		m_dwCookieDataSink20 = 0;
-		if (m_pDataSink)
-		{
-			m_pDataSink->Release();
-			delete m_pDataSink;
-			m_pDataSink = NULL;
-		}
+		throw _T("COPCClient::AddCallback: Failed to call IConnectionPointContainer.FindConnectionPoint");
 	}
-	catch (...) 
+
+	// If we succeeded to get connection point interface, create
+	// our data sink interface and advise server of it:
+	// Instantiate a new IKDataSink20:
+	if (m_pDataSink)
 	{
-		g_Logger.VLog(_T("COPCClient::Connect(): unspecfied error occurred. HRESULT=%x"), hr);
+		m_pDataSink->Release();
+		delete m_pDataSink;
+	}
+	m_pDataSink = new IDataSink20();
+
+	// Add ourselves to its reference count:
+	m_pDataSink->AddRef();
+
+	// Advise the server of our data sink:
+	if (S_OK != (m_hLastHResult = pCP->Advise(m_pDataSink, &m_dwCookieDataSink20)))
+	{
 		m_dwCookieDataSink20 = 0;
-		if (m_pDataSink)
-		{
-			m_pDataSink->Release();
-			delete m_pDataSink;
-			m_pDataSink = NULL;
-		}
+		pCP->Release();
+		throw _T("COPCClient::AddCallback: Failed to call IConnectionPoint.Advise");
 	}
 
 	return m_dwCookieDataSink20;
 }
 
-BOOL COPCClient::RemoveCallback()
+void COPCClient::RemoveCallback()
 {
 	if ( (0 == m_dwCookieDataSink20) || !m_pDataSink || !m_pConnectionPointContainer)
 	{
@@ -793,20 +641,25 @@ BOOL COPCClient::RemoveCallback()
 			m_pDataSink = NULL;
 		}
 
-		return TRUE;
+		return;
 	}
 
-	HRESULT hr = E_FAIL;
+	m_hLastHResult = E_FAIL;
 	IConnectionPoint *pCP = NULL;
-	try
+	__try
 	{
-		if (S_OK != (hr = m_pConnectionPointContainer->FindConnectionPoint(IID_IOPCDataCallback, &pCP)))
-			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPointContainer.FindConnectionPoint");
+		if (S_OK != (m_hLastHResult = m_pConnectionPointContainer->FindConnectionPoint(IID_IOPCDataCallback, &pCP)))
+			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPointContainer.FindConnectionPoint.");
 
-		hr = pCP->Unadvise(m_dwCookieDataSink20);
-		pCP->Release();
-		if (S_OK != hr)
-			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPoint.Unadvise");
+		m_hLastHResult = pCP->Unadvise(m_dwCookieDataSink20);
+		
+		if (S_OK != m_hLastHResult)
+			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPoint.Unadvise.");
+	}
+	__finally
+	{
+		if (pCP)
+			pCP->Release();
 
 		// Release memory
 		if (m_pDataSink)
@@ -815,19 +668,7 @@ BOOL COPCClient::RemoveCallback()
 			delete m_pDataSink;
 			m_pDataSink = NULL;
 		}
-	}
-	catch (LPCTSTR pMsg)
-	{
-		g_Logger.VLog(_T("%s. HRESULT=%x"), pMsg, hr);
-		return FALSE;
-	}
-	catch (...) 
-	{
-		g_Logger.VLog(_T("COPCClient::RemoveCallback(): unspecfied error occurred. HRESULT=%x"), hr);
-		return FALSE;
-	}
-
-	return TRUE;
+	}	
 }
 
 INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB, OPCITEMSTATE *pState)
@@ -840,62 +681,90 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 
 	int nCount = 0;
 
-	HRESULT hr = NULL;
+	m_hLastHResult = E_FAIL;
 	IOPCSyncIO *pISync = NULL;
-	if (S_OK != (hr = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
+	OPCITEMSTATE *pValues = NULL;
+	HRESULT *pErrors = NULL;
+	try
 	{
-		CHECK_CONNECT(hr)
-		throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
-	}
-	
-	for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
-	{
-		COPCItemDef *pItem = (COPCItemDef*)*vi;
-		if (!pItem)
+		if (S_OK != (m_hLastHResult = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
 		{
-			g_Logger.ForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to get pointer to COPCItemDef from vector."));
-			continue;
+			CHECK_CONNECT(m_hLastHResult)			
+			throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
 
-		OPCITEMSTATE *pValues	= NULL;
-		HRESULT *pErrors = NULL;
-		if (S_OK == (hr = pISync->Read(OPC_DS_CACHE, 1, &pItem->m_hServer, &pValues, &pErrors)))
+		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
 		{
-			// TODO: May need to convert the readed value by pItem->pInConverter
-
-			if (bUpdateDB)
+			COPCItemDef *pItem = (COPCItemDef*)*vi;
+			if (!pItem)
 			{
-				int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp));
-				if (nAffectedRows > 0)
+				g_Logger.ForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to get pointer to COPCItemDef from vector."));
+				continue;
+			}
+						
+			if (S_OK == (m_hLastHResult = pISync->Read(OPC_DS_CACHE, 1, &pItem->m_hServer, &pValues, &pErrors)))
+			{
+				// TODO: May need to convert the readed value by pItem->pInConverter
+
+				if (bUpdateDB)
 				{
-					nCount++;
+					int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp));
+					if (nAffectedRows > 0)
+					{
+						nCount++;
+					}
+					else
+					{
+						g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata(), return=%d,"), nAffectedRows);
+					}
 				}
 				else
 				{
-					g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata(), return=%d,"), nAffectedRows);
+					nCount++;
 				}
 			}
 			else
 			{
-				nCount++;
+				g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read(), hr=%x, error=%x"), m_hLastHResult, pErrors ? pErrors[0] : 0);
 			}
-		}
-		else
-		{
-			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read(), hr=%x, error=%x"), hr, pErrors?pErrors[0]:0);
+
+			if (pValues)
+			{
+				CoTaskMemFree(pValues);
+				pValues = NULL;
+			}
+
+			if (pErrors)
+			{
+				CoTaskMemFree(pErrors);
+				pErrors = NULL;
+			}
+
+			CHECK_CONNECT(m_hLastHResult)
 		}
 
+		return nCount;
+	}
+	catch (...)
+	{
 		if (pValues)
-			CoTaskMemFree (pValues);	
+		{
+			CoTaskMemFree(pValues);
+			pValues = NULL;
+		}
 
 		if (pErrors)
-			CoTaskMemFree (pErrors);
+		{
+			CoTaskMemFree(pErrors);
+			pErrors = NULL;
+		}
 
-		CHECK_CONNECT(hr)
-	}
-	
-	pISync->Release();
-	pISync = NULL;
+		if (pISync)
+		{
+			pISync->Release();
+			pISync = NULL;
+		}
 
-	return nCount;
+		throw;
+	}	
 }

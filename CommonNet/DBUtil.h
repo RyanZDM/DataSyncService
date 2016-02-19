@@ -205,11 +205,11 @@ public:
 	BOOL StopConnectionEvent();
 	BOOL StartConnectionEvent();
 	_variant_t GetSingleValue(LPCTSTR pcszCommand, LONG lCommandType = adCmdText);
-	INT GetSingleStringValue(std::string &szVal, LPCTSTR szCommand, LONG lCommandType = adCmdText);
-	LONG GetSingleLongValue(LPCTSTR szCommand, LONG lCommandType = adCmdText);
+	INT GetSingleStringValue(std::string &szVal, LPCSTR pDefault, LPCTSTR szCommand, LONG lCommandType = adCmdText);
+	LONG GetSingleLongValue(LPCTSTR szCommand, LONG lDefault, LONG lCommandType = adCmdText);
 	BOOL GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommandType = adCmdText);
-	DOUBLE GetSingleDoubleValue(LPCTSTR szCommand, BYTE nScale, LONG lCommandType = adCmdText);	
-	DECIMAL GetSingleDecimalValue(LPCTSTR szCommand, LONG lCommandType = adCmdText);
+	DOUBLE GetSingleDoubleValue(LPCTSTR szCommand, DOUBLE dblDefault, BYTE nScale, LONG lCommandType = adCmdText);	
+	DECIMAL GetSingleDecimalValue(LPCTSTR szCommand, DECIMAL decDefault, LONG lCommandType = adCmdText);
 	BOOL SetDBType(DWORD dwDBType);													// 设置与连接数据库的类型
 	BOOL SetConnectMode(DWORD dwMode);												// 设置数据库连接方式
 	BOOL SetConnectStr(LPCTSTR pcszConnectStr);										// 设置数据库连接字符串

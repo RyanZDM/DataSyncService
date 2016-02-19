@@ -31,9 +31,18 @@ UINT CLogUtil::s_nInstanceCount = 0;
 void GetProductVersion(FILE_PRODUCT_VERSION &version)
 {	
 	HRSRC res = FindResource(NULL, MAKEINTRESOURCE(VS_VERSION_INFO), RT_VERSION);
+	if (!res)
+		return;
+
 	DWORD dwSize = SizeofResource(NULL, res);
 	HGLOBAL mem = LoadResource(NULL, res);
+	if (!mem)
+		return;
+
 	LPVOID pBlock = LockResource(mem);
+	if (!pBlock)
+		return;
+
 	UINT nLen;
 	LPVOID pBuf = NULL;
 	BOOL bRet = VerQueryValue(pBlock, _T("\\"), &pBuf, &nLen);

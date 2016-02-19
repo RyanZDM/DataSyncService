@@ -25,7 +25,7 @@ using namespace std;
 #define E_INVALID_GROUP_PTR			-9997
 #define E_CONNECTION_BROKE			-9998
 #define E_INVALID_DBPTR_FOR_GROUP	-9999
-#define CHECK_CONNECT(hr) if ( (0x800706ba == hr) || (0x800706bf == hr) ) { this->m_bConnected=FALSE; throw E_CONNECTION_BROKE; }
+#define CHECK_CONNECT(hr) if ( (0x800706ba == hr) || (0x800706bf == hr) ) { m_bConnected=FALSE; m_hLastHResult=hr; throw E_CONNECTION_BROKE; }
 
 typedef struct tagGroupInfo 
 {
@@ -161,13 +161,14 @@ private:
 class COPCClient  
 {
 public:
+	HRESULT GetLastHResult() { return m_hLastHResult; }
 	void SetDBPtr(CDBUtil *pDB) { m_pDB = pDB; }
 	CDBUtil* GetDBPtr() { return m_pDB; }
 	BOOL IsConnected() { return m_bConnected; }
 	INT ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB = TRUE, OPCITEMSTATE *pState = NULL);
 	vector<COPCItemDef*>* GetItems() { return &m_vItems; }
 	LPGROUPINFO GetGroup() { return m_pGroup; }
-	BOOL RemoveCallback();
+	void RemoveCallback();
 	DWORD AddCallback();
 	INT AddItems(const vector<LPITEMINFO> &vList);
 	HRESULT AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside = TRUE);
@@ -176,25 +177,26 @@ public:
 	LPGROUPINFO AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside = TRUE);
 	void Disconnect();
 	IOPCServer * Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo = NULL);
-	vector<wstring> * GetOPCServerList(CATID catID);
-	vector<wstring> * CurrentOPCServerList() { return &m_vOPCServerList; }
+	vector<LPWSTR> & GetOPCServerList(CATID catID);
+	vector<LPWSTR> & CurrentOPCServerList() { return m_vOPCServerList; }
 
 	COPCClient();
 	virtual ~COPCClient();
 	void Clear();
 
 private:
-	BOOL m_bConnected;
+	BOOL					m_bConnected;
 	IConnectionPointContainer * m_pConnectionPointContainer;
-	IOPCServer	*m_pServer;
-	IUnknown	*m_ppUnknown;
-	IDataSink20 *m_pDataSink;
-	LPGROUPINFO	m_pGroup;
+	IOPCServer				*m_pServer;
+	IUnknown				*m_ppUnknown;
+	IDataSink20				*m_pDataSink;
+	LPGROUPINFO				m_pGroup;
 
 	DWORD					m_dwCookieDataSink20;
-	vector<wstring>			m_vOPCServerList;
+	vector<LPWSTR>			m_vOPCServerList;
 	vector<COPCItemDef*>	m_vItems;
 	CDBUtil					*m_pDB;
+	HRESULT					m_hLastHResult;
 };
 
 #endif // !defined(AFX_OPCCLIENT_H__A8E88EB6_644E_4B53_BFAC_1D2EB71A2CCB__INCLUDED_)
