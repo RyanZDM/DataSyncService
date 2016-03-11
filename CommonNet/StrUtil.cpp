@@ -204,7 +204,7 @@ INT CStrUtil::Str2Vector(std::vector<string> &vRet, LPCSTR lpszSource, LPCSTR lp
 			
 			pStart = (pFound + dwSepLen);
 			if (pBuf)
-				delete pBuf;
+				delete[] pBuf;
 		}
 		else {
 			// the last substring
@@ -245,7 +245,7 @@ INT CStrUtil::Str2Vector(std::vector<wstring> &vRet, LPCWSTR lpszSource, LPCWSTR
 			
 			pStart = (pFound + dwSepLen);
 			if (pBuf)
-				delete pBuf;
+				delete[] pBuf;
 		}
 		else {
 			// the last substring
@@ -809,7 +809,7 @@ LPBYTE CStrUtil::ParsePseudoHex(DWORD &dwDataLen, LPCSTR pcszData, LPCSTR pcszPr
 				}
 			}
 
-			delete pHexStr;
+			delete[] pHexStr;
 		}
 		
 	}
