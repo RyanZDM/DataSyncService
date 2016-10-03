@@ -163,7 +163,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="DataSyncService.ini" />
     <None Include="DataSyncService.rgs" />
+    <None Include="TimerTasks.ini" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="DataSyncService.idl" />

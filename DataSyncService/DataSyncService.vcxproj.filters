@@ -20,6 +20,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{f13f9f4a-cead-410e-96db-f36f0e16d296}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Configuration Files">
+      <UniqueIdentifier>{f3132c8d-19fc-4cc2-b887-eca6091b7217}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -129,6 +132,12 @@
   <ItemGroup>
     <None Include="DataSyncService.rgs">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="TimerTasks.ini">
+      <Filter>Configuration Files</Filter>
+    </None>
+    <None Include="DataSyncService.ini">
+      <Filter>Configuration Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

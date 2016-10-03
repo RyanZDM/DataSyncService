@@ -20,7 +20,6 @@ extern HANDLE	g_hExitEvent;
 extern vector<HANDLE>	g_vhThreadExitEvents;
 extern BOOL		g_bKeepWork;
 CSysParams		g_SysParams;
-COPCClient		g_OPCClient;
 // ***********************************************************************/
 
 // *** Methods Declaration ***********************************************/
@@ -32,7 +31,7 @@ void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &time);
 INT Init(CDBUtil &db);
 // ***********************************************************************/
 
-INT Init(CDBUtil &db)
+INT Init(CDBUtil &db, COPCClient &OPCClient)
 {
 	// Get system parameters from database
 	INT nRet = g_SysParams.RefreshSysParams(db);
@@ -40,7 +39,7 @@ INT Init(CDBUtil &db)
 		return nRet;
 
 	// Connect to OPC server
-	g_OPCClient.Clear();
+	OPCClient.Clear();
 	LPCWSTR pProgID = g_SysParams.GetOPCServerProgID();
 	if (!pProgID || (wcslen(pProgID) < 1))
 	{
@@ -58,12 +57,12 @@ INT Init(CDBUtil &db)
 		
 		CoServerInfo.pwszName = new wchar_t[dwLen + 1];
 		wcscpy_s(CoServerInfo.pwszName, dwLen + 1, pRemoteMachine);
-		pServer = g_OPCClient.Connect(pProgID, &CoServerInfo);
+		pServer = OPCClient.Connect(pProgID, &CoServerInfo);
 		delete [] CoServerInfo.pwszName;
 	}
 	else													// Connect to local OPC server
 	{
-		pServer = g_OPCClient.Connect(pProgID, NULL);		
+		pServer = OPCClient.Connect(pProgID, NULL);
 	}
 	
 	if (!pServer)
@@ -76,39 +75,39 @@ INT Init(CDBUtil &db)
 	swprintf_s(wszGroup, sizeof(wszGroup) / sizeof(wszGroup[0]), L"_Group_%d", GetCurrentThreadId());
 
 	LPGROUPINFO pGroup = new GROUPINFO(wszGroup);
-	if (!g_OPCClient.AddGroup(pGroup, TRUE))
+	if (!OPCClient.AddGroup(pGroup, TRUE))
 	{
-		g_OPCClient.Disconnect();
+		OPCClient.Disconnect();
 		g_Logger.VForceLog(L"Failed to add group [%s] to OPC server [%s]", wszGroup, pProgID);
 		return -2;
 	}
 
-	// Add items to group
+	// Get items to be monitored from datbase and add them into group
 	vector<LPITEMINFO> vItems;
 	INT nItemCount = g_SysParams.GetItemList(vItems);
 	if (nItemCount < 0)
 	{
-		g_OPCClient.Disconnect();
+		OPCClient.Disconnect();
 		g_Logger.VForceLog(L"Failed to call CSysParams.GetItemList(). Return=%d", nItemCount);
 		return -3;
 	}
 	else if (0 == nItemCount)
 	{
-		g_OPCClient.Disconnect();
+		OPCClient.Disconnect();
 		g_Logger.VForceLog(L"No items found in database. No action required.");
 		return -4;
 	}
 
-	INT nAddedItems = g_OPCClient.AddItems(vItems);
+	INT nAddedItems = OPCClient.AddItems(vItems);
 	if (nAddedItems < 0)
 	{
-		g_OPCClient.Disconnect();
+		OPCClient.Disconnect();
 		g_Logger.VForceLog(L"Failed to call OPCClient.AddItems(). Return=%d", nItemCount);
 		return -3;
 	}
 	else if (0 == nAddedItems)
 	{
-		g_OPCClient.Disconnect();
+		OPCClient.Disconnect();
 		g_Logger.VForceLog(L"Failed to add item group [%s]. No action required.", wszGroup);
 		return -4;
 	}
@@ -125,6 +124,10 @@ INT Init(CDBUtil &db)
 	return nAddedItems;
 }
 
+/**************************************************************************
+* Get called once the service started.
+* Timely get data from predefined OPC server and update it into database.
+**************************************************************************/
 unsigned __stdcall OPCDataSyncThread(void*)
 {
 	HANDLE hExitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -138,7 +141,8 @@ unsigned __stdcall OPCDataSyncThread(void*)
 	//myDB.RemoveAllItems();
 	//myDB.Disconnect();
 			
-	CMyDB db;	
+	CMyDB db;
+	COPCClient OPCClient;
 	BOOL bDbConnectionBroke = TRUE;		// Actively disconnect DB does not affect this variable
 	BOOL bLastDBConnectFlag = TRUE;
 	BOOL bLastOPCConnectFlag = TRUE;
@@ -155,11 +159,11 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				bLastDBConnectFlag = TRUE;
 				bDbConnectionBroke = FALSE;
 
-				if (!g_OPCClient.IsConnected())
+				if (!OPCClient.IsConnected())
 				{
 					try
 					{
-						INT nRet = Init(db);
+						INT nRet = Init(db, OPCClient);
 						if (nRet < 0)
 						{
 							throw E_CONNECTION_BROKE;
@@ -170,7 +174,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 						if (bLastOPCConnectFlag)
 						{
 							g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x. This log won't be output again until next time connected to database.\n%s")
-								, g_OPCClient.GetLastHResult(), dwThreadID, pMsg);
+								, OPCClient.GetLastHResult(), dwThreadID, pMsg);
 
 							// Update this flag indicates that no need log one more time
 							bLastDBConnectFlag = FALSE;
@@ -182,13 +186,13 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					bLastDBConnectFlag = TRUE;
 				}
 
-				LPGROUPINFO pGroup = g_OPCClient.GetGroup();
+				LPGROUPINFO pGroup = OPCClient.GetGroup();
 				if (pGroup)
 				{
-					g_OPCClient.SetDBPtr(&db);
-					vector<COPCItemDef*> *pvList = g_OPCClient.GetItems();
+					OPCClient.SetDBPtr(&db);
+					vector<COPCItemDef*> *pvList = OPCClient.GetItems();
 					int nItemCnt = pvList->size();
-					int nRet = g_OPCClient.ReadAndUpdateItemValue(pvList, TRUE);
+					int nRet = OPCClient.ReadAndUpdateItemValue(pvList, TRUE);
 					if (nRet != nItemCnt)
 					{
 						if (!db.IsConnected())
@@ -209,7 +213,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				{
 					bLastDBConnectFlag = FALSE;
 					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x. This log won't be output again until next time connected to database.\n%s")
-							,g_OPCClient.GetLastHResult(), dwThreadID);
+						, OPCClient.GetLastHResult(), dwThreadID);
 				}				
 			}
 		}
@@ -268,6 +272,80 @@ unsigned __stdcall OPCDataSyncThread(void*)
 	return 0;
 }
 
+/**************************************************************************
+* Get called once the service started.
+* Get the task list from ini file and create thread for each of them for
+* timerly runing.
+**************************************************************************/
+INT SetupTimelyTasks()
+{
+	vector<CTimerTask*> vTasks;
+	GetTimerTasks(vTasks);
+
+	INT nTasks = 0;
+	for (vector<CTimerTask*>::const_iterator vi = vTasks.begin(); vi != vTasks.end(); vi++)
+	{
+		CTimerTask *pTask = *vi;
+		if (!pTask)
+			continue;
+
+		if (!pTask->m_bEnabled)
+		{
+			delete pTask;
+			continue;
+		}
+
+		nTasks++;
+		// The pointer to task will be releasd before thread exit
+		_beginthreadex(NULL, 0, &TimerTaskThread, (void*)(pTask), 0, NULL);
+	}
+
+	return nTasks;
+}
+
+/**************************************************************************
+* Get the task definition of timer task from ini file TimerTasksFileName.
+* Note: The elements in vector need to be released outside
+**************************************************************************/
+INT GetTimerTasks(vector<CTimerTask*> &vTasks)
+{
+	ClearVector(vTasks);
+
+	LPCTSTR pPath = CProfileOperator::GetExecutablePath();
+	TCHAR szTaskIniFile[MAX_PATH];
+	_stprintf_s(szTaskIniFile, MAX_PATH, _T("%s%s"), CProfileOperator::GetExecutablePath(), TimerTasksFileName);
+	CProfileOperator po(szTaskIniFile);
+	vector<basic_string<TCHAR>> vSections;
+	po.GetSections(vSections);
+
+	TCHAR szBuf[1000];
+	DWORD dwLen = sizeof(szBuf) / sizeof(szBuf[0]);
+	for (vector<basic_string<TCHAR>>::const_iterator vi = vSections.begin(); vi != vSections.end(); vi++)
+	{
+		CTimerTask *pTask = new CTimerTask();
+
+		basic_string<TCHAR> szSection = *vi;
+		pTask->m_szName = szSection;
+
+		po.GetString(szSection.c_str(), _T("Run"), NULL, szBuf, dwLen);
+		pTask->m_szRun = szBuf;
+
+		po.GetString(szSection.c_str(), _T("RunAtFixedTime"), NULL, szBuf, dwLen);
+		pTask->ParseTimeString(szBuf);
+
+		pTask->SetInterval(po.GetInt(szSection.c_str(), _T("Interval"), 0));
+		pTask->m_bEnabled = po.GetBool(szSection.c_str(), _T("Enable"), FALSE);
+
+		vTasks.push_back(pTask);
+	}
+
+	return vTasks.size();
+}
+
+/**************************************************************************
+* The thread for executing a timer task
+* Note: The elements in vector need to be released outside
+**************************************************************************/
 unsigned __stdcall TimerTaskThread(void* pParameter)
 {
 	HANDLE hExitEvent = NULL;
@@ -312,6 +390,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 			}
 
 			// Run timerly
+			// The task will be ran first time immediately
 			RunTaskTimerly(pTask->m_szRun.c_str(), pTask->GetInterval() * 1000);
 		}
 
@@ -328,36 +407,6 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 		if (hExitEvent)
 			SetEvent(hExitEvent);
 	}
-}
-
-/**************************************************************************
-* Get the tasks to be timerly ran from Windows Registry
-* and setup thread for running them
-*************************************************************************/
-INT SetupTimelyTasks()
-{
-	vector<CTimerTask*> vTasks;
-	GetTimerTasks(vTasks);
-
-	INT nTasks = 0;
-	for (vector<CTimerTask*>::const_iterator vi = vTasks.begin(); vi != vTasks.end(); vi++)
-	{
-		CTimerTask *pTask = *vi;
-		if (!pTask)
-			continue;
-
-		if (!pTask->m_bEnabled)
-		{
-			delete pTask;
-			continue;
-		}
-
-		nTasks++;
-		// The pointer to task will be releasd before thread exit
-		_beginthreadex(NULL, 0, &TimerTaskThread, (void*)(pTask), 0, NULL);
-	}
-
-	return nTasks;
 }
 
 void RunTask(LPCTSTR pcszCommand)
@@ -423,7 +472,7 @@ void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime)
 		}		
 
 		// To make sure the thread can exit immediately when the application is about to exit
-		if (WaitForSingleObject(g_hExitEvent, seconds * 1000) != WAIT_TIMEOUT)
+		if (WaitForSingleObject(g_hExitEvent, (DWORD)(seconds * 1000)) != WAIT_TIMEOUT)
 		{
 			break;
 		}
@@ -432,41 +481,3 @@ void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime)
 	}	// end while (TRUE == g_bKeepWork)
 }
 
-/**************************************************************************
-* Note: The elements in vector need to be released outside
-*
-*************************************************************************/
-INT GetTimerTasks(vector<CTimerTask*> &vTasks)
-{
-	ClearVector(vTasks);
-
-	LPCTSTR pPath = CProfileOperator::GetExecutablePath();
-	TCHAR szTaskIniFile[MAX_PATH];
-	_stprintf_s(szTaskIniFile, MAX_PATH, _T("%s%s"), CProfileOperator::GetExecutablePath(), TimerTasksFileName);
-	CProfileOperator po(szTaskIniFile);
-	vector<basic_string<TCHAR>> vSections;
-	po.GetSections(vSections);
-
-	TCHAR szBuf[1000];
-	DWORD dwLen = sizeof(szBuf) / sizeof(szBuf[0]);
-	for (vector<basic_string<TCHAR>>::const_iterator vi = vSections.begin(); vi != vSections.end(); vi++)
-	{
-		CTimerTask *pTask = new CTimerTask();
-
-		basic_string<TCHAR> szSection = *vi;
-		pTask->m_szName = szSection;
-
-		po.GetString(szSection.c_str(), _T("Run"), NULL, szBuf, dwLen);
-		pTask->m_szRun = szBuf;
-
-		po.GetString(szSection.c_str(), _T("RunAtFixedTime"), NULL, szBuf, dwLen);
-		pTask->ParseTimeString(szBuf);
-
-		pTask->SetInterval(po.GetInt(szSection.c_str(), _T("Interval"), 0));				
-		pTask->m_bEnabled = po.GetBool(szSection.c_str(), _T("Enable"), FALSE);
-
-		vTasks.push_back(pTask);
-	}
-
-	return vTasks.size();
-}

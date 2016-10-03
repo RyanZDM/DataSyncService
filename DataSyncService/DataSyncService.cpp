@@ -389,7 +389,7 @@ void Cleanup()
 	if (g_vhThreadExitEvents.size() > 0)
 	{
 		HANDLE *pHandles = new HANDLE[g_vhThreadExitEvents.size()];
-		for (INT i = 0; i < g_vhThreadExitEvents.size(); i++)				{
+		for (size_t i = 0; i < g_vhThreadExitEvents.size(); i++)				{
 			pHandles[i] = g_vhThreadExitEvents[i];
 		}
 
@@ -399,7 +399,7 @@ void Cleanup()
 			g_Logger.ForceLog(_T("Some threads have no enough time to exit when service stopped."));
 		}
 
-		for (INT i = 0; i < g_vhThreadExitEvents.size(); i++)
+		for (size_t i = 0; i < g_vhThreadExitEvents.size(); i++)
 		{
 			CloseHandle(g_vhThreadExitEvents[i]);
 		}
