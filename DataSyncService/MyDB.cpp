@@ -35,7 +35,7 @@ BOOL CMyDB::Connect(BOOL bLogComError)
 			SetDBType(DT_MSSQL);
 			SetConnectMode(CM_USING_CONNECT_STR);
 
-			TCHAR szBuf[200];
+			TCHAR szBuf[500];
 			DWORD dwLen = sizeof(szBuf) / sizeof(szBuf[0]);
 			CProfileOperator po;
 

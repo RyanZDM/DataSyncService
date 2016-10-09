@@ -380,7 +380,7 @@ LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside)
 									m_pGroup->hClientGroup,			// Client provided handle for this group. [refer to description of data types, parameters, and structures for more information about this parameter]
 									&m_pGroup->lTimeBias,			// Pointer to Long containing the initial TimeBias (in minutes) for the Group.  
 																	// Pass a NULL Pointer if you wish the group to use the default system TimeBias. 
-									&m_pGroup->fPercentDeadband,	// The percent change in an item value that will cause a subscription callback for that value to a client. 
+									(FLOAT*)&m_pGroup->fPercentDeadband,	// The percent change in an item value that will cause a subscription callback for that value to a client. 
 																	// This parameter only applies to items in the group that have dwEUType of Analog. 
 																	// A NULL pointer is equivalent to 0.0.
 									m_pGroup->dwLCID,				// The language to be used by the server when returning values (including EU enumeration's) as text for operations on this group.  

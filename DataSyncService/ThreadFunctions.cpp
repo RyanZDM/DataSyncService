@@ -213,7 +213,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				{
 					bLastDBConnectFlag = FALSE;
 					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x. This log won't be output again until next time connected to database.\n%s")
-						, OPCClient.GetLastHResult(), dwThreadID);
+						, dwThreadID, OPCClient.GetLastHResult(), db.GetLastErrormsg());
 				}				
 			}
 		}

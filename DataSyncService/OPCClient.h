@@ -34,7 +34,7 @@ typedef struct tagGroupInfo
 	DWORD		dwRequestedUpdateRate;
 	OPCHANDLE	hClientGroup;
 	LONG		lTimeBias;
-	FLOAT		fPercentDeadband;
+	double		fPercentDeadband;
 	DWORD		dwLCID;
 	OPCHANDLE	hServerGroup;
 	DWORD		dwRevisedUpdateRate;
