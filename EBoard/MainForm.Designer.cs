@@ -28,6 +28,12 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
@@ -60,9 +66,19 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.labelTotalRuntime1 = new System.Windows.Forms.Label();
 			this.labelTotalRuntime2 = new System.Windows.Forms.Label();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.chart1_18 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.label2 = new System.Windows.Forms.Label();
 			this.panel1.SuspendLayout();
 			this.panel2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+			this.splitContainer1.Panel1.SuspendLayout();
+			this.splitContainer1.Panel2.SuspendLayout();
+			this.splitContainer1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.chart1_18)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// panel1
@@ -71,6 +87,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.panel1.Controls.Add(this.splitContainer1);
 			this.panel1.Controls.Add(this.labelTotalRuntime2);
 			this.panel1.Controls.Add(this.labelTotalRuntime1);
 			this.panel1.Controls.Add(this.label4);
@@ -80,14 +97,14 @@
 			this.panel1.Location = new System.Drawing.Point(38, 34);
 			this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(1271, 671);
+			this.panel1.Size = new System.Drawing.Size(1271, 706);
 			this.panel1.TabIndex = 0;
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
 			this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label4.Location = new System.Drawing.Point(672, 122);
+			this.label4.Location = new System.Drawing.Point(672, 102);
 			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(219, 25);
@@ -98,7 +115,7 @@
 			// 
 			this.label3.AutoSize = true;
 			this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label3.Location = new System.Drawing.Point(155, 122);
+			this.label3.Location = new System.Drawing.Point(155, 102);
 			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(219, 25);
@@ -136,10 +153,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.panel2.Controls.Add(this.groupBox1);
-			this.panel2.Location = new System.Drawing.Point(38, 210);
+			this.panel2.Location = new System.Drawing.Point(38, 183);
 			this.panel2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
 			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(1271, 299);
+			this.panel2.Size = new System.Drawing.Size(1271, 262);
 			this.panel2.TabIndex = 0;
 			// 
 			// groupBox1
@@ -172,7 +189,7 @@
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Location = new System.Drawing.Point(11, 17);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(1244, 270);
+			this.groupBox1.Size = new System.Drawing.Size(1244, 233);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "当前班次生产数据";
@@ -379,7 +396,7 @@
 			// 
 			// labelTotalRuntime1
 			// 
-			this.labelTotalRuntime1.Location = new System.Drawing.Point(381, 122);
+			this.labelTotalRuntime1.Location = new System.Drawing.Point(381, 102);
 			this.labelTotalRuntime1.Name = "labelTotalRuntime1";
 			this.labelTotalRuntime1.Size = new System.Drawing.Size(269, 17);
 			this.labelTotalRuntime1.TabIndex = 4;
@@ -387,17 +404,85 @@
 			// 
 			// labelTotalRuntime2
 			// 
-			this.labelTotalRuntime2.Location = new System.Drawing.Point(898, 122);
+			this.labelTotalRuntime2.Location = new System.Drawing.Point(898, 102);
 			this.labelTotalRuntime2.Name = "labelTotalRuntime2";
 			this.labelTotalRuntime2.Size = new System.Drawing.Size(302, 25);
 			this.labelTotalRuntime2.TabIndex = 4;
 			this.labelTotalRuntime2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
+			// splitContainer1
+			// 
+			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainer1.Location = new System.Drawing.Point(11, 418);
+			this.splitContainer1.Name = "splitContainer1";
+			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer1.Panel1
+			// 
+			this.splitContainer1.Panel1.Controls.Add(this.chart1_18);
+			// 
+			// splitContainer1.Panel2
+			// 
+			this.splitContainer1.Panel2.Controls.Add(this.label2);
+			this.splitContainer1.Panel2.Controls.Add(this.chart2);
+			this.splitContainer1.Size = new System.Drawing.Size(1244, 274);
+			this.splitContainer1.SplitterDistance = 141;
+			this.splitContainer1.TabIndex = 5;
+			// 
+			// chart1_18
+			// 
+			this.chart1_18.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			chartArea3.Name = "ChartArea1";
+			this.chart1_18.ChartAreas.Add(chartArea3);
+			legend3.Name = "Legend1";
+			this.chart1_18.Legends.Add(legend3);
+			this.chart1_18.Location = new System.Drawing.Point(0, 0);
+			this.chart1_18.Name = "chart1_18";
+			series3.ChartArea = "ChartArea1";
+			series3.Legend = "Legend1";
+			series3.Name = "Series1";
+			this.chart1_18.Series.Add(series3);
+			this.chart1_18.Size = new System.Drawing.Size(1241, 138);
+			this.chart1_18.TabIndex = 0;
+			this.chart1_18.Text = "chart1";
+			// 
+			// chart2
+			// 
+			this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			chartArea4.Name = "ChartArea1";
+			this.chart2.ChartAreas.Add(chartArea4);
+			legend4.Name = "Legend1";
+			this.chart2.Legends.Add(legend4);
+			this.chart2.Location = new System.Drawing.Point(0, 3);
+			this.chart2.Name = "chart2";
+			series4.ChartArea = "ChartArea1";
+			series4.Legend = "Legend1";
+			series4.Name = "Series1";
+			this.chart2.Series.Add(series4);
+			this.chart2.Size = new System.Drawing.Size(880, 123);
+			this.chart2.TabIndex = 0;
+			this.chart2.Text = "chart2";
+			// 
+			// label2
+			// 
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label2.Location = new System.Drawing.Point(902, 4);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(221, 57);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "当月累计沼气消耗量：当月累计发电量：";
+			// 
 			// EBoard
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1351, 717);
+			this.ClientSize = new System.Drawing.Size(1351, 752);
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.panel1);
 			this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -411,6 +496,12 @@
 			this.panel2.ResumeLayout(false);
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			this.splitContainer1.Panel1.ResumeLayout(false);
+			this.splitContainer1.Panel2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+			this.splitContainer1.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.chart1_18)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -449,6 +540,10 @@
 		private System.Windows.Forms.Label labelBiogas1;
 		private System.Windows.Forms.Label labelTotalRuntime2;
 		private System.Windows.Forms.Label labelTotalRuntime1;
+		private System.Windows.Forms.SplitContainer splitContainer1;
+		private System.Windows.Forms.DataVisualization.Charting.Chart chart1_18;
+		private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+		private System.Windows.Forms.Label label2;
 	}
 }
 

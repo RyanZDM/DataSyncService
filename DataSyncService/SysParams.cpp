@@ -215,7 +215,7 @@ INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 	{
 		try
 		{		
-			LPCTSTR pSQL = _T("SELECT ItemID, DataType, DisplayName, NeedAccumulate, InConverter, OutConverter From MonitorItem WHERE Status='A'");
+			LPCTSTR pSQL = _T("SELECT ItemID, Address, DisplayName, NeedAccumulate, InConverter, OutConverter, DataType From MonitorItem WHERE Status='A'");
 			_RecordsetPtr pRS = db.GetRecordset(_variant_t(pSQL));
 			if (pRS)
 			{
@@ -224,11 +224,12 @@ INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 				{
 					LPITEMINFO pItem = new ITEMINFO();
 					GetStringValue(pRS, 0, &(pItem->pItemID), dwBufLen);
+					GetStringValue(pRS, 1, &(pItem->pAddress), dwBufLen);
 					GetStringValue(pRS, 2, &(pItem->pDisplayName), dwBufLen);
 					GetStringValue(pRS, 4, &(pItem->pInConverter), dwBufLen);
 					GetStringValue(pRS, 5, &(pItem->pOutConverter), dwBufLen);
 
-					_variant_t vRetVal = pRS->Fields->GetItem(_variant_t((long)1))->GetValue();
+					_variant_t vRetVal = pRS->Fields->GetItem(_variant_t((long)6))->GetValue();
 					if (VT_I4 == vRetVal.vt)
 					{
 						pItem->vtRequestedDataType = vRetVal.lVal;

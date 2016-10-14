@@ -22,7 +22,7 @@ Thumbs.db
 *.suo
 *.tlb
 *.tlh
-*.bak
+#*.bak
 *.cache
 *.ilk
 *.log

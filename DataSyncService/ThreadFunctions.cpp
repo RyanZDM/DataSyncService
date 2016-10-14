@@ -28,7 +28,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter);
 void RunTask(LPCTSTR pcszCommand);
 void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval);
 void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &time);
-INT Init(CDBUtil &db);
+INT Init(CDBUtil &db, COPCClient &OPCClient);
 // ***********************************************************************/
 
 INT Init(CDBUtil &db, COPCClient &OPCClient)
@@ -98,6 +98,8 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 		return -4;
 	}
 
+	// TODO: Create a hashtable contains the mapping of ItemId and Address
+
 	INT nAddedItems = OPCClient.AddItems(vItems);
 	if (nAddedItems < 0)
 	{
@@ -116,7 +118,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	for (vector<LPITEMINFO>::const_iterator it = vItems.begin(); it != vItems.end(); it++)
 	{
 		LPITEMINFO p = *it;		
-		msg.append(p->pItemID).append(_T(","));
+		msg.append(p->pItemID).append(_T("//")).append(p->pAddress).append(_T(","));
 		delete p;
 	}
 	g_Logger.VForceLog(_T("[%d] item(s) found in database, [%d] item(s) were added successfully.\n%s"), nItemCount, nAddedItems, msg.c_str());
@@ -192,6 +194,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					OPCClient.SetDBPtr(&db);
 					vector<COPCItemDef*> *pvList = OPCClient.GetItems();
 					int nItemCnt = pvList->size();
+					// TODO add mappting table here as a parameter
 					int nRet = OPCClient.ReadAndUpdateItemValue(pvList, TRUE);
 					if (nRet != nItemCnt)
 					{

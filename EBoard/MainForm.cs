@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using NLog;
+
 namespace EBoard
 {
     public partial class EBoard : Form
@@ -20,12 +21,15 @@ namespace EBoard
 			InitializeComponent();
         }
 
-        private void EBoard_Load(object sender, System.EventArgs e)
+        private void EBoard_Load(object sender, EventArgs e)
         {
 			logger.Info("Electronic Board System started.");
 
-	        var now = DateTime.Now;
-			labelCurrDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));
+			// temp
+	        var reporter = new Reporter();
+			reporter.GetCurrentMonthData();
+
+	        labelCurrDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));
             refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);            
         }
 
@@ -34,8 +38,7 @@ namespace EBoard
             refreshDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
             try
             {
-                var conn = new SqlConnection(@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=OPC;Data Source=.\carestream");
-                conn.Open();
+	            var conn = DbFactory.GetConnection();
                 var productionData = GetData(conn);
                 RefreshData(productionData);
             }
@@ -47,9 +50,9 @@ namespace EBoard
 
         private void RefreshData(ProductionData data)
         {
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                BeginInvoke((MethodInvoker)delegate () { RefreshData(data); });
+                BeginInvoke((MethodInvoker)(() => RefreshData(data)));
                 return;
             }
 
@@ -197,6 +200,6 @@ namespace EBoard
             }
 
             return data;
-        }
+		}
     }
 }

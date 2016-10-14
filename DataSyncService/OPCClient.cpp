@@ -532,7 +532,7 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 
 		OPCITEMDEF *pItem = (OPCITEMDEF*)CoTaskMemAlloc(sizeof(OPCITEMDEF));
 		
-		LPWSTR pName = T2W(pItemInfo->pItemID);
+		LPWSTR pName = T2W(pItemInfo->pAddress);
 		DWORD dwLen = wcslen(pName);
 		pItem->szItemID				= (LPWSTR)CoTaskMemAlloc((dwLen + 1) * sizeof (WCHAR));
 		lstrcpynW(pItem->szItemID, pName, dwLen + 1);
@@ -708,6 +708,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 
 				if (bUpdateDB)
 				{
+					// TODO: get ItemId from mappting table by Address
 					int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp));
 					if (nAffectedRows > 0)
 					{

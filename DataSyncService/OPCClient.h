@@ -85,6 +85,7 @@ typedef struct tagGroupInfo
 typedef struct tagItemInfo 
 {
 	LPTSTR	pItemID;
+	LPTSTR	pAddress;
 	LPTSTR	pDisplayName;
 	VARTYPE vtRequestedDataType;
 	BOOL	bNeedAccumulate;
@@ -95,6 +96,7 @@ typedef struct tagItemInfo
 	tagItemInfo()
 	{
 		pItemID = NULL;
+		pAddress = NULL;
 		pDisplayName = NULL;
 		vtRequestedDataType = VT_I4;
 		bNeedAccumulate = FALSE;
@@ -114,6 +116,12 @@ typedef struct tagItemInfo
 		{
 			delete pItemID;
 			pItemID = NULL;
+		}
+
+		if (pAddress)
+		{
+			delete pAddress;
+			pAddress = NULL;
 		}
 
 		if (pDisplayName)
