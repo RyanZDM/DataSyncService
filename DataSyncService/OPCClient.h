@@ -27,7 +27,7 @@ using namespace std;
 #define E_INVALID_DBPTR_FOR_GROUP	-9999
 #define CHECK_CONNECT(hr) if ( (0x800706ba == hr) || (0x800706bf == hr) ) { m_bConnected=FALSE; m_hLastHResult=hr; throw E_CONNECTION_BROKE; }
 
-typedef struct tagGroupInfo 
+typedef struct tagGroupInfo
 {
 	wstring		wszName;
 	BOOL		bActive;
@@ -38,7 +38,7 @@ typedef struct tagGroupInfo
 	DWORD		dwLCID;
 	OPCHANDLE	hServerGroup;
 	DWORD		dwRevisedUpdateRate;
-//	REFIID		riid;
+	//	REFIID		riid;
 	IOPCItemMgt*	pOPCItemMgt;
 
 	tagGroupInfo()
@@ -46,7 +46,7 @@ typedef struct tagGroupInfo
 		Init();
 	}
 
-	tagGroupInfo(LPCWSTR pName):wszName(pName)
+	tagGroupInfo(LPCWSTR pName) :wszName(pName)
 	{
 		Init();
 	}
@@ -54,35 +54,35 @@ typedef struct tagGroupInfo
 	tagGroupInfo* Clone()
 	{
 		tagGroupInfo* pGroup = new tagGroupInfo();
-		pGroup->wszName				= wszName;
-		pGroup->bActive					= bActive;
-		pGroup->dwRequestedUpdateRate	= dwRequestedUpdateRate;
-		pGroup->hClientGroup			= (OPCHANDLE)pGroup;
-		pGroup->lTimeBias				= lTimeBias;
-		pGroup->fPercentDeadband		= fPercentDeadband;
-		pGroup->dwLCID					= dwLCID;
-		pGroup->hServerGroup			= hServerGroup;
-		pGroup->pOPCItemMgt				= pOPCItemMgt;
+		pGroup->wszName = wszName;
+		pGroup->bActive = bActive;
+		pGroup->dwRequestedUpdateRate = dwRequestedUpdateRate;
+		pGroup->hClientGroup = (OPCHANDLE)pGroup;
+		pGroup->lTimeBias = lTimeBias;
+		pGroup->fPercentDeadband = fPercentDeadband;
+		pGroup->dwLCID = dwLCID;
+		pGroup->hServerGroup = hServerGroup;
+		pGroup->pOPCItemMgt = pOPCItemMgt;
 
 		return pGroup;
 	}
 
 	void Init()
 	{
-		bActive					= TRUE;
-		dwRequestedUpdateRate	= 500;
-		hClientGroup			= (OPCHANDLE)this;
-		lTimeBias				= 0;
-		fPercentDeadband		= 0.0f;
-		dwLCID					= 0;
-		hServerGroup			= 0;	// Not defined
-		dwRevisedUpdateRate		= 0;
+		bActive = TRUE;
+		dwRequestedUpdateRate = 500;
+		hClientGroup = (OPCHANDLE)this;
+		lTimeBias = 0;
+		fPercentDeadband = 0.0f;
+		dwLCID = 0;
+		hServerGroup = 0;	// Not defined
+		dwRevisedUpdateRate = 0;
 		//riid					= IID_IOPCItemMgt;
-		pOPCItemMgt				= NULL;
+		pOPCItemMgt = NULL;
 	}
 } GROUPINFO, *LPGROUPINFO;
 
-typedef struct tagItemInfo 
+typedef struct tagItemInfo
 {
 	LPTSTR	pItemID;
 	LPTSTR	pAddress;
@@ -102,7 +102,7 @@ typedef struct tagItemInfo
 		bNeedAccumulate = FALSE;
 		pInConverter = NULL;
 		pOutConverter = NULL;
-		chStatus = _T('');
+		chStatus = _T('\0');
 	}
 
 	~tagItemInfo()
@@ -141,17 +141,29 @@ typedef struct tagItemInfo
 			delete pOutConverter;
 			pOutConverter = NULL;
 		}
+
+		chStatus = _T('\0');
 	}
 }ITEMINFO, *LPITEMINFO;
 
-class COPCItemDef
-{ 
+// Used for key value compare in map
+class StrCompare
+{
 public:
-	INT UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp);
+	BOOL operator()(LPCWSTR first, LPCWSTR second)
+	{
+		return lstrcmpiW(first, second) < 0;
+	}
+};
+
+class COPCItemDef
+{
+public:
+	INT UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp, map<LPCWSTR, LPWSTR, StrCompare> &mappings);
 	COPCItemDef* Clone();
 	operator OPCITEMDEF*() { return m_pOPCItemDef; }
 	COPCItemDef() { Init(TRUE); }
-	COPCItemDef(OPCITEMDEF *pItem) ;
+	COPCItemDef(OPCITEMDEF *pItem);
 	COPCItemDef(LPCWSTR pAccessPath, LPCWSTR pItemID, BOOL bActive = TRUE, VARTYPE vtRequestedDataType = VT_EMPTY);
 
 	~COPCItemDef() { Clear(); }
@@ -166,7 +178,7 @@ private:
 	void Init(BOOL bInitItemMgtPtr = TRUE);
 };
 
-class COPCClient  
+class COPCClient
 {
 public:
 	HRESULT GetLastHResult() { return m_hLastHResult; }
@@ -175,22 +187,27 @@ public:
 	BOOL IsConnected() { return m_bConnected; }
 	INT ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB = TRUE, OPCITEMSTATE *pState = NULL);
 	vector<COPCItemDef*>* GetItems() { return &m_vItems; }
-	LPGROUPINFO GetGroup() { return m_pGroup; }
-	void RemoveCallback();
-	DWORD AddCallback();
 	INT AddItems(const vector<LPITEMINFO> &vList);
-	HRESULT AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside = TRUE);
+	void Disconnect();
+	IOPCServer * Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo = NULL);
+
+	LPGROUPINFO GetGroup() { return m_pGroup; }
 	HRESULT RemoveGroup(LPGROUPINFO pGroup);
 	HRESULT EnumerateGroups(vector<wstring> &vList, OPCENUMSCOPE dwScope = OPC_ENUM_PRIVATE_CONNECTIONS);
 	LPGROUPINFO AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside = TRUE);
-	void Disconnect();
-	IOPCServer * Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo = NULL);
+
 	vector<LPWSTR> & GetOPCServerList(CATID catID);
 	vector<LPWSTR> & CurrentOPCServerList() { return m_vOPCServerList; }
 
 	COPCClient();
 	virtual ~COPCClient();
 	void Clear();
+
+private:
+	void RemoveCallback();
+	DWORD AddCallback();
+
+	HRESULT AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside = TRUE);
 
 private:
 	BOOL					m_bConnected;
@@ -203,6 +220,7 @@ private:
 	DWORD					m_dwCookieDataSink20;
 	vector<LPWSTR>			m_vOPCServerList;
 	vector<COPCItemDef*>	m_vItems;
+	map<LPCWSTR, LPWSTR, StrCompare>	m_ItemMappings;
 	CDBUtil					*m_pDB;
 	HRESULT					m_hLastHResult;
 };

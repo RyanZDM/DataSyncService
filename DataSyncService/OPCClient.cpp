@@ -15,23 +15,25 @@
 
 #pragma comment(lib, "shlwapi.lib")
 
+using namespace std;
+
 #ifdef _DEBUG
 #undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
+static char THIS_FILE[] = __FILE__;
 //#define new DEBUG_NEW
 #endif
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
- 
+
 extern CLogUtil g_Logger;
 
-COPCItemDef::COPCItemDef(OPCITEMDEF *pItem) 
-{ 
-	m_hServer = 0; 
+COPCItemDef::COPCItemDef(OPCITEMDEF *pItem)
+{
+	m_hServer = 0;
 	m_pOPCItemDef = pItem;
-	
+
 	if (m_pOPCItemDef)
 		m_pOPCItemDef->hClient = (OPCHANDLE)this;
 }
@@ -39,16 +41,16 @@ COPCItemDef::COPCItemDef(OPCITEMDEF *pItem)
 COPCItemDef::COPCItemDef(LPCWSTR pAccessPath, LPCWSTR pItemID, BOOL bActive/*= TRUE*/, VARTYPE vtRequestedDataType/*= VT_EMPTY*/)
 {
 	Init(TRUE);
-	m_pOPCItemDef->bActive				= bActive;
-	m_pOPCItemDef->vtRequestedDataType	= vtRequestedDataType;
-	
+	m_pOPCItemDef->bActive = bActive;
+	m_pOPCItemDef->vtRequestedDataType = vtRequestedDataType;
+
 	if (pAccessPath)
 	{
 		int nLen = lstrlenW(pAccessPath);
 		m_pOPCItemDef->szAccessPath = (LPWSTR)CoTaskMemAlloc((nLen + 1) * sizeof(wchar_t));
 		lstrcpynW(m_pOPCItemDef->szAccessPath, pAccessPath, nLen + 1);
 	}
-	
+
 	if (pItemID)
 	{
 		int nLen = lstrlenW(pItemID);
@@ -59,18 +61,18 @@ COPCItemDef::COPCItemDef(LPCWSTR pAccessPath, LPCWSTR pItemID, BOOL bActive/*= T
 
 void COPCItemDef::Init(BOOL bInitItemMgtPtr)
 {
-	m_hServer					= 0;
+	m_hServer = 0;
 	if (bInitItemMgtPtr)
 	{
 		m_pOPCItemDef = (OPCITEMDEF*)CoTaskMemAlloc(sizeof(OPCITEMDEF));
-		m_pOPCItemDef->szAccessPath	= NULL;
-		m_pOPCItemDef->szItemID		= NULL;
-		m_pOPCItemDef->bActive		= FALSE;
-		m_pOPCItemDef->hClient		= (OPCHANDLE)this;
-		m_pOPCItemDef->dwBlobSize	= 0;
-		m_pOPCItemDef->pBlob		= NULL;
-		m_pOPCItemDef->vtRequestedDataType	= VT_EMPTY ;
-		m_pOPCItemDef->wReserved	= 0;	
+		m_pOPCItemDef->szAccessPath = NULL;
+		m_pOPCItemDef->szItemID = NULL;
+		m_pOPCItemDef->bActive = FALSE;
+		m_pOPCItemDef->hClient = (OPCHANDLE)this;
+		m_pOPCItemDef->dwBlobSize = 0;
+		m_pOPCItemDef->pBlob = NULL;
+		m_pOPCItemDef->vtRequestedDataType = VT_EMPTY;
+		m_pOPCItemDef->wReserved = 0;
 	}
 	else
 	{
@@ -85,20 +87,20 @@ void COPCItemDef::Clear()
 		CoTaskMemFree(m_pOPCItemDef->szAccessPath);
 		m_pOPCItemDef->szAccessPath = NULL;
 	}
-	
+
 	if (m_pOPCItemDef->szItemID)
 	{
 		CoTaskMemFree(m_pOPCItemDef->szItemID);
 		m_pOPCItemDef->szItemID = NULL;
 	}
-	
+
 	m_pOPCItemDef->dwBlobSize = 0;
 	if (m_pOPCItemDef->pBlob)
 	{
 		delete m_pOPCItemDef->pBlob;
 		m_pOPCItemDef->pBlob = NULL;
 	}
-	
+
 	if (m_pOPCItemDef)
 	{
 		CoTaskMemFree(m_pOPCItemDef);
@@ -110,17 +112,17 @@ void COPCItemDef::Clear()
 
 COPCItemDef* COPCItemDef::Clone()
 {
-	COPCItemDef *pItem = new COPCItemDef(this->m_pOPCItemDef->szAccessPath, 
-										this->m_pOPCItemDef->szItemID, 
-										this->m_pOPCItemDef->bActive,
-										this->m_pOPCItemDef->vtRequestedDataType);
+	COPCItemDef *pItem = new COPCItemDef(this->m_pOPCItemDef->szAccessPath,
+		this->m_pOPCItemDef->szItemID,
+		this->m_pOPCItemDef->bActive,
+		this->m_pOPCItemDef->vtRequestedDataType);
 
 	return pItem;
 }
 
-INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp)
+INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp, map<LPCWSTR, LPWSTR, StrCompare> &mappings)
 {
-	if (!pTimeStamp || !pDB	)
+	if (!pTimeStamp || !pDB)
 		return E_INVALIDARG;
 
 	_bstr_t bstrVal;
@@ -134,16 +136,16 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 
 	const int MAX_LEN = 1000;
 	wchar_t wszSQL[MAX_LEN];
-	swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Update ItemLatestStatus Set Val='%s', LastUpdate=Convert(datetime,'%d-%d-%d %d:%d:%d'),Quality=%d Where ItemID='%s'", 
-			(LPCWSTR)bstrVal, 
-			localTime.wYear,
-			localTime.wMonth,
-			localTime.wDay,
-			localTime.wHour,
-			localTime.wMinute,
-			localTime.wSecond,
-			wQuality,
-			pItemID);
+	swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Update ItemLatestStatus Set Val='%s', LastUpdate=Convert(datetime,'%d-%d-%d %d:%d:%d'),Quality=%d Where ItemID='%s'",
+		(LPCWSTR)bstrVal,
+		localTime.wYear,
+		localTime.wMonth,
+		localTime.wDay,
+		localTime.wHour,
+		localTime.wMinute,
+		localTime.wSecond,
+		wQuality,
+		mappings[pItemID]);		// Assume the element must be contained in m_ItemMappings
 
 	try
 	{
@@ -153,11 +155,11 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 			// Update successfully.
 			return nRet;
 		}
-		else	
+		else
 		{
 			// No record was affected, need to insert a new record
 			swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Insert Into ItemLatestStatus (ItemID,Val,LastUpdate,Quality) Values ('%s', '%s', Convert(datetime, '%d-%d-%d %d:%d:%d'), %d)",
-				pItemID, 
+				mappings[pItemID],
 				(LPCTSTR)bstrVal,
 				localTime.wYear,
 				localTime.wMonth,
@@ -166,7 +168,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 				localTime.wMinute,
 				localTime.wSecond,
 				wQuality);
-			
+
 			return pDB->Execute(_bstr_t(wszSQL));
 		}
 	}
@@ -178,14 +180,14 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 
 COPCClient::COPCClient()
 {
-	m_bConnected				= FALSE;
-	m_pConnectionPointContainer	= NULL;
-	m_ppUnknown					= NULL;
-	m_pServer					= NULL;
-	m_pDataSink					= NULL;
-	m_pGroup					= NULL;
-	m_pDB						= NULL;
-	m_dwCookieDataSink20		= 0;
+	m_bConnected = FALSE;
+	m_pConnectionPointContainer = NULL;
+	m_ppUnknown = NULL;
+	m_pServer = NULL;
+	m_pDataSink = NULL;
+	m_pGroup = NULL;
+	m_pDB = NULL;
+	m_dwCookieDataSink20 = 0;
 
 	if (FAILED(CoInitialize(NULL)))
 		g_Logger.Log(_T("COPCClient::COPCClient(): Failed to call CoInitialze"));
@@ -197,11 +199,11 @@ COPCClient::~COPCClient()
 	CoUninitialize();
 }
 
-static const CATID CATID_OPCDAServer10 = 
+static const CATID CATID_OPCDAServer10 =
 { 0x63d5f430, 0xcfe4, 0x11d1, { 0xb2, 0xc8, 0x0, 0x60, 0x8, 0x3b, 0xa1, 0xfb } };
 // {63D5F430-CFE4-11d1-B2C8-0060083BA1FB}
 
-static const CATID CATID_OPCDAServer20 = 
+static const CATID CATID_OPCDAServer20 =
 { 0x63d5f432, 0xcfe4, 0x11d1, { 0xb2, 0xc8, 0x0, 0x60, 0x8, 0x3b, 0xa1, 0xfb } };
 // {63D5F432-CFE4-11d1-B2C8-0060083BA1FB}
 
@@ -236,7 +238,7 @@ vector<LPWSTR> & COPCClient::GetOPCServerList(CATID catID)
 
 				throw _T("COPCClient::GetOPCServerList(): Failed to call ProgIDFromCLSID");
 			}
-			
+
 			size_t nSize = wcslen(pProgID);
 			LPWSTR pBuf = new WCHAR[nSize + 1];
 			wcscpy_s(pBuf, nSize + 1, pProgID);
@@ -253,7 +255,7 @@ vector<LPWSTR> & COPCClient::GetOPCServerList(CATID catID)
 	{
 		if (pCat)
 			pCat->Release();
-	}	
+	}
 }
 
 IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
@@ -315,7 +317,7 @@ IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
 		}
 
 		throw;
-	}	
+	}
 }
 
 void COPCClient::Disconnect()
@@ -335,9 +337,9 @@ void COPCClient::Disconnect()
 	}
 
 	if (m_pServer)
-	{		
-//		RemoveAllGroups();
-		
+	{
+		//		RemoveAllGroups();
+
 		m_pServer->Release();
 		m_pServer = NULL;
 	}
@@ -355,9 +357,9 @@ void COPCClient::Disconnect()
 	}
 }
 
-LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside) 
+LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside)
 {
-	if(!pInfo)
+	if (!pInfo)
 		return NULL;
 
 	// TODO Check if the group name is duplicated or not
@@ -370,29 +372,29 @@ LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside)
 		delete m_pGroup;
 		m_pGroup = NULL;
 	}
-	
-	m_pGroup = bNoReleaseOutside?pInfo:pInfo->Clone();
+
+	m_pGroup = bNoReleaseOutside ? pInfo : pInfo->Clone();
 	m_hLastHResult = m_pServer->AddGroup(m_pGroup->wszName.c_str(),		// Name of the group. The name must be unique among the other groups created by this client. If no name (NULL), the server will generate a unique name.
-									m_pGroup->bActive,				// If the Group is to be created as active or not
-									m_pGroup->dwRequestedUpdateRate,// Client Specifies the fastest rate at which data changes may be sent to OnDataChange for items in this group. This also indicates the desired accuracy of Cached Data. This is intended only to control the behavior of the interface. How the server deals with the update rate and how often it actually polls the hardware internally is an implementation detail.  
-																	// Passing 0 indicates the server should use the fastest practical rate.  
-																	// The rate is specified in milliseconds.
-									m_pGroup->hClientGroup,			// Client provided handle for this group. [refer to description of data types, parameters, and structures for more information about this parameter]
-									&m_pGroup->lTimeBias,			// Pointer to Long containing the initial TimeBias (in minutes) for the Group.  
-																	// Pass a NULL Pointer if you wish the group to use the default system TimeBias. 
-									(FLOAT*)&m_pGroup->fPercentDeadband,	// The percent change in an item value that will cause a subscription callback for that value to a client. 
-																	// This parameter only applies to items in the group that have dwEUType of Analog. 
-																	// A NULL pointer is equivalent to 0.0.
-									m_pGroup->dwLCID,				// The language to be used by the server when returning values (including EU enumeration's) as text for operations on this group.  
-																	// This could also include such things as alarm or status conditions or digital contact states.
-									&m_pGroup->hServerGroup,		// Place to store the unique server generated handle to the newly created group. The client will use the server provided handle for many of the subsequent functions that the client requests the server to perform on the group.
-									&m_pGroup->dwRevisedUpdateRate,	// The server returns the value it will actually use for the UpdateRate which may differ from the RequestedUpdateRate.
-																	// Note that this may also be slower than the rate at which the server is internally obtaining the data and updating the cache. In general the server should 'round up' the requested rate to the next available supported rate. 
-																	// The rate is specified in milliseconds.  
-																	// Server returns HRESULT of OPC_S_UNSUPPORTEDRATE  when it returns a value in revisedUpdateRate that is different than RequestedUpdateRate
-									IID_IOPCItemMgt,//pInfo->riid,	// The type of interface desired (e.g. IID_IOPCItemMgt)
-									(LPUNKNOWN*)&(m_pGroup->pOPCItemMgt)// Where to store the returned interface pointer. NULL is returned for any FAILED HRESULT.
-								);
+		m_pGroup->bActive,				// If the Group is to be created as active or not
+		m_pGroup->dwRequestedUpdateRate,// Client Specifies the fastest rate at which data changes may be sent to OnDataChange for items in this group. This also indicates the desired accuracy of Cached Data. This is intended only to control the behavior of the interface. How the server deals with the update rate and how often it actually polls the hardware internally is an implementation detail.  
+										// Passing 0 indicates the server should use the fastest practical rate.  
+										// The rate is specified in milliseconds.
+		m_pGroup->hClientGroup,			// Client provided handle for this group. [refer to description of data types, parameters, and structures for more information about this parameter]
+		&m_pGroup->lTimeBias,			// Pointer to Long containing the initial TimeBias (in minutes) for the Group.  
+										// Pass a NULL Pointer if you wish the group to use the default system TimeBias. 
+		(FLOAT*)&m_pGroup->fPercentDeadband,	// The percent change in an item value that will cause a subscription callback for that value to a client. 
+										// This parameter only applies to items in the group that have dwEUType of Analog. 
+										// A NULL pointer is equivalent to 0.0.
+		m_pGroup->dwLCID,				// The language to be used by the server when returning values (including EU enumeration's) as text for operations on this group.  
+										// This could also include such things as alarm or status conditions or digital contact states.
+		&m_pGroup->hServerGroup,		// Place to store the unique server generated handle to the newly created group. The client will use the server provided handle for many of the subsequent functions that the client requests the server to perform on the group.
+		&m_pGroup->dwRevisedUpdateRate,	// The server returns the value it will actually use for the UpdateRate which may differ from the RequestedUpdateRate.
+										// Note that this may also be slower than the rate at which the server is internally obtaining the data and updating the cache. In general the server should 'round up' the requested rate to the next available supported rate. 
+										// The rate is specified in milliseconds.  
+										// Server returns HRESULT of OPC_S_UNSUPPORTEDRATE  when it returns a value in revisedUpdateRate that is different than RequestedUpdateRate
+		IID_IOPCItemMgt,//pInfo->riid,	// The type of interface desired (e.g. IID_IOPCItemMgt)
+		(LPUNKNOWN*)&(m_pGroup->pOPCItemMgt)// Where to store the returned interface pointer. NULL is returned for any FAILED HRESULT.
+	);
 
 	if (m_hLastHResult != S_OK)
 	{
@@ -507,6 +509,7 @@ void COPCClient::Clear()
 
 	ClearVector(m_vOPCServerList);
 	ClearVector(m_vItems);
+	ClearMap(m_ItemMappings, TRUE);
 }
 
 INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
@@ -523,7 +526,9 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 	int nRet = 0;
 	HRESULT hr = E_FAIL;
 	HRESULT *pErrors = NULL;
-	OPCITEMRESULT *pResults = NULL;	
+	OPCITEMRESULT *pResults = NULL;
+
+	ClearMap(m_ItemMappings, TRUE);
 	for (INT i = 0; i < nCount; i++)
 	{
 		LPITEMINFO pItemInfo = vList[i];
@@ -531,20 +536,31 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 			continue;
 
 		OPCITEMDEF *pItem = (OPCITEMDEF*)CoTaskMemAlloc(sizeof(OPCITEMDEF));
-		
+
 		LPWSTR pName = T2W(pItemInfo->pAddress);
 		DWORD dwLen = wcslen(pName);
-		pItem->szItemID				= (LPWSTR)CoTaskMemAlloc((dwLen + 1) * sizeof (WCHAR));
+		pItem->szItemID = (LPWSTR)CoTaskMemAlloc((dwLen + 1) * sizeof(WCHAR));
 		lstrcpynW(pItem->szItemID, pName, dwLen + 1);
-		pItem->szAccessPath			= NULL;
-		pItem->bActive				= TRUE;
-		pItem->dwBlobSize			= 0;
-		pItem->pBlob				= NULL;
-		pItem->vtRequestedDataType	= pItemInfo->vtRequestedDataType;
-		pItem->wReserved			= 0;
+		pItem->szAccessPath = NULL;
+		pItem->bActive = TRUE;
+		pItem->dwBlobSize = 0;
+		pItem->pBlob = NULL;
+		pItem->vtRequestedDataType = pItemInfo->vtRequestedDataType;
+		pItem->wReserved = 0;
 
 		if (S_OK == AddItem(new COPCItemDef(pItem), TRUE))
+		{
 			nRet++;
+
+			// Add ItemId and Address into the mappings
+			LPWSTR pAddr = new wchar_t[dwLen + 1];
+			lstrcpynW(pAddr, pName, dwLen + 1);
+
+			dwLen = wcslen(pItemInfo->pItemID);
+			LPWSTR pItemId = new wchar_t[dwLen + 1];
+			lstrcpynW(pItemId, T2W(pItemInfo->pItemID), dwLen + 1);
+			m_ItemMappings.insert({ pAddr, pItemId });
+		}
 	}
 
 	return nCount;
@@ -559,21 +575,23 @@ HRESULT COPCClient::AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside)
 		return E_INVALID_GROUP_PTR;
 
 	HRESULT hr = E_FAIL;
-	COPCItemDef *pActItem = bNoReleaseOutside?pItem:pItem->Clone();
+	COPCItemDef *pActItem = bNoReleaseOutside ? pItem : pItem->Clone();
 
 	HRESULT *pErrors = NULL;
 	OPCITEMRESULT *pResults = NULL;
 	if (S_OK != (hr = m_pGroup->pOPCItemMgt->AddItems(1, pItem->m_pOPCItemDef, &pResults, &pErrors)) || !pResults)
 	{
 		g_Logger.VLog(_T("COPCClient::AddItem(): Failed to call IOPCItemMgt.AddItems. HRESULT=%x"), hr);
-		if (!bNoReleaseOutside)	
-			delete pActItem; 
+		if (!bNoReleaseOutside)
+			delete pActItem;
 	}
 	else
 	{
 		// Add the pointer to item to vector
 		pActItem->m_hServer = pResults[0].hServer;
 		m_vItems.push_back(pActItem);
+
+		// Add mapping of monitor item and address
 	}
 
 	if (pResults)
@@ -584,7 +602,7 @@ HRESULT COPCClient::AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside)
 
 	CHECK_CONNECT(hr)
 
-	return hr;
+		return hr;
 }
 
 DWORD COPCClient::AddCallback()
@@ -594,7 +612,7 @@ DWORD COPCClient::AddCallback()
 
 	if (m_dwCookieDataSink20 > 0)
 		RemoveCallback();
-	
+
 	// Get connection point (IID_IOPCDataCallback interface):
 	m_hLastHResult = E_FAIL;
 	IConnectionPoint *pCP = NULL;
@@ -630,7 +648,7 @@ DWORD COPCClient::AddCallback()
 
 void COPCClient::RemoveCallback()
 {
-	if ( (0 == m_dwCookieDataSink20) || !m_pDataSink || !m_pConnectionPointContainer)
+	if ((0 == m_dwCookieDataSink20) || !m_pDataSink || !m_pConnectionPointContainer)
 	{
 		// Invalid, exit
 		m_dwCookieDataSink20 = 0;
@@ -652,7 +670,7 @@ void COPCClient::RemoveCallback()
 			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPointContainer.FindConnectionPoint.");
 
 		m_hLastHResult = pCP->Unadvise(m_dwCookieDataSink20);
-		
+
 		if (S_OK != m_hLastHResult)
 			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPoint.Unadvise.");
 	}
@@ -668,7 +686,7 @@ void COPCClient::RemoveCallback()
 			delete m_pDataSink;
 			m_pDataSink = NULL;
 		}
-	}	
+	}
 }
 
 INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB, OPCITEMSTATE *pState)
@@ -689,8 +707,8 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 	{
 		if (S_OK != (m_hLastHResult = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
 		{
-			CHECK_CONNECT(m_hLastHResult)			
-			throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
+			CHECK_CONNECT(m_hLastHResult)
+				throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
 
 		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
@@ -701,15 +719,14 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 				g_Logger.ForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to get pointer to COPCItemDef from vector."));
 				continue;
 			}
-						
+
 			if (S_OK == (m_hLastHResult = pISync->Read(OPC_DS_CACHE, 1, &pItem->m_hServer, &pValues, &pErrors)))
 			{
 				// TODO: May need to convert the readed value by pItem->pInConverter
 
 				if (bUpdateDB)
 				{
-					// TODO: get ItemId from mappting table by Address
-					int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp));
+					int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp), m_ItemMappings);
 					if (nAffectedRows > 0)
 					{
 						nCount++;
@@ -767,5 +784,5 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 		}
 
 		throw;
-	}	
+	}
 }

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataSyncService", "DataSyncService.vcxproj", "{1E5764D6-7ECA-44E0-B641-AC041449ED0D}"
 EndProject
@@ -9,8 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DataSyncServicePS", "DataSy
 	ProjectSection(ProjectDependencies) = postProject
 		{1E5764D6-7ECA-44E0-B641-AC041449ED0D} = {1E5764D6-7ECA-44E0-B641-AC041449ED0D}
 	EndProjectSection
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "..\Database\Database.sqlproj", "{5131EB25-8817-40A5-85E9-893A1A4FAF47}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBoard", "..\EBoard\EBoard.csproj", "{F263D1D7-4FA4-43B1-B097-84D34802ED44}"
 EndProject
@@ -102,55 +100,6 @@ Global
 		{250991CB-9153-483F-8BF8-EB71D9970DFB}.Unicode Release MinSize|Mixed Platforms.ActiveCfg = Release|Win32
 		{250991CB-9153-483F-8BF8-EB71D9970DFB}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release|Win32
 		{250991CB-9153-483F-8BF8-EB71D9970DFB}.Unicode Release MinSize|Win32.ActiveCfg = Release|Win32
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Any CPU.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Any CPU.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Any CPU.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Mixed Platforms.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinDependency|Win32.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Any CPU.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Any CPU.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Any CPU.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release MinSize|Win32.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Release|Win32.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Debug|Win32.ActiveCfg = Debug|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Any CPU.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Any CPU.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Any CPU.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Mixed Platforms.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinDependency|Win32.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Any CPU.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Any CPU.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Any CPU.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Mixed Platforms.Deploy.0 = Release|Any CPU
-		{5131EB25-8817-40A5-85E9-893A1A4FAF47}.Unicode Release MinSize|Win32.ActiveCfg = Release|Any CPU
 		{F263D1D7-4FA4-43B1-B097-84D34802ED44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F263D1D7-4FA4-43B1-B097-84D34802ED44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F263D1D7-4FA4-43B1-B097-84D34802ED44}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

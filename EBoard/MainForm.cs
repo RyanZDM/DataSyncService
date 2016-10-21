@@ -7,199 +7,234 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using NLog;
+using System.Windows.Forms.DataVisualization.Charting;
 
 namespace EBoard
 {
-    public partial class EBoard : Form
+	public partial class EBoard : Form
 	{
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private System.Threading.Timer refreshDataTimer;
+		private System.Threading.Timer refreshDataTimer;
+		private System.Windows.Forms.Timer refreshTimeTimer;
+
+		/// <summary>
+		/// The last time data got changed
+		/// </summary>
+		private DateTime? lastUpdateTime;
+
+		/// <summary>
+		/// How many days in current month
+		/// </summary>
+		private int daysInMonth;
 
 		public EBoard()
 		{
 			InitializeComponent();
-        }
+		}
 
-        private void EBoard_Load(object sender, EventArgs e)
-        {
+		private void EBoard_Load(object sender, EventArgs e)
+		{
 			logger.Info("Electronic Board System started.");
 
-			// temp
-	        var reporter = new Reporter();
-			reporter.GetCurrentMonthData();
-
-	        labelCurrDate.Text = DateTime.Now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));
-            refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);            
-        }
-
-        private void RefreshDataTimerCallback(object state)
-        {
-            refreshDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            try
-            {
-	            var conn = DbFactory.GetConnection();
-                var productionData = GetData(conn);
-                RefreshData(productionData);
-            }
-            finally
-            {
-                refreshDataTimer.Change(2000, Timeout.Infinite);
-            }            
-        }
-
-        private void RefreshData(ProductionData data)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke((MethodInvoker)(() => RefreshData(data)));
-                return;
-            }
-
-            if (data.Workers.Count > 0)
-            {
-                var sb = new StringBuilder();
-                data.Workers.ForEach(w => sb.Append(string.Format("姓名 {0}  工号 {1}    ", w.Id, w.Name)));
-                labelWorkers.Text = sb.ToString();
-            }
-            else
-            {
-                labelWorkers.Text = "";
-            }
-
-	        labelTotalRuntime1.Text = data.TotalRuntime1.ToString();
-			labelTotalRuntime2.Text = data.TotalRuntime2.ToString();
-            labelBiogas1.Text = data.Biogas1.ToString();
-            labelBiogas2.Text = data.Biogas2.ToString();
-	        labelBiogasTotal.Text = (data.Biogas1 + data.Biogas2).ToString();
-	        labelEnergyProduction1.Text = data.EnergyProduction1.ToString();
-			labelEnergyProduction2.Text = data.EnergyProduction2.ToString();
-	        labelEnergyProductionTotal.Text = (data.EnergyProduction1 + data.EnergyProduction2).ToString();
-	        labelRuntime1.Text = data.Runtime1.ToString();
-	        labelRuntime2.Text = data.Runtime2.ToString();
-	        labelRuntimeTotal.Text = (data.Runtime1 + data.Runtime2).ToString();
-        }
-
-        private const string Biogas1ColName = "Biogas1";
-        private const string Biogas2ColName = "Biogas2";
-        private const string EnergyProduction1ColName = "EnergyProduction1";
-        private const string EnergyProduction2ColName = "EnergyProduction2";
-        private const string Runtime1ColName = "Runtime1";
-        private const string Runtime2ColName = "Runtime2";
-		private const string TotalRuntime1ColName = "TotalRuntime1";
-		private const string TotalRuntime2ColName = "TotalRuntime2";
-
-        private ProductionData GetData(SqlConnection connection)
-        {
-            var ds = new DataSet();  
-            var sql = @"Select a.ItemId, a.Val, a.LastUpdate, a.Quality, b.Name From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId";
-            var adapter = new SqlDataAdapter(sql, connection);
-            adapter.Fill(ds, "ItemLatestStatus");
-
-            sql = @"Select Id,ShiftId,BeginTime,EndTime,IsCurrent,Status From ProductionStatMstr Where IsCurrent = 1";
-            new SqlDataAdapter(sql, connection).Fill(ds, "ProductionStatMstr");
-
-            sql = @"SELECT Name,SubTotal FROM ProductionStatDet, ProductionStatMstr, MonitorItem Where ProductionId=Id And ItemId = Item And IsCurrent=1";
-            new SqlDataAdapter(sql, connection).Fill(ds, "ProductionStatDet");
-
-            sql = @"SELECT WorkerId, WorkerName FROM WorkersInProduction, ProductionStatMstr Where ProductionId=Id And IsCurrent=1";
-            new SqlDataAdapter(sql, connection).Fill(ds, "WorkersInProduction");
-
-            var data = new ProductionData();
-
-            // Current shift
-            var mstrTable = ds.Tables["ProductionStatMstr"];
-            if ((mstrTable == null) || (mstrTable.Rows.Count < 1))
-            {
-                data.CurrentShift = "";
-                return data;
-            }
-
-            // Workers
-            data.CurrentShift = mstrTable.Rows[0]["ShiftId"].ToString();
-            data.Workers = new List<Worker>();
-            foreach (DataRow row in ds.Tables["WorkersInProduction"].Rows)
-            {
-                data.Workers.Add(new Worker
-                {
-                    Id = row["WorkerId"].ToString(),
-                    Name = row["WorkerName"].ToString()
-                });
-            }
-			
-            var latestTable = ds.Tables["ItemLatestStatus"];
-            var latestDict = new Dictionary<string, double>();
-            latestTable.AsEnumerable().ToList().ForEach(row =>
-            {
-                try
-                {
-                    latestDict[row["Name"].ToString().ToLower()] = (double)row["Val"];
-                }
-                catch(Exception ex)
-                {
-					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ItemLatestStatus. {2}", row["Val"], row["Name"], ex);
-                }
-            });
-
-			//Energy Production
-            if (latestDict.Keys.Contains(EnergyProduction1ColName, StringComparer.OrdinalIgnoreCase))
-            {
-                data.EnergyProduction1 = latestDict[EnergyProduction1ColName.ToLower()];
-            }
-
-            if (latestDict.Keys.Contains(EnergyProduction2ColName, StringComparer.OrdinalIgnoreCase))
-            {
-                data.EnergyProduction2 = latestDict[EnergyProduction2ColName.ToLower()];
-            }
-
-			// Total run time
-			if (latestDict.Keys.Contains(TotalRuntime1ColName, StringComparer.OrdinalIgnoreCase))
+			try
 			{
-				data.TotalRuntime1 = latestDict[TotalRuntime1ColName.ToLower()];
-			}
+				var now = DateTime.Now;
+				labelCurrDate.Text = now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));
+				refreshTimeTimer = new System.Windows.Forms.Timer();
+				refreshTimeTimer.Interval = 1000;
+				refreshTimeTimer.Tick += RefreshTimeTimer_Tick;
+				refreshTimeTimer.Enabled = true;
+								
+				daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
+				InitChart(chartCurrMonth1, 1, 19);
+				InitChart(chartCurrMonth2, 20, daysInMonth);
 
-			if (latestDict.Keys.Contains(TotalRuntime2ColName, StringComparer.OrdinalIgnoreCase))
+				refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);
+			}
+			catch (Exception ex)
 			{
-				data.TotalRuntime2 = latestDict[TotalRuntime2ColName.ToLower()];
+				logger.Error(ex, "Error occurred while initializing.");
+				MessageBox.Show(string.Format("程序初始化出错. {0}", ex));
 			}
-
-            var detTable = ds.Tables["ProductionStatDet"];
-            var subtotalDict = new Dictionary<string, double>();
-            detTable.AsEnumerable().ToList().ForEach(row =>
-            {
-                try
-                {
-                    subtotalDict[row["Name"].ToString().ToLower()] = (double)row["SubTotal"];
-                }
-				catch (Exception ex)
-				{
-					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ProductionStatDet. {2}", row["SubTotal"], row["Name"], ex);
-				}
-            });
-
-            // Biogas
-            if (subtotalDict.Keys.Contains(Biogas1ColName, StringComparer.OrdinalIgnoreCase))
-            {
-                data.Biogas1 = subtotalDict[Biogas1ColName.ToLower()];
-            }
-
-            if (subtotalDict.Keys.Contains(Biogas2ColName, StringComparer.OrdinalIgnoreCase))
-            {
-                data.Biogas2 = subtotalDict[Biogas2ColName.ToLower()];
-            }
-
-            // Run time
-            if (subtotalDict.Keys.Contains(Runtime1ColName, StringComparer.OrdinalIgnoreCase))
-            {
-                data.Runtime1 = subtotalDict[Runtime1ColName.ToLower()];
-            }
-
-            if (subtotalDict.Keys.Contains(Runtime2ColName, StringComparer.OrdinalIgnoreCase))
-            {
-                data.Runtime2 = subtotalDict[Runtime2ColName.ToLower()];
-            }
-
-            return data;
 		}
-    }
+
+		private void RefreshTimeTimer_Tick(object sender, EventArgs e)
+		{
+			labelCurrTime.Text = DateTime.Now.ToLocalTime().ToString("HH:mm:ss");
+		}
+
+		private void RefreshDataTimerCallback(object state)
+		{
+			refreshDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
+			try
+			{
+				var conn = DbFactory.GetConnection();
+				var dal = new Dal(conn);
+				var productionData = dal.GetProductionData(lastUpdateTime);
+				if (productionData == null)
+					return;
+
+				// Need to refresh two charts the first time
+				var alwaysRefresh = (!lastUpdateTime.HasValue);
+
+				lastUpdateTime = productionData.LastUpdate;
+
+				RefreshData(productionData);
+
+				var reporter = new Reporter(conn);
+				var ds = reporter.GetCurrentMonthData();
+				RefreshCharts(ds, alwaysRefresh);
+			}
+			finally
+			{
+				refreshDataTimer.Change(2000, Timeout.Infinite);
+			}
+		}
+
+		private void RefreshData(ProductionData data)
+		{
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)(() => RefreshData(data)));
+				return;
+			}
+
+			if (data.Workers.Count > 0)
+			{
+				var sb = new StringBuilder();
+				data.Workers.ForEach(w => sb.Append(string.Format("姓名 {0}  工号 {1}    ", w.Id, w.Name)));
+				labelWorkers.Text = sb.ToString();
+			}
+			else
+			{
+				labelWorkers.Text = "";
+			}
+
+			labelTotalRuntime1.Text = data.TotalRuntime1.ToString();
+			labelTotalRuntime2.Text = data.TotalRuntime2.ToString();
+			labelBiogas1.Text = data.Biogas1.ToString();
+			labelBiogas2.Text = data.Biogas2.ToString();
+			labelBiogasTotal.Text = (data.Biogas1 + data.Biogas2).ToString();
+			labelEnergyProduction1.Text = data.EnergyProduction1.ToString();
+			labelEnergyProduction2.Text = data.EnergyProduction2.ToString();
+			labelEnergyProductionTotal.Text = (data.EnergyProduction1 + data.EnergyProduction2).ToString();
+			labelRuntime1.Text = data.Runtime1.ToString();
+			labelRuntime2.Text = data.Runtime2.ToString();
+			labelRuntimeTotal.Text = (data.Runtime1 + data.Runtime2).ToString();
+		}
+
+		#region For Chart
+		private void InitChart(Chart chart, int begin, int end)
+		{
+			chart.ChartAreas[0].AxisX.Minimum = begin - 1;
+			chart.ChartAreas[0].AxisX.Maximum = end;
+			chart.ChartAreas[0].AxisX.Interval = 1;
+
+			while (chart.Series.Count > 0)
+			{
+				chart.Series.RemoveAt(0);
+			}
+
+			var series1 = chart.Series.Add("沼气量");
+			series1.XValueMember = "Day";
+			series1.YValueMembers = "Biogas";
+
+			var series2 = chart.Series.Add("发电量");
+			series2.XValueMember = "Day";
+			series2.YValueMembers = "EngeryProduction";
+
+			while (chart.ChartAreas[0].AxisX.CustomLabels.Count > 0)
+			{
+				chart.ChartAreas[0].AxisX.CustomLabels.RemoveAt(0);
+			}
+
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "日期", 0, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量", 1, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量", 2, LabelMarkStyle.None);
+
+			for (var i = begin; i <= end; i++)
+			{
+				var from = i - 0.5;
+				var to = i + 0.5;
+
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, i.ToString(), 0, LabelMarkStyle.None);				
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 1, LabelMarkStyle.None).Tag = i;
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 2, LabelMarkStyle.None).Tag = i;
+			}
+		}
+
+		private void RefreshCharts(DataSet ds, bool alwaysRefresh = false)
+		{
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)(() => RefreshCharts(ds, alwaysRefresh)));
+				return;
+			}
+
+			var now = DateTime.Now;		
+
+			// If month changed, then last day may changed, call InitChart()
+			var lastDay = DateTime.DaysInMonth(now.Year, now.Month);
+			if (daysInMonth != lastDay)
+			{
+				InitChart(chartCurrMonth2, 20, lastDay);
+				daysInMonth = lastDay;
+			}
+
+			if (alwaysRefresh)
+			{
+				RefreshChart(chartCurrMonth1, ds);
+				RefreshChart(chartCurrMonth2, ds);
+				return;
+			}
+
+			// No need to refresh another series if today is not in that period
+			var currDay = now.Day;			
+			if (currDay <= chartCurrMonth1.ChartAreas[0].AxisX.Maximum)
+			{
+				RefreshChart(chartCurrMonth1, ds);
+			}
+			else
+			{
+				RefreshChart(chartCurrMonth2, ds);
+			}
+		}
+
+		private void RefreshChart(Chart chart, DataSet ds)
+		{
+			var axis = chart.ChartAreas[0].AxisX;
+			var begin = axis.Minimum + 1;
+			var end = axis.Maximum;
+
+			chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
+			
+			for (var i = begin; i <= end; i++)
+			{
+				var row = ds.Tables[0].AsEnumerable().FirstOrDefault(d => (int)d["Day"] == i);
+				if (row == null) continue;
+				
+				var labels = axis.CustomLabels.Where(c => c.RowIndex > 0 && c.Tag != null && (int)c.Tag == i).ToList();
+				foreach (var label in labels)
+				{
+					if (label.RowIndex == 1)
+					{
+						label.Text = row["Biogas"].ToString();
+					}
+					else
+					{
+						label.Text = row["EngeryProduction"].ToString();
+					}
+				}
+			}
+
+			if (ds.Tables.Count < 1 || ds.Tables[1].Rows.Count < 1)
+				return;
+
+			var sumRow = ds.Tables[1].Rows[0];
+			labelBiogasMonth.Text = sumRow["Biogas"].ToString();
+			labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString();
+		}
+		#endregion
+	}
 }

@@ -1,26 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace EBoard
 {
 	public class Reporter
 	{
+		private SqlConnection connection;
+		public Reporter(SqlConnection conn)
+		{
+			connection = conn;
+		}
+
 		public void CreateReport(int month)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void GetCurrentMonthData()
+		public DataSet GetCurrentMonthData()
 		{
-			var now = DateTime.Now;
-			var month = now.Month;
-			var daysInMonth = DateTime.DaysInMonth(now.Year, month);
-			var beginTime = new DateTime(now.Year, month, 1, 0, 0, 0);
-			var endTime = beginTime.AddMonths(1);
+			var command = new SqlCommand
+			{
+				Connection = connection,
+				CommandType = CommandType.StoredProcedure,
+				CommandText = "sp_GetCurrentMonthDataByDay"
+			};
+
+			var adapter = new SqlDataAdapter(command);
+			var ds = new DataSet();
+			adapter.Fill(ds);
+
+			return ds;
 		}
 	}
 }

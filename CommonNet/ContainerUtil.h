@@ -95,6 +95,36 @@ void ClearList(list<T> &dest)
 	ClearContainer<list<T>, T>(dest);
 }
 
+template <typename K, typename T, typename T1>
+void ClearMap(map<K, T, T1> &container, BOOL bAlsoReleaseKey = FALSE)
+{
+	for (map<K, T, T1>::iterator mi = container.begin(); mi != container.end(); mi++)
+	{
+		try
+		{
+			T pVal = (T)mi->second;
+			if (pVal)
+				delete pVal;
+		}
+		catch (...) {
+		}
+
+		if (bAlsoReleaseKey)
+		{
+			try
+			{
+				K pKey = (K)mi->first;
+				if (pKey)
+					delete pKey;
+			}
+			catch (...) {
+			}
+		}
+	}
+
+	container.clear();
+}
+
 template <typename K, typename T>
 void ClearMap(map<K, T> &container, BOOL bAlsoReleaseKey = FALSE)
 {

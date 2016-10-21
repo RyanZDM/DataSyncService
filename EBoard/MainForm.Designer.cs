@@ -35,6 +35,12 @@
 			System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
 			System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.chartCurrMonth1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.label2 = new System.Windows.Forms.Label();
+			this.chartCurrMonth2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.labelTotalRuntime2 = new System.Windows.Forms.Label();
+			this.labelTotalRuntime1 = new System.Windows.Forms.Label();
 			this.label4 = new System.Windows.Forms.Label();
 			this.label3 = new System.Windows.Forms.Label();
 			this.labelCurrDate = new System.Windows.Forms.Label();
@@ -64,21 +70,19 @@
 			this.label7 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
-			this.labelTotalRuntime1 = new System.Windows.Forms.Label();
-			this.labelTotalRuntime2 = new System.Windows.Forms.Label();
-			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this.chart1_18 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-			this.label2 = new System.Windows.Forms.Label();
+			this.labelCurrTime = new System.Windows.Forms.Label();
+			this.labelBiogasMonth = new System.Windows.Forms.Label();
+			this.label18 = new System.Windows.Forms.Label();
+			this.labelEnergyProductionMonth = new System.Windows.Forms.Label();
 			this.panel1.SuspendLayout();
-			this.panel2.SuspendLayout();
-			this.groupBox1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.chart1_18)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth2)).BeginInit();
+			this.panel2.SuspendLayout();
+			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// panel1
@@ -92,6 +96,7 @@
 			this.panel1.Controls.Add(this.labelTotalRuntime1);
 			this.panel1.Controls.Add(this.label4);
 			this.panel1.Controls.Add(this.label3);
+			this.panel1.Controls.Add(this.labelCurrTime);
 			this.panel1.Controls.Add(this.labelCurrDate);
 			this.panel1.Controls.Add(this.label1);
 			this.panel1.Location = new System.Drawing.Point(38, 34);
@@ -99,6 +104,93 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(1271, 706);
 			this.panel1.TabIndex = 0;
+			// 
+			// splitContainer1
+			// 
+			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.splitContainer1.Location = new System.Drawing.Point(11, 418);
+			this.splitContainer1.Name = "splitContainer1";
+			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			// 
+			// splitContainer1.Panel1
+			// 
+			this.splitContainer1.Panel1.Controls.Add(this.chartCurrMonth1);
+			// 
+			// splitContainer1.Panel2
+			// 
+			this.splitContainer1.Panel2.Controls.Add(this.labelEnergyProductionMonth);
+			this.splitContainer1.Panel2.Controls.Add(this.labelBiogasMonth);
+			this.splitContainer1.Panel2.Controls.Add(this.label18);
+			this.splitContainer1.Panel2.Controls.Add(this.label2);
+			this.splitContainer1.Panel2.Controls.Add(this.chartCurrMonth2);
+			this.splitContainer1.Size = new System.Drawing.Size(1244, 274);
+			this.splitContainer1.SplitterDistance = 141;
+			this.splitContainer1.TabIndex = 5;
+			// 
+			// chartCurrMonth1
+			// 
+			this.chartCurrMonth1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			chartArea3.Name = "ChartArea1";
+			this.chartCurrMonth1.ChartAreas.Add(chartArea3);
+			legend3.Name = "Legend1";
+			this.chartCurrMonth1.Legends.Add(legend3);
+			this.chartCurrMonth1.Location = new System.Drawing.Point(0, 0);
+			this.chartCurrMonth1.Name = "chartCurrMonth1";
+			series3.ChartArea = "ChartArea1";
+			series3.Legend = "Legend1";
+			series3.Name = "Series1";
+			this.chartCurrMonth1.Series.Add(series3);
+			this.chartCurrMonth1.Size = new System.Drawing.Size(1241, 138);
+			this.chartCurrMonth1.TabIndex = 0;
+			this.chartCurrMonth1.Text = "chart1";
+			// 
+			// label2
+			// 
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label2.Location = new System.Drawing.Point(902, 25);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(221, 29);
+			this.label2.TabIndex = 1;
+			this.label2.Text = "当月累计沼气消耗量：";
+			// 
+			// chartCurrMonth2
+			// 
+			this.chartCurrMonth2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			chartArea4.Name = "ChartArea1";
+			this.chartCurrMonth2.ChartAreas.Add(chartArea4);
+			legend4.Name = "Legend1";
+			this.chartCurrMonth2.Legends.Add(legend4);
+			this.chartCurrMonth2.Location = new System.Drawing.Point(0, 3);
+			this.chartCurrMonth2.Name = "chartCurrMonth2";
+			series4.ChartArea = "ChartArea1";
+			series4.Legend = "Legend1";
+			series4.Name = "Series1";
+			this.chartCurrMonth2.Series.Add(series4);
+			this.chartCurrMonth2.Size = new System.Drawing.Size(880, 123);
+			this.chartCurrMonth2.TabIndex = 0;
+			this.chartCurrMonth2.Text = "chart2";
+			// 
+			// labelTotalRuntime2
+			// 
+			this.labelTotalRuntime2.Location = new System.Drawing.Point(898, 102);
+			this.labelTotalRuntime2.Name = "labelTotalRuntime2";
+			this.labelTotalRuntime2.Size = new System.Drawing.Size(302, 25);
+			this.labelTotalRuntime2.TabIndex = 4;
+			this.labelTotalRuntime2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// labelTotalRuntime1
+			// 
+			this.labelTotalRuntime1.Location = new System.Drawing.Point(381, 102);
+			this.labelTotalRuntime1.Name = "labelTotalRuntime1";
+			this.labelTotalRuntime1.Size = new System.Drawing.Size(269, 17);
+			this.labelTotalRuntime1.TabIndex = 4;
+			this.labelTotalRuntime1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// label4
 			// 
@@ -126,10 +218,10 @@
 			// 
 			this.labelCurrDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelCurrDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelCurrDate.Location = new System.Drawing.Point(931, 33);
+			this.labelCurrDate.Location = new System.Drawing.Point(866, 33);
 			this.labelCurrDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelCurrDate.Name = "labelCurrDate";
-			this.labelCurrDate.Size = new System.Drawing.Size(306, 64);
+			this.labelCurrDate.Size = new System.Drawing.Size(281, 64);
 			this.labelCurrDate.TabIndex = 1;
 			this.labelCurrDate.Text = "labelCurrDate";
 			this.labelCurrDate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -394,89 +486,41 @@
 			this.label5.TabIndex = 0;
 			this.label5.Text = "当前员工";
 			// 
-			// labelTotalRuntime1
+			// labelCurrTime
 			// 
-			this.labelTotalRuntime1.Location = new System.Drawing.Point(381, 102);
-			this.labelTotalRuntime1.Name = "labelTotalRuntime1";
-			this.labelTotalRuntime1.Size = new System.Drawing.Size(269, 17);
-			this.labelTotalRuntime1.TabIndex = 4;
-			this.labelTotalRuntime1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelCurrTime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelCurrTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelCurrTime.Location = new System.Drawing.Point(1152, 33);
+			this.labelCurrTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.labelCurrTime.Name = "labelCurrTime";
+			this.labelCurrTime.Size = new System.Drawing.Size(100, 64);
+			this.labelCurrTime.TabIndex = 1;
+			this.labelCurrTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
-			// labelTotalRuntime2
+			// labelBiogasMonth
 			// 
-			this.labelTotalRuntime2.Location = new System.Drawing.Point(898, 102);
-			this.labelTotalRuntime2.Name = "labelTotalRuntime2";
-			this.labelTotalRuntime2.Size = new System.Drawing.Size(302, 25);
-			this.labelTotalRuntime2.TabIndex = 4;
-			this.labelTotalRuntime2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelBiogasMonth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelBiogasMonth.Location = new System.Drawing.Point(1102, 25);
+			this.labelBiogasMonth.Name = "labelBiogasMonth";
+			this.labelBiogasMonth.Size = new System.Drawing.Size(139, 29);
+			this.labelBiogasMonth.TabIndex = 1;
 			// 
-			// splitContainer1
+			// label18
 			// 
-			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainer1.Location = new System.Drawing.Point(11, 418);
-			this.splitContainer1.Name = "splitContainer1";
-			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+			this.label18.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.label18.Location = new System.Drawing.Point(902, 54);
+			this.label18.Name = "label18";
+			this.label18.Size = new System.Drawing.Size(194, 31);
+			this.label18.TabIndex = 1;
+			this.label18.Text = "当月累计发电量：";
 			// 
-			// splitContainer1.Panel1
+			// labelEnergyProductionMonth
 			// 
-			this.splitContainer1.Panel1.Controls.Add(this.chart1_18);
-			// 
-			// splitContainer1.Panel2
-			// 
-			this.splitContainer1.Panel2.Controls.Add(this.label2);
-			this.splitContainer1.Panel2.Controls.Add(this.chart2);
-			this.splitContainer1.Size = new System.Drawing.Size(1244, 274);
-			this.splitContainer1.SplitterDistance = 141;
-			this.splitContainer1.TabIndex = 5;
-			// 
-			// chart1_18
-			// 
-			this.chart1_18.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			chartArea3.Name = "ChartArea1";
-			this.chart1_18.ChartAreas.Add(chartArea3);
-			legend3.Name = "Legend1";
-			this.chart1_18.Legends.Add(legend3);
-			this.chart1_18.Location = new System.Drawing.Point(0, 0);
-			this.chart1_18.Name = "chart1_18";
-			series3.ChartArea = "ChartArea1";
-			series3.Legend = "Legend1";
-			series3.Name = "Series1";
-			this.chart1_18.Series.Add(series3);
-			this.chart1_18.Size = new System.Drawing.Size(1241, 138);
-			this.chart1_18.TabIndex = 0;
-			this.chart1_18.Text = "chart1";
-			// 
-			// chart2
-			// 
-			this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			chartArea4.Name = "ChartArea1";
-			this.chart2.ChartAreas.Add(chartArea4);
-			legend4.Name = "Legend1";
-			this.chart2.Legends.Add(legend4);
-			this.chart2.Location = new System.Drawing.Point(0, 3);
-			this.chart2.Name = "chart2";
-			series4.ChartArea = "ChartArea1";
-			series4.Legend = "Legend1";
-			series4.Name = "Series1";
-			this.chart2.Series.Add(series4);
-			this.chart2.Size = new System.Drawing.Size(880, 123);
-			this.chart2.TabIndex = 0;
-			this.chart2.Text = "chart2";
-			// 
-			// label2
-			// 
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.label2.Location = new System.Drawing.Point(902, 4);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(221, 57);
-			this.label2.TabIndex = 1;
-			this.label2.Text = "当月累计沼气消耗量：当月累计发电量：";
+			this.labelEnergyProductionMonth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.labelEnergyProductionMonth.Location = new System.Drawing.Point(1102, 54);
+			this.labelEnergyProductionMonth.Name = "labelEnergyProductionMonth";
+			this.labelEnergyProductionMonth.Size = new System.Drawing.Size(139, 29);
+			this.labelEnergyProductionMonth.TabIndex = 1;
 			// 
 			// EBoard
 			// 
@@ -493,15 +537,15 @@
 			this.Load += new System.EventHandler(this.EBoard_Load);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
-			this.panel2.ResumeLayout(false);
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(this.chart1_18)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth2)).EndInit();
+			this.panel2.ResumeLayout(false);
+			this.groupBox1.ResumeLayout(false);
+			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -541,9 +585,13 @@
 		private System.Windows.Forms.Label labelTotalRuntime2;
 		private System.Windows.Forms.Label labelTotalRuntime1;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.DataVisualization.Charting.Chart chart1_18;
-		private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+		private System.Windows.Forms.DataVisualization.Charting.Chart chartCurrMonth1;
+		private System.Windows.Forms.DataVisualization.Charting.Chart chartCurrMonth2;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label labelCurrTime;
+		private System.Windows.Forms.Label labelEnergyProductionMonth;
+		private System.Windows.Forms.Label labelBiogasMonth;
+		private System.Windows.Forms.Label label18;
 	}
 }
 

@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EBoard
 {
-    public class ProductionData
+	public class ProductionData
 	{
-        public string CurrentShift { get; set; }
+		public string CurrentShift { get; set; }
 
-        public List<Worker> Workers { get; set; }
+		public List<Worker> Workers { get; set; }
+
+		public DateTime LastUpdate { get; set; }
 
 		/// <summary>
 		/// 填埋场沼气流量

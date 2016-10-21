@@ -47,24 +47,24 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 		return E_INVALIDARG;
 	}
 
-	IOPCServer *pServer = NULL;	
+	IOPCServer *pServer = NULL;
 	LPCWSTR pRemoteMachine = g_SysParams.GetRemoteMachine();
 	DWORD dwLen = wcslen(pRemoteMachine);
 	if (pRemoteMachine && (dwLen > 0))		// Connect to remote OPC server
 	{
 		COSERVERINFO CoServerInfo;
 		ZeroMemory(&CoServerInfo, sizeof(COSERVERINFO));
-		
+
 		CoServerInfo.pwszName = new wchar_t[dwLen + 1];
 		wcscpy_s(CoServerInfo.pwszName, dwLen + 1, pRemoteMachine);
 		pServer = OPCClient.Connect(pProgID, &CoServerInfo);
-		delete [] CoServerInfo.pwszName;
+		delete[] CoServerInfo.pwszName;
 	}
 	else													// Connect to local OPC server
 	{
 		pServer = OPCClient.Connect(pProgID, NULL);
 	}
-	
+
 	if (!pServer)
 		return -1;
 
@@ -98,8 +98,6 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 		return -4;
 	}
 
-	// TODO: Create a hashtable contains the mapping of ItemId and Address
-
 	INT nAddedItems = OPCClient.AddItems(vItems);
 	if (nAddedItems < 0)
 	{
@@ -117,7 +115,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	TString msg;
 	for (vector<LPITEMINFO>::const_iterator it = vItems.begin(); it != vItems.end(); it++)
 	{
-		LPITEMINFO p = *it;		
+		LPITEMINFO p = *it;
 		msg.append(p->pItemID).append(_T("//")).append(p->pAddress).append(_T(","));
 		delete p;
 	}
@@ -142,7 +140,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 	//CMyDB myDB;
 	//myDB.RemoveAllItems();
 	//myDB.Disconnect();
-			
+
 	CMyDB db;
 	COPCClient OPCClient;
 	BOOL bDbConnectionBroke = TRUE;		// Actively disconnect DB does not affect this variable
@@ -151,13 +149,13 @@ unsigned __stdcall OPCDataSyncThread(void*)
 	while (TRUE == g_bKeepWork)
 	{
 		try
-		{			
+		{
 			if (db.Connect(FALSE))
 			{
 				// Log only when successfully connnected to db first time or reconnected after a connection broken
 				if (bDbConnectionBroke)
 					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Database connected."), dwThreadID);
-				
+
 				bLastDBConnectFlag = TRUE;
 				bDbConnectionBroke = FALSE;
 
@@ -183,7 +181,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 						}
 
 						throw E_CONNECTION_BROKE;
-					}					
+					}
 
 					bLastDBConnectFlag = TRUE;
 				}
@@ -194,7 +192,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					OPCClient.SetDBPtr(&db);
 					vector<COPCItemDef*> *pvList = OPCClient.GetItems();
 					int nItemCnt = pvList->size();
-					// TODO add mappting table here as a parameter
+
 					int nRet = OPCClient.ReadAndUpdateItemValue(pvList, TRUE);
 					if (nRet != nItemCnt)
 					{
@@ -205,7 +203,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 						}
 
 						g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] %d item(s) to be read, but only %d item(s) read successfully.\n%s")
-											, dwThreadID, nItemCnt, nRet, db.GetLastErrormsg());
+							, dwThreadID, nItemCnt, nRet, db.GetLastErrormsg());
 					}
 				}	// end if (pGroup)				
 			}
@@ -217,10 +215,10 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					bLastDBConnectFlag = FALSE;
 					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x. This log won't be output again until next time connected to database.\n%s")
 						, dwThreadID, OPCClient.GetLastHResult(), db.GetLastErrormsg());
-				}				
+				}
 			}
 		}
-		catch (LPCTSTR pMsg) 
+		catch (LPCTSTR pMsg)
 		{
 			g_Logger.ForceLog(pMsg);
 		}
@@ -232,19 +230,19 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				{
 					bLastOPCConnectFlag = FALSE;
 					g_Logger.VForceLog(L"[OPCDataSyncThread:%d] The connection to OPC server [%s] break down. Will re-connect. This log won't be output again until next time connected to OPC server."
-										, dwThreadID, g_SysParams.GetOPCServerProgID());
+						, dwThreadID, g_SysParams.GetOPCServerProgID());
 				}
 			}
 			else
 			{
 				g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again. Return=%d.\n%s")
-									, dwThreadID, nCode, db.GetLastErrormsg());
+					, dwThreadID, nCode, db.GetLastErrormsg());
 			}
 		}
 		catch (...)
 		{
 			g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again.\n%s")
-									, dwThreadID, db.GetLastErrormsg());
+				, dwThreadID, db.GetLastErrormsg());
 		}
 
 		// Sleep
@@ -414,11 +412,11 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 
 void RunTask(LPCTSTR pcszCommand)
 {
-	DWORD dwThreadID = GetCurrentThreadId();	
+	DWORD dwThreadID = GetCurrentThreadId();
 	try
 	{
 		time_t begin = time(nullptr);
-		INT nRet = _tsystem(pcszCommand);		
+		INT nRet = _tsystem(pcszCommand);
 		if (nRet != 0)
 			throw nRet;
 
@@ -455,7 +453,7 @@ void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval)
 }
 
 void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime)
-{	
+{
 	while (TRUE == g_bKeepWork)
 	{
 		time_t now = time(nullptr);
@@ -472,7 +470,7 @@ void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime)
 		{
 			// add one day		
 			seconds += 24 * 60 * 60;
-		}		
+		}
 
 		// To make sure the thread can exit immediately when the application is about to exit
 		if (WaitForSingleObject(g_hExitEvent, (DWORD)(seconds * 1000)) != WAIT_TIMEOUT)
