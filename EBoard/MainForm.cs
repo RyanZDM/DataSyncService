@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 using NLog;
 using System.Windows.Forms.DataVisualization.Charting;
+using System.Drawing;
 
 namespace EBoard
 {
@@ -137,12 +138,19 @@ namespace EBoard
 			}
 
 			var series1 = chart.Series.Add("沼气量");
+
 			series1.XValueMember = "Day";
 			series1.YValueMembers = "Biogas";
+			series1.BackHatchStyle = ChartHatchStyle.DarkUpwardDiagonal;
+			series1.Color = Color.Black;
+			series1.BorderColor = Color.Black;
 
 			var series2 = chart.Series.Add("发电量");
 			series2.XValueMember = "Day";
 			series2.YValueMembers = "EngeryProduction";
+			series2.BackHatchStyle = ChartHatchStyle.SmallGrid;
+			series2.Color = Color.Black;
+			series2.BorderColor = Color.Black;
 
 			while (chart.ChartAreas[0].AxisX.CustomLabels.Count > 0)
 			{

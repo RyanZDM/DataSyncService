@@ -140,6 +140,7 @@
     <ClCompile Include="SysParams.cpp" />
     <ClCompile Include="ThreadFunctions.cpp" />
     <ClCompile Include="TimerTask.cpp" />
+    <ClCompile Include="TimerTaskManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CommonNet\ContainerUtil.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="ThreadFunctions.h" />
     <ClInclude Include="TimerTask.h" />
+    <ClInclude Include="TimerTaskManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DataSyncService.rc" />

@@ -11,6 +11,7 @@
 #include "ProfileOperator.h"
 #include "TimerTask.h"
 #include "ContainerUtil.h"
+#include "TimerTaskManager.h"
 
 using namespace std;
 
@@ -23,11 +24,10 @@ CSysParams		g_SysParams;
 // ***********************************************************************/
 
 // *** Methods Declaration ***********************************************/
-INT GetTimerTasks(vector<CTimerTask*> &vTasks);
 unsigned __stdcall TimerTaskThread(void* pParameter);
 void RunTask(LPCTSTR pcszCommand);
 void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval);
-void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &time);
+void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime, INT nFixedDay);
 INT Init(CDBUtil &db, COPCClient &OPCClient);
 // ***********************************************************************/
 
@@ -280,8 +280,9 @@ unsigned __stdcall OPCDataSyncThread(void*)
 **************************************************************************/
 INT SetupTimelyTasks()
 {
+	CTimerTaskManager tm;
 	vector<CTimerTask*> vTasks;
-	GetTimerTasks(vTasks);
+	tm.GetTimerTasks(vTasks);
 
 	INT nTasks = 0;
 	for (vector<CTimerTask*>::const_iterator vi = vTasks.begin(); vi != vTasks.end(); vi++)
@@ -302,45 +303,6 @@ INT SetupTimelyTasks()
 	}
 
 	return nTasks;
-}
-
-/**************************************************************************
-* Get the task definition of timer task from ini file TimerTasksFileName.
-* Note: The elements in vector need to be released outside
-**************************************************************************/
-INT GetTimerTasks(vector<CTimerTask*> &vTasks)
-{
-	ClearVector(vTasks);
-
-	LPCTSTR pPath = CProfileOperator::GetExecutablePath();
-	TCHAR szTaskIniFile[MAX_PATH];
-	_stprintf_s(szTaskIniFile, MAX_PATH, _T("%s%s"), CProfileOperator::GetExecutablePath(), TimerTasksFileName);
-	CProfileOperator po(szTaskIniFile);
-	vector<basic_string<TCHAR>> vSections;
-	po.GetSections(vSections);
-
-	TCHAR szBuf[1000];
-	DWORD dwLen = sizeof(szBuf) / sizeof(szBuf[0]);
-	for (vector<basic_string<TCHAR>>::const_iterator vi = vSections.begin(); vi != vSections.end(); vi++)
-	{
-		CTimerTask *pTask = new CTimerTask();
-
-		basic_string<TCHAR> szSection = *vi;
-		pTask->m_szName = szSection;
-
-		po.GetString(szSection.c_str(), _T("Run"), NULL, szBuf, dwLen);
-		pTask->m_szRun = szBuf;
-
-		po.GetString(szSection.c_str(), _T("RunAtFixedTime"), NULL, szBuf, dwLen);
-		pTask->ParseTimeString(szBuf);
-
-		pTask->SetInterval(po.GetInt(szSection.c_str(), _T("Interval"), 0));
-		pTask->m_bEnabled = po.GetBool(szSection.c_str(), _T("Enable"), FALSE);
-
-		vTasks.push_back(pTask);
-	}
-
-	return vTasks.size();
 }
 
 /**************************************************************************
@@ -379,7 +341,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 
 		if (pTime)		// Run at fixed time
 		{
-			RunTaskAtFixedTime(pTask->m_szRun.c_str(), *pTime);
+			RunTaskAtFixedTime(pTask->m_szRun.c_str(), *pTime, pTask->GetFixedDay());
 		}
 		else
 		{
@@ -390,8 +352,15 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 				return 0;
 			}
 
-			// Run timerly
-			// The task will be ran first time immediately
+			// Run timerly, delay n seconds first
+			if (pTask->GetDelay() > 0)
+			{
+				// To make sure the thread can exit immediately when the application is about to exit
+				if (WaitForSingleObject(g_hExitEvent, pTask->GetDelay() * 1000) != WAIT_TIMEOUT)
+				{
+					return 0;
+				}
+			}
 			RunTaskTimerly(pTask->m_szRun.c_str(), pTask->GetInterval() * 1000);
 		}
 
@@ -452,25 +421,13 @@ void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval)
 	}	// end while (TRUE == g_bKeepWork)
 }
 
-void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime)
+void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime, INT nFixedDay)
 {
 	while (TRUE == g_bKeepWork)
 	{
-		time_t now = time(nullptr);
-		tm localTime;
-		localtime_s(&localTime, &now);
-
-		tmFixedTime.tm_year = localTime.tm_year;
-		tmFixedTime.tm_mon = localTime.tm_mon;
-		tmFixedTime.tm_mday = localTime.tm_mday;
-		time_t target = mktime(&tmFixedTime);
-
-		DOUBLE seconds = difftime(target, now);
-		if (seconds < 0)
-		{
-			// add one day		
-			seconds += 24 * 60 * 60;
-		}
+		CTimerTaskManager *pTM = new CTimerTaskManager();		
+		DWORD seconds = pTM->GetWaitSeconds(tmFixedTime, nFixedDay);
+		delete pTM;
 
 		// To make sure the thread can exit immediately when the application is about to exit
 		if (WaitForSingleObject(g_hExitEvent, (DWORD)(seconds * 1000)) != WAIT_TIMEOUT)
