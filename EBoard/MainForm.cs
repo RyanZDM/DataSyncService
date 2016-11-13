@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -9,10 +7,11 @@ using System.Threading;
 using NLog;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
+using EBoard.Common;
 
 namespace EBoard
 {
-	public partial class EBoard : Form
+	public partial class MainForm : Form
 	{
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -29,12 +28,14 @@ namespace EBoard
 		/// </summary>
 		private int daysInMonth;
 
-		public EBoard()
+		public User CurrentUser { get; set; }
+
+		public MainForm()
 		{
 			InitializeComponent();
 		}
 
-		private void EBoard_Load(object sender, EventArgs e)
+		private void MainForm_Load(object sender, EventArgs e)
 		{
 			logger.Info("Electronic Board System started.");
 

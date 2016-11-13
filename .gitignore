@@ -51,3 +51,4 @@ InstallUtil.InstallLog
 
 *.VC.db
 *.VC.opendb
+DataSyncService.VC.db

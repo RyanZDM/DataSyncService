@@ -1,0 +1,65 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace EBoard.SysManager
+{
+	public partial class FormBase : Form
+	{
+		protected bool hasDirtyData = false;
+
+		public FormBase()
+		{
+			InitializeComponent();
+		}
+
+		public virtual bool CheckDirtyData()
+		{
+			if (!hasDirtyData)
+				return true;
+
+			switch (MessageBox.Show("数据已修改，需要保存吗？", "Save", MessageBoxButtons.YesNoCancel))
+			{
+				case DialogResult.Yes:
+					return Save();
+				case DialogResult.No:
+					return true;
+				case DialogResult.Cancel:
+					return false;
+				default:
+					return true;
+			}
+		}
+
+		public virtual bool Save()
+		{
+			return true;
+		}
+
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			base.OnClosing(e);
+
+			if (!e.Cancel)
+			{
+				if (CheckDirtyData())
+				{
+					Cleanup();
+				}
+				else
+				{
+					e.Cancel = true;
+				}
+			}
+		}
+
+		protected virtual void Cleanup()
+		{ }
+	}
+}

@@ -1,6 +1,6 @@
 ﻿namespace EBoard
 {
-	partial class EBoard
+	partial class MainForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -534,7 +534,7 @@
 			this.Name = "EBoard";
 			this.Text = "EBoard";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-			this.Load += new System.EventHandler(this.EBoard_Load);
+			this.Load += new System.EventHandler(this.MainForm_Load);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);
