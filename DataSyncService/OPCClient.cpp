@@ -722,6 +722,10 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 
 			if (S_OK == (m_hLastHResult = pISync->Read(OPC_DS_CACHE, 1, &pItem->m_hServer, &pValues, &pErrors)))
 			{
+				// TODO: Need to check wQuality to see if the data is accuracy, log and do not update db
+				// TODO: Need to read flag from OPC server to see if the connection broke, log
+				// TODO: need to notify on GUI
+
 				// TODO: May need to convert the readed value by pItem->pInConverter
 
 				if (bUpdateDB)

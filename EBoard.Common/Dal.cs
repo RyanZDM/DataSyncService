@@ -152,6 +152,11 @@ namespace EBoard.Common
 			return data;
 		}
 
+		public IList<string> GetGeneralParamCategory()
+		{
+			return new List<string>();
+		}
+
 		#region For User and Role
 		public User GetUser(string loginId)
 		{
@@ -220,7 +225,7 @@ namespace EBoard.Common
 			};
 
 			user.Roles = new List<string>();
-			var roleSql = string.Format(@"SELECT RoleId FROM UseInRole WHERE UserId=CONVERT(uniqueidentifier, '{0}')", user.UserId);
+			var roleSql = string.Format(@"SELECT RoleId FROM UserInRole WHERE UserId=CONVERT(uniqueidentifier, '{0}')", user.UserId);
 			adapter = new SqlDataAdapter(roleSql, connection);
 			adapter.Fill(ds, "RoleList");
 			foreach (DataRow r in ds.Tables["RoleList"].Rows)

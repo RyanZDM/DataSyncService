@@ -231,7 +231,7 @@
             this.refreshToolStripButton});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(254, 27);
+			this.toolStrip1.Size = new System.Drawing.Size(215, 27);
 			this.toolStrip1.TabIndex = 2;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -316,7 +316,7 @@
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "UserMgrForm";
-			this.Text = "UseMgrForm";
+			this.Text = "用户管理";
 			this.Load += new System.EventHandler(this.UserMgrForm_Load);
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewUser)).EndInit();
 			this.menuStrip1.ResumeLayout(false);

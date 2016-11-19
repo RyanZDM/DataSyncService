@@ -13,19 +13,6 @@ namespace EBoard.SysManager
 
 		private SqlDataAdapter adapter;
 
-		protected bool HasDirtyData
-		{
-			get { return hasDirtyData; }
-			set
-			{
-				//if (hasDirtyData == value)
-				//	return;
-
-				hasDirtyData = value;
-				CheckMenuState();
-			}
-		}
-
 		public UserMgrForm()
 		{
 			InitializeComponent();
@@ -33,14 +20,12 @@ namespace EBoard.SysManager
 
 		private void UserMgrForm_Load(object sender, EventArgs e)
 		{
-			// This flag is changed after InitializeComponent(), no need to check menu state
-			hasDirtyData = false;
-			RefreshData();
+			RefreshData(false);
 		}
 
-		public void RefreshData()
+		public void RefreshData(bool checkDirtyData = true)
 		{
-			if (!CheckDirtyData())
+			if (checkDirtyData && !CheckDirtyData())
 				return;
 
 			if (connection == null)
@@ -48,8 +33,7 @@ namespace EBoard.SysManager
 
 			if (adapter == null)
 			{
-				adapter = new SqlDataAdapter("SELECT * FROM [User]", connection);
-				new SqlCommandBuilder(adapter);
+				adapter = new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM [User]", connection)).DataAdapter;
 			}
 
 			var ds = new DataSet();			
@@ -61,8 +45,10 @@ namespace EBoard.SysManager
 			HasDirtyData = false;
 		}
 
-		private void CheckMenuState()
+		protected override void UpdateDefaultButton()
 		{
+			base.UpdateDefaultButton();
+		
 			var hasRow = (dataGridViewUser.RowCount > 0);
 
 			deleteToolStripMenuItem.Enabled = hasRow;
@@ -71,8 +57,8 @@ namespace EBoard.SysManager
 			changePwdToolStripMenuItem.Enabled = hasRow;
 			changePwdToolStripButton.Enabled = hasRow;
 
-			saveToolStripMenuItem.Enabled = hasDirtyData;
-			saveToolStripButton.Enabled = hasDirtyData;
+			saveToolStripMenuItem.Enabled = HasDirtyData;
+			saveToolStripButton.Enabled = HasDirtyData;
 		}
 
 		protected override void Cleanup()
@@ -91,14 +77,16 @@ namespace EBoard.SysManager
 		{
 			// TODO: For adding a new row but not move focus to other row yet, cannot save since the new data has not been validated
 			dataGridViewUser.EndEdit();
-
+			
 			if (!base.Save())
 				return false;
 
 			try
 			{
 				//dataGridViewUser.RefreshEdit();
-				adapter.Update(dataGridViewUser.DataSource as DataTable);
+				var table = dataGridViewUser.DataSource as DataTable;
+				adapter.Update(table);
+				table.AcceptChanges();
 				HasDirtyData = false;
 				return true;
 			}
@@ -122,14 +110,14 @@ namespace EBoard.SysManager
 
 		public int DeleteRecord()
 		{
-			var rowDeleted = 0;
+			var rowsDeleted = 0;
 
 			if (dataGridViewUser.SelectedRows.Count > 0)
 			{
 				foreach (DataGridViewRow row in dataGridViewUser.SelectedRows)
 				{
 					dataGridViewUser.Rows.Remove(row);
-					rowDeleted++;
+					rowsDeleted++;
 				}
 			}
 			else
@@ -139,18 +127,19 @@ namespace EBoard.SysManager
 				if (row != null)
 				{
 					dataGridViewUser.Rows.Remove(row);
-					rowDeleted = 1;					
+					rowsDeleted = 1;					
 				}
 			}
 
-			if (rowDeleted > 0)
+			if (rowsDeleted > 0)
 			{
 				HasDirtyData = true;
 			}
 
 			// TODO: save immediately
+			//Table.AcceptChanges()
 
-			return rowDeleted;
+			return rowsDeleted;
 		}
 
 		public void ChangePassword()

@@ -33,10 +33,7 @@ namespace EBoard.SysManager
 		private void Form1_Load(object sender, EventArgs e)
 		{
 			// TODO:
-			var frm = new UserMgrForm();
-			frm.MdiParent = this;
-			frm.Show();
-			//frm.Dock = DockStyle.Fill;
+			OpenForm<DataMaintainForm>();
 		}
 
 		private void OpenForm<T>() where T : Form, new()

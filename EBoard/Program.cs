@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBoard.Common;
+using System;
 using System.Windows.Forms;
 
 namespace EBoard
@@ -19,7 +20,7 @@ namespace EBoard
 			{
 				return;
 			}
-			
+
 			Application.Run(new MainForm { CurrentUser = loginForm.CurrentUser });
 		}
 	}

@@ -1,23 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EBoard.SysManager
 {
 	public partial class FormBase : Form
 	{
-		protected bool hasDirtyData = false;
+		private bool hasDirtyData = false;
+
+		protected bool HasDirtyData
+		{
+			get { return hasDirtyData; }
+			set
+			{
+				//if (hasDirtyData == value)
+				//	return;
+
+				hasDirtyData = value;
+				UpdateMenuState();
+			}
+		}
 
 		public FormBase()
 		{
 			InitializeComponent();
 		}
+
+		public virtual void UpdateMenuState() {	}
 
 		public virtual bool CheckDirtyData()
 		{
@@ -29,6 +38,7 @@ namespace EBoard.SysManager
 				case DialogResult.Yes:
 					return Save();
 				case DialogResult.No:
+					RollbackChanges();
 					return true;
 				case DialogResult.Cancel:
 					return false;
@@ -36,6 +46,8 @@ namespace EBoard.SysManager
 					return true;
 			}
 		}
+
+		public virtual void RollbackChanges() { }
 
 		public virtual bool Save()
 		{
@@ -59,7 +71,6 @@ namespace EBoard.SysManager
 			}
 		}
 
-		protected virtual void Cleanup()
-		{ }
+		protected virtual void Cleanup() { }
 	}
 }
