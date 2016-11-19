@@ -36,7 +36,7 @@ namespace EBoard.SysManager
 				adapter = new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM [User]", connection)).DataAdapter;
 			}
 
-			var ds = new DataSet();			
+			var ds = new DataSet();
 			adapter.Fill(ds);
 
 			dataGridViewUser.DataSource = ds.Tables[0];
@@ -48,7 +48,7 @@ namespace EBoard.SysManager
 		protected override void UpdateDefaultButton()
 		{
 			base.UpdateDefaultButton();
-		
+
 			var hasRow = (dataGridViewUser.RowCount > 0);
 
 			deleteToolStripMenuItem.Enabled = hasRow;
@@ -70,14 +70,24 @@ namespace EBoard.SysManager
 				connection.Close();
 				connection.Dispose();
 			}
-			catch (Exception) {}
+			catch (Exception) { }
+		}
+
+		public override void RollbackChanges()
+		{
+			base.RollbackChanges();
+
+			(dataGridViewUser.DataSource as DataTable).RejectChanges();
+
+
+			HasDirtyData = false;
 		}
 
 		public override bool Save()
 		{
 			// TODO: For adding a new row but not move focus to other row yet, cannot save since the new data has not been validated
 			dataGridViewUser.EndEdit();
-			
+
 			if (!base.Save())
 				return false;
 
@@ -94,7 +104,21 @@ namespace EBoard.SysManager
 			{
 				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
 				return false;
-			}			
+			}
+		}
+
+		protected override void UpdateMenuState()
+		{
+			base.UpdateMenuState();
+
+			saveToolStripMenuItem.Enabled = HasDirtyData;
+			saveToolStripButton.Enabled = HasDirtyData;
+
+			var hasData = dataGridViewUser.Rows.Count > 0;
+			deleteToolStripMenuItem.Enabled = hasData;
+			deleteToolStripButton.Enabled = hasData;
+			changePwdToolStripMenuItem.Enabled = hasData;
+			changePwdToolStripButton.Enabled = hasData;
 		}
 
 		public DataRow AddRecord()
@@ -127,7 +151,7 @@ namespace EBoard.SysManager
 				if (row != null)
 				{
 					dataGridViewUser.Rows.Remove(row);
-					rowsDeleted = 1;					
+					rowsDeleted = 1;
 				}
 			}
 

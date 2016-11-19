@@ -26,7 +26,7 @@ namespace EBoard.SysManager
 			InitializeComponent();
 		}
 
-		public virtual void UpdateMenuState() {	}
+		protected virtual void UpdateMenuState() {	}
 
 		public virtual bool CheckDirtyData()
 		{

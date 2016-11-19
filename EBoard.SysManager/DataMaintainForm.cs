@@ -16,12 +16,12 @@ namespace EBoard.SysManager
 	{
 		private bool isInitialzing = true;
 
+		private bool isRefreshing = false;
+
 		private SqlConnection connection;
 
 		private Dictionary<string, Control> nodeMappings = new Dictionary<string, Control>();
 
-		//private List<SqlDataAdapter> adapters = new List<SqlDataAdapter>();
-		
 		public DataMaintainForm()
 		{
 			InitializeComponent();
@@ -45,7 +45,8 @@ namespace EBoard.SysManager
 				var adapter = (new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM MonitorItem", connection))).DataAdapter;
 				var ds = new DataSet();
 				adapter.Fill(ds);
-				dataGridViewMonitorItem.DataSource = ds.Tables[0];
+				dataGridViewMonitorItem.DataSource = ds.Tables[0].DefaultView;
+				dataGridViewMonitorItem.CellValueChanged += dataGridView_CellValueChanged;
 				dataGridViewMonitorItem.Tag = adapter;
 				var node = treeView1.Nodes[0].Nodes["MonitorItem"];
 				node.Tag = dataGridViewMonitorItem;
@@ -55,15 +56,17 @@ namespace EBoard.SysManager
 				adapter = (new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM GeneralParams WHERE Hide=0", connection))).DataAdapter;
 				ds = new DataSet();
 				adapter.Fill(ds);
-				dataGridViewGeneralParams.DataSource = ds.Tables[0];
+				dataGridViewGeneralParams.DataSource = ds.Tables[0].DefaultView;
+				dataGridViewGeneralParams.CellValueChanged += dataGridView_CellValueChanged;
 				dataGridViewGeneralParams.Tag = adapter;
 				node = treeView1.Nodes[0].Nodes["SysParam"];
 				node.Tag = dataGridViewGeneralParams;
 				nodeMappings.Add(node.Name.ToLower(), panelGeneralParams);
 
-				var dal = new Dal(connection);
-				var categoryList = dal.GetGeneralParamCategory();
-				comboBoxCategory.DataSource = categoryList;
+				comboBoxCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+				InitCategoryList();
+
+				HasDirtyData = false;
 			}
 			finally
 			{
@@ -71,25 +74,23 @@ namespace EBoard.SysManager
 			}
 		}
 
-		public DataRow Add()
+		public DataRowView Add()
 		{
-			var node = treeView1.SelectedNode;
-			var view = node.Tag as DataGridView;
+			var view = GetCurrentDataGridView();
 			if (view == null)
 				return null;
 
-			var row = (view.DataSource as DataTable).Rows.Add();
+			var row = (view.DataSource as DataView).AddNew();
 			view.Select();
 
 			HasDirtyData = true;
 
 			return row;
 		}
-		
+
 		public int Delete()
 		{
-			var node = treeView1.SelectedNode;
-			var view = node.Tag as DataGridView;
+			var view = GetCurrentDataGridView();
 			if (view == null)
 				return -1;
 
@@ -127,7 +128,7 @@ namespace EBoard.SysManager
 					else
 					{
 						MessageBox.Show(protectNotification);
-					}					
+					}
 				}
 			}
 
@@ -157,24 +158,65 @@ namespace EBoard.SysManager
 			if (connection == null)
 				connection = DbFactory.GetConnection();
 
-			// TODO: Get settings of current node and refresh data
 			var view = node.Tag as DataGridView;
 			if (view == null)
 				return;
 
-			var adapter = view.Tag as SqlDataAdapter;			
+			isRefreshing = true;
+
+			var adapter = view.Tag as SqlDataAdapter;
 			var ds = new DataSet();
 			adapter.Fill(ds);
-			view.DataSource = ds.Tables[0];
-			//view.BringToFront();
-			
+			view.DataSource = ds.Tables[0].DefaultView;
+
 			// Refresh data may trigger the CellValueChanged event, need to reset hasDirtyData flag
 			HasDirtyData = false;
+
+			isRefreshing = false;
 		}
 
 		public override bool Save()
 		{
-			return base.Save();
+			if (!base.Save())
+				return false;
+
+			var view = GetCurrentDataGridView();
+			if (view == null)
+				return false;
+
+			try
+			{
+				view.EndEdit();
+
+				var adapter = view.Tag as SqlDataAdapter;
+				var table = (view.DataSource as DataView).Table;
+				
+				adapter.Update(table);
+				table.AcceptChanges();
+				HasDirtyData = false;
+				return true;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
+				return false;
+			}
+		}
+
+		protected override void UpdateMenuState()
+		{
+			base.UpdateMenuState();
+
+			saveToolStripMenuItem.Enabled = HasDirtyData;
+			toolStripButtonSave.Enabled = HasDirtyData;
+
+			var view = GetCurrentDataGridView();
+			if (view == null)
+				return;
+
+			var hasData = (view != null) ? (view.Rows.Count > 0) : false;
+			deleteToolStripMenuItem.Enabled = hasData;
+			toolStripButtonDelete.Enabled = hasData;
 		}
 
 		protected override void Cleanup()
@@ -193,13 +235,21 @@ namespace EBoard.SysManager
 		{
 			base.RollbackChanges();
 
-			var node = treeView1.SelectedNode;
-			var view = node.Tag as DataGridView;
+			var view = GetCurrentDataGridView();
 			if (view == null)
 				return;
 
-			(view.DataSource as DataTable).RejectChanges();
+			(view.DataSource as DataView).Table.RejectChanges();
 			HasDirtyData = false;
+		}
+
+		private DataGridView GetCurrentDataGridView()
+		{
+			var node = treeView1.SelectedNode;
+			if (node == null)
+				return null;
+
+			return node.Tag as DataGridView;
 		}
 
 		private bool IsRowProtected(DataGridViewRow row)
@@ -215,6 +265,20 @@ namespace EBoard.SysManager
 			return (bool.TryParse(row.Cells["IsProtected"].Value.ToString(), out ret)) ? ret : false;
 		}
 
+		private void InitCategoryList()
+		{
+
+			var categoryList = new SortedSet<string> { "" };
+			var rows = (dataGridViewGeneralParams.DataSource as DataView).Table.Rows;
+			foreach (DataRow row in rows)
+			{
+				categoryList.Add(row["Category"].ToString());
+			}
+
+			comboBoxCategory.DataSource = categoryList.ToList();
+		}
+
+		#region Event subscription
 		private void addToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Add();
@@ -240,6 +304,9 @@ namespace EBoard.SysManager
 			if (isInitialzing)
 				return;
 
+
+			// TODO: accept test
+
 			if (!CheckDirtyData())
 				e.Cancel = true;
 		}
@@ -258,7 +325,24 @@ namespace EBoard.SysManager
 
 		private void comboBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			//Filter
+			var category = comboBoxCategory.Text;
+			var filter = comboBoxCategory.Text == "" ? "" : string.Format("Category = '{0}'", category);
+
+			(dataGridViewGeneralParams.DataSource as DataView).RowFilter = filter;
+		}
+
+		private void dataGridViewGeneralParams_DataSourceChanged(object sender, EventArgs e)
+		{
+			InitCategoryList();
+		}
+		#endregion
+
+		private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+		{
+			if (isRefreshing)
+				return;
+
+			HasDirtyData = true;
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace EBoard.Common
 	public class DbFactory
 	{
 		private const string ConnectionString =
-			@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=OPC;Data Source=.\carestream";
+			@"Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=OPC;Data Source=.";
 
 		public static SqlConnection GetConnection()
 		{
