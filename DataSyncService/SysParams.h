@@ -26,6 +26,8 @@ public:
 	INT RefreshSysParams(BOOL bLog = FALSE);
 	INT RefreshSysParams(CDBUtil &db, BOOL bLog = FALSE);
 	void KeepDbConnection(BOOL flag) { m_bKeepDbConnection = flag; }
+	tm & GetStartTimeOfShift1() { return m_tStartTimeOfShift1; }
+	tm & GetStartTimeOfShift2() { return m_tStartTimeOfShift2; }
 
 	CSysParams();
 	virtual ~CSysParams();
@@ -48,6 +50,8 @@ private:
 	wstring	m_wszOPCServerProgID;
 	wstring	m_wszRemoteMachine;
 	BOOL	m_bKeepDbConnection;
+	tm		m_tStartTimeOfShift1;
+	tm		m_tStartTimeOfShift2;
 };
 
 #endif // !defined(AFX_SYSPARAMS_H__640CAA53_1956_4B69_9D2A_B65090686F16__INCLUDED_)

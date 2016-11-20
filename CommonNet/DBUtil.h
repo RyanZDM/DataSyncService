@@ -205,7 +205,7 @@ public:
 	BOOL StopConnectionEvent();
 	BOOL StartConnectionEvent();
 	_variant_t GetSingleValue(LPCTSTR pcszCommand, LONG lCommandType = adCmdText);
-	INT GetSingleStringValue(std::string &szVal, LPCSTR pDefault, LPCTSTR szCommand, LONG lCommandType = adCmdText);
+	INT GetSingleStringValue(std::basic_string<TCHAR> &szVal, LPCTSTR pDefault, LPCTSTR szCommand, LONG lCommandType = adCmdText);
 	LONG GetSingleLongValue(LPCTSTR szCommand, LONG lDefault, LONG lCommandType = adCmdText);
 	BOOL GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommandType = adCmdText);
 	DOUBLE GetSingleDoubleValue(LPCTSTR szCommand, DOUBLE dblDefault, BYTE nScale, LONG lCommandType = adCmdText);	

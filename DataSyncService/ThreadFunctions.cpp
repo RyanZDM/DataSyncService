@@ -280,9 +280,11 @@ unsigned __stdcall OPCDataSyncThread(void*)
 **************************************************************************/
 INT SetupTimelyTasks()
 {
-	CTimerTaskManager tm;
+	// First check if need to create new shift
+	CheckShiftTime();
+
 	vector<CTimerTask*> vTasks;
-	tm.GetTimerTasks(vTasks);
+	CTimerTaskManager::GetTimerTasks(vTasks);
 
 	INT nTasks = 0;
 	for (vector<CTimerTask*>::const_iterator vi = vTasks.begin(); vi != vTasks.end(); vi++)
@@ -425,9 +427,7 @@ void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime, INT nFixedDay)
 {
 	while (TRUE == g_bKeepWork)
 	{
-		CTimerTaskManager *pTM = new CTimerTaskManager();		
-		DWORD seconds = pTM->GetWaitSeconds(tmFixedTime, nFixedDay);
-		delete pTM;
+		DWORD seconds = CTimerTaskManager::GetWaitSeconds(tmFixedTime, nFixedDay);
 
 		// To make sure the thread can exit immediately when the application is about to exit
 		if (WaitForSingleObject(g_hExitEvent, (DWORD)(seconds * 1000)) != WAIT_TIMEOUT)

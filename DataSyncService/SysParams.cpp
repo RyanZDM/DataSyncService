@@ -9,6 +9,7 @@
 #include "LogUtil.h"
 #include "ContainerUtil.h"
 #include "MyDB.h"
+#include "TimerTaskManager.h"
 
 extern CLogUtil g_Logger;
 
@@ -18,12 +19,12 @@ extern CLogUtil g_Logger;
 
 CSysParams::CSysParams()
 {
-	m_hMutex				= NULL;
-	m_lQryInterval			= DEFAULT_QRY_INTERVAL;
-	m_bEnableLog			= DEFAULT_LOG_FLAG;
-	m_bKeepDbConnection		= DEFAULT_KEEP_DB_CONNECT;
+	m_hMutex = NULL;
+	m_lQryInterval = DEFAULT_QRY_INTERVAL;
+	m_bEnableLog = DEFAULT_LOG_FLAG;
+	m_bKeepDbConnection = DEFAULT_KEEP_DB_CONNECT;
 
-	InitMutex();		
+	InitMutex();
 }
 
 CSysParams::~CSysParams()
@@ -37,32 +38,32 @@ CSysParams::~CSysParams()
 
 void CSysParams::InitMutex()
 {
-	srand( (unsigned)time( NULL ) );
+	srand((unsigned)time(NULL));
 	INT nRandom = rand();
 	TCHAR szName[50];
 	wsprintf(szName, _T("_DA_SYS_PARAMTERS_%d"), nRandom);
 	m_hMutex = CreateMutex(NULL, FALSE, szName);
 	if (m_hMutex)
-		g_Logger.VLog(_T("[CSysParams::InitMutex] Mutex has been created: %s"), szName);
+g_Logger.VLog(_T("[CSysParams::InitMutex] Mutex has been created: %s"), szName);
 	else
 		g_Logger.ForceLog(_T("[CSysParams::InitMutex] CreateMutex failed. GetLastError=%d"), GetLastError());
 }
 
 BOOL CSysParams::Lock(DWORD dwMilliseconds)
 {
-	DWORD dwWaitResult = WaitForSingleObject(m_hMutex, dwMilliseconds); 
-    switch (dwWaitResult) 
-    {
-        // The thread got mutex ownership.
-        case WAIT_OBJECT_0: 
-            return TRUE;
-			
-        //case WAIT_TIMEOUT:	// Cannot get mutex ownership due to time-out.
-        //case WAIT_ABANDONED:	// Got ownership of the abandoned mutex object.
-			
-		default:
-			return FALSE;
-    }
+	DWORD dwWaitResult = WaitForSingleObject(m_hMutex, dwMilliseconds);
+	switch (dwWaitResult)
+	{
+		// The thread got mutex ownership.
+	case WAIT_OBJECT_0:
+		return TRUE;
+
+		//case WAIT_TIMEOUT:	// Cannot get mutex ownership due to time-out.
+		//case WAIT_ABANDONED:	// Got ownership of the abandoned mutex object.
+
+	default:
+		return FALSE;
+	}
 }
 
 void CSysParams::Unlock()
@@ -78,7 +79,7 @@ INT CSysParams::RefreshSysParams(BOOL bLog)
 		return ERR_CANT_CONNECT_DB;
 
 	INT nRet = RefreshSysParams(db, bLog);
-	
+
 	db.Disconnect();
 
 	return nRet;
@@ -89,19 +90,19 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 	USES_CONVERSION;
 
 	INT nRet = ERR_UNKONW_ERROR;
-			
+
 	if (Lock(LOCK_WAIT_TIMEOUT))
-	{	
-		try	
+	{
+		try
 		{
 			TCHAR buf[500];
 			basic_string<TCHAR> szMsg(_T("Refresh system parameters:"));
 			_variant_t value;
-			
+
 			value = db.GetSingleValue(_T("SELECT Convert(int,Value) FROM GeneralParams WHERE Category='System' AND Name='QueryInterval'"));
-			if ( (db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_I4) )
+			if ((db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_I4))
 			{
-				SetQueryInterval( value.lVal );
+				SetQueryInterval(value.lVal);
 				if (bLog)
 				{
 					_stprintf_s(buf, sizeof(buf) / sizeof(buf[0]), _T("\n\tQuery internal: %d ms"), m_lQryInterval);
@@ -109,7 +110,7 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 				}
 			}
 			else
-			{  
+			{
 				if (bLog)
 				{
 					_stprintf_s(buf, sizeof(buf) / sizeof(buf[0]), _T("\n\tQuery internal: use default value %d ms"), DEFAULT_QRY_INTERVAL);
@@ -118,7 +119,7 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 			}
 
 			value = db.GetSingleValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='OPCServerProgID'"));
-			if ( (db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_BSTR) )
+			if ((db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_BSTR))
 			{
 				LPWSTR pTemp = (BSTR)value.pbstrVal;
 				m_wszOPCServerProgID = pTemp;
@@ -130,7 +131,7 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 			}
 
 			value = db.GetSingleValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='RemoteMachine'"));
-			if ( (db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_BSTR) )
+			if ((db.GetLastErrorCode() == ERR_SUCCESS) && (value.vt == VT_BSTR))
 			{
 				LPWSTR pTemp = (BSTR)value.pbstrVal;
 				SetRemoteMachine(pTemp);
@@ -141,13 +142,36 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 				}
 			}
 
-			m_bKeepDbConnection = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='KeepDbConnection'"), m_bKeepDbConnection);			
+			std::basic_string<TCHAR> szValue;
+			if (db.GetSingleStringValue(szValue, DEFAULT_SHIFT_START_1, _T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='ShiftStartTime1'")) > 0)
+			{
+				LPCTSTR pTemp = szValue.c_str();
+				CTimerTaskManager::ParseTimeString(pTemp, m_tStartTimeOfShift1);
+				if (bLog)
+				{
+					szMsg += _T("\n\tShiftStartTime1: ");
+					szMsg += pTemp;
+				}
+			}
+
+			if (db.GetSingleStringValue(szValue, DEFAULT_SHIFT_START_1, _T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='ShiftStartTime2'")) > 0)
+			{
+				LPCTSTR pTemp = szValue.c_str();
+				CTimerTaskManager::ParseTimeString(pTemp, m_tStartTimeOfShift2);
+				if (bLog)
+				{
+					szMsg += _T("\n\tShiftStartTime2: ");
+					szMsg += pTemp;
+				}
+			}
+
+			m_bKeepDbConnection = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='KeepDbConnection'"), m_bKeepDbConnection);
 			if (bLog)
 			{
 				szMsg += _T("\n\tKeep DB Connection: ");
 				szMsg += (m_bKeepDbConnection ? _T("True") : _T("False"));
 			}
-			
+
 			BOOL bFlag = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='EnableLog'"), m_bEnableLog);
 			if (bLog)
 			{
@@ -155,13 +179,13 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 				szMsg += (bFlag ? _T("True") : _T("False"));
 			}
 
-			EnableLog( bFlag );				
-						
+			EnableLog(bFlag);
+
 			if (bLog)
 				g_Logger.ForceLog(szMsg.c_str());
 		}
-		catch (...) { }
-		
+		catch (...) {}
+
 		Unlock();
 		nRet = ERR_SUCCESS;
 	}
@@ -202,19 +226,19 @@ BOOL CSysParams::SetOPCServerProgID(LPCWSTR pName)
 
 INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 {
- 	ClearVector(&vList);
+	ClearVector(&vList);
 
 	INT nRet = ERR_UNKONW_ERROR;
 	CMyDB db;
 	if (!db.Connect())
 		return ERR_CANT_CONNECT_DB;
-	
+
 	USES_CONVERSION;	// for W2A or A2W
-	
+
 	if (Lock(LOCK_WAIT_TIMEOUT))
 	{
 		try
-		{		
+		{
 			LPCTSTR pSQL = _T("SELECT ItemID, Address, DisplayName, NeedAccumulate, InConverter, OutConverter, DataType From MonitorItem WHERE Status='A'");
 			_RecordsetPtr pRS = db.GetRecordset(_variant_t(pSQL));
 			if (pRS)
@@ -247,9 +271,9 @@ INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 
 					pRS->MoveNext();
 				}
-				
+
 				pRS->Close();
-				pRS.Release();		
+				pRS.Release();
 			}
 			else
 			{
@@ -261,7 +285,7 @@ INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 			Unlock();
 			nRet;
 		}
-		
+
 		Unlock();
 		nRet = vList.size();
 	}
@@ -269,7 +293,7 @@ INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 	{
 		nRet = ERR_LOCK_TIMEOUT;
 	}
-	
+
 	db.Disconnect();
 	return nRet;
 }
@@ -287,12 +311,12 @@ BOOL CSysParams::GetStringValue(_RecordsetPtr pRS, LONG lIndex, LPTSTR *ppBuf, D
 
 	if (VT_BSTR != vRetVal.vt)
 		return FALSE;
-		
+
 	dwLen = 0;
 	LPCTSTR itemId = W2CT((BSTR)vRetVal.pbstrVal);
 	size_t len = _tcslen(itemId) + 1;
 	*ppBuf = new TCHAR[len];
 	_tcscpy_s(*ppBuf, len, itemId);
-	
+
 	return TRUE;
 }

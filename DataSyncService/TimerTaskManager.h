@@ -13,8 +13,8 @@ public:
 	CTimerTaskManager();
 	~CTimerTaskManager();
 
-	INT GetTimerTasks(vector<CTimerTask*> &vTasks);
-	BOOL ParseTimeString(LPCTSTR pcszTimeStr, tm &Time);
-	DWORD GetWaitSeconds(tm &tmFixedTime, INT nFixedDay = 0);
+	INT static GetTimerTasks(vector<CTimerTask*> &vTasks);
+	BOOL static ParseTimeString(LPCTSTR pcszTimeStr, tm &Time);
+	DWORD static GetWaitSeconds(tm &tmFixedTime, INT nFixedDay = 0);
 };
 

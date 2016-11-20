@@ -961,9 +961,9 @@ BOOL CDBUtil::GetSingleBoolValue(LPCTSTR szCommand, BOOL bDefault, LONG lCommand
 	return bDefault;
 }
 
-INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCSTR pDefault, LPCTSTR szCommand, LONG lCommandType)
+INT CDBUtil::GetSingleStringValue(std::basic_string<TCHAR> &szVal, LPCTSTR pDefault, LPCTSTR szCommand, LONG lCommandType)
 {
-	szVal = pDefault ? pDefault : "";
+	szVal = pDefault ? pDefault : _T("");
 	_variant_t vRetVal = GetSingleValue(szCommand, lCommandType);
 	if (ERR_SUCCESS == m_nLastErrorCode)
 	{
@@ -972,9 +972,8 @@ INT CDBUtil::GetSingleStringValue(std::string &szVal, LPCSTR pDefault, LPCTSTR s
 		case VT_BSTR:
 			{
 				SetLastErrorCode(0);
-				char* pTemp = _com_util::ConvertBSTRToString((BSTR)vRetVal.pbstrVal);
+				LPCTSTR pTemp = W2CT((BSTR)vRetVal.pbstrVal);
 				szVal = pTemp;
-				delete[] pTemp;
 				return szVal.size();
 			}
 		default:
