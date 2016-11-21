@@ -70,9 +70,6 @@
     <ClCompile Include="TimerTaskManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShiftManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -127,9 +124,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="TimerTaskManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ShiftManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

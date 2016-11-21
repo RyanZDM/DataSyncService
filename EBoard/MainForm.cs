@@ -94,7 +94,7 @@ namespace EBoard
 			}
 		}
 
-		private void RefreshData(ProductionData data)
+		private void RefreshData(ShiftStatInfo data)
 		{
 			if (InvokeRequired)
 			{
@@ -102,16 +102,17 @@ namespace EBoard
 				return;
 			}
 
-			if (data.Workers.Count > 0)
-			{
-				var sb = new StringBuilder();
-				data.Workers.ForEach(w => sb.Append(string.Format("姓名 {0}  工号 {1}    ", w.Id, w.Name)));
-				labelWorkers.Text = sb.ToString();
-			}
-			else
-			{
-				labelWorkers.Text = "";
-			}
+			// TODO
+			//if (data.Workers.Count > 0)
+			//{
+			//	var sb = new StringBuilder();
+			//	data.Workers.ForEach(w => sb.Append(string.Format("姓名 {0}  工号 {1}    ", w.Id, w.Name)));
+			//	labelWorkers.Text = sb.ToString();
+			//}
+			//else
+			//{
+			//	labelWorkers.Text = "";
+			//}
 
 			labelTotalRuntime1.Text = data.TotalRuntime1.ToString();
 			labelTotalRuntime2.Text = data.TotalRuntime2.ToString();

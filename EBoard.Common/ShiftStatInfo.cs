@@ -3,13 +3,25 @@ using System.Collections.Generic;
 
 namespace EBoard.Common
 {
-	public class ProductionData
+	public class ShiftStatInfo
 	{
-		public string CurrentShift { get; set; }
+		public string ShiftId { get; set; }
 
-		public List<Worker> Workers { get; set; }
+		public string LastLoginId { get; set; }
+
+		public string LastLoginName { get; set; }
+
+		public DateTime BeginTime { get; set; }
+
+		public DateTime ActualBeginTime { get; set; }
+
+		public DateTime EndTime { get; set; }
 
 		public DateTime LastUpdate { get; set; }
+
+		public IDictionary<string, double> MonitorItems { get; set; }
+
+		public IDictionary<string, double> StatInfo { get; set; }
 
 		/// <summary>
 		/// 填埋场沼气流量

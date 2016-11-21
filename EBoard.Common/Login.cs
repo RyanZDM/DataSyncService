@@ -55,6 +55,8 @@ namespace EBoard.Common
 
 		private void DoLogin()
 		{
+			// TODO: after validated, update loginName, loginId,lastLoginTime. Notify user if they are not the first one log on of current shift
+
 			if (loginMode == LoginMode.IdCard)
 			{
 				DialogResult = DialogResult.OK;

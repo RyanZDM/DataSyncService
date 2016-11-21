@@ -280,6 +280,8 @@ unsigned __stdcall OPCDataSyncThread(void*)
 **************************************************************************/
 INT SetupTimelyTasks()
 {
+	// TODO: timerly create monthly report and create Excel
+
 	vector<CTimerTask*> vTasks;
 	CTimerTaskManager::GetTimerTasks(vTasks);
 

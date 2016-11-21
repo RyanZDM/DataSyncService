@@ -34,8 +34,8 @@
 			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("基础数据", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.operationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,15 +57,6 @@
 			this.comboBoxCategory = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.dataGridViewGeneralParams = new System.Windows.Forms.DataGridView();
-			this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.DispName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.DispOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Hide = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.IsEncrypted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.IsProtected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.dataGridViewMonitorItem = new System.Windows.Forms.DataGridView();
 			this.ItemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +67,15 @@
 			this.InConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.OutConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.DispName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.DispOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.IsHide = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.IsEncrypted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.IsProtected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -317,7 +317,7 @@
             this.Value,
             this.DispOrder,
             this.Memo,
-            this.Hide,
+            this.IsHide,
             this.IsEncrypted,
             this.IsProtected});
 			this.dataGridViewGeneralParams.Location = new System.Drawing.Point(0, 38);
@@ -327,87 +327,6 @@
 			this.dataGridViewGeneralParams.Size = new System.Drawing.Size(716, 503);
 			this.dataGridViewGeneralParams.TabIndex = 0;
 			this.dataGridViewGeneralParams.DataSourceChanged += new System.EventHandler(this.dataGridViewGeneralParams_DataSourceChanged);
-			// 
-			// Category
-			// 
-			this.Category.DataPropertyName = "Category";
-			this.Category.HeaderText = "分类";
-			this.Category.Name = "Category";
-			this.Category.Visible = false;
-			// 
-			// ItemName
-			// 
-			this.ItemName.DataPropertyName = "Name";
-			this.ItemName.HeaderText = "名称";
-			this.ItemName.MaxInputLength = 50;
-			this.ItemName.Name = "ItemName";
-			this.ItemName.Width = 200;
-			// 
-			// DispName
-			// 
-			this.DispName.DataPropertyName = "DispName";
-			this.DispName.HeaderText = "显示名称";
-			this.DispName.Name = "DispName";
-			this.DispName.Width = 200;
-			// 
-			// Value
-			// 
-			this.Value.DataPropertyName = "Value";
-			this.Value.HeaderText = "值";
-			this.Value.MaxInputLength = 200;
-			this.Value.Name = "Value";
-			this.Value.Width = 200;
-			// 
-			// DispOrder
-			// 
-			this.DispOrder.DataPropertyName = "DispOrder";
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.DispOrder.DefaultCellStyle = dataGridViewCellStyle1;
-			this.DispOrder.HeaderText = "显示序号";
-			this.DispOrder.MaxInputLength = 5;
-			this.DispOrder.Name = "DispOrder";
-			this.DispOrder.Width = 80;
-			// 
-			// Memo
-			// 
-			this.Memo.DataPropertyName = "Memo";
-			this.Memo.HeaderText = "备注";
-			this.Memo.MaxInputLength = 100;
-			this.Memo.Name = "Memo";
-			this.Memo.Width = 300;
-			// 
-			// Hide
-			// 
-			this.Hide.DataPropertyName = "Hide";
-			this.Hide.FalseValue = "0";
-			this.Hide.HeaderText = "隐藏";
-			this.Hide.Name = "Hide";
-			this.Hide.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.Hide.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.Hide.TrueValue = "1";
-			this.Hide.Visible = false;
-			// 
-			// IsEncrypted
-			// 
-			this.IsEncrypted.DataPropertyName = "IsEncrypted";
-			this.IsEncrypted.FalseValue = "0";
-			this.IsEncrypted.HeaderText = "加密";
-			this.IsEncrypted.Name = "IsEncrypted";
-			this.IsEncrypted.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.IsEncrypted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.IsEncrypted.TrueValue = "1";
-			this.IsEncrypted.Visible = false;
-			// 
-			// IsProtected
-			// 
-			this.IsProtected.DataPropertyName = "IsProtected";
-			this.IsProtected.FalseValue = "0";
-			this.IsProtected.HeaderText = "保护";
-			this.IsProtected.Name = "IsProtected";
-			this.IsProtected.ReadOnly = true;
-			this.IsProtected.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.IsProtected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.IsProtected.TrueValue = "0";
 			// 
 			// dataGridViewMonitorItem
 			// 
@@ -501,6 +420,87 @@
 			this.Status.Name = "Status";
 			this.Status.TrueValue = "A";
 			// 
+			// Category
+			// 
+			this.Category.DataPropertyName = "Category";
+			this.Category.HeaderText = "分类";
+			this.Category.Name = "Category";
+			this.Category.Visible = false;
+			// 
+			// ItemName
+			// 
+			this.ItemName.DataPropertyName = "Name";
+			this.ItemName.HeaderText = "名称";
+			this.ItemName.MaxInputLength = 50;
+			this.ItemName.Name = "ItemName";
+			this.ItemName.Width = 200;
+			// 
+			// DispName
+			// 
+			this.DispName.DataPropertyName = "DispName";
+			this.DispName.HeaderText = "显示名称";
+			this.DispName.Name = "DispName";
+			this.DispName.Width = 200;
+			// 
+			// Value
+			// 
+			this.Value.DataPropertyName = "Value";
+			this.Value.HeaderText = "值";
+			this.Value.MaxInputLength = 200;
+			this.Value.Name = "Value";
+			this.Value.Width = 200;
+			// 
+			// DispOrder
+			// 
+			this.DispOrder.DataPropertyName = "DispOrder";
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.DispOrder.DefaultCellStyle = dataGridViewCellStyle1;
+			this.DispOrder.HeaderText = "显示序号";
+			this.DispOrder.MaxInputLength = 5;
+			this.DispOrder.Name = "DispOrder";
+			this.DispOrder.Width = 80;
+			// 
+			// Memo
+			// 
+			this.Memo.DataPropertyName = "Memo";
+			this.Memo.HeaderText = "备注";
+			this.Memo.MaxInputLength = 100;
+			this.Memo.Name = "Memo";
+			this.Memo.Width = 300;
+			// 
+			// IsHide
+			// 
+			this.IsHide.DataPropertyName = "Hide";
+			this.IsHide.FalseValue = "0";
+			this.IsHide.HeaderText = "隐藏";
+			this.IsHide.Name = "IsHide";
+			this.IsHide.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.IsHide.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.IsHide.TrueValue = "1";
+			this.IsHide.Visible = false;
+			// 
+			// IsEncrypted
+			// 
+			this.IsEncrypted.DataPropertyName = "IsEncrypted";
+			this.IsEncrypted.FalseValue = "0";
+			this.IsEncrypted.HeaderText = "加密";
+			this.IsEncrypted.Name = "IsEncrypted";
+			this.IsEncrypted.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.IsEncrypted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.IsEncrypted.TrueValue = "1";
+			this.IsEncrypted.Visible = false;
+			// 
+			// IsProtected
+			// 
+			this.IsProtected.DataPropertyName = "IsProtected";
+			this.IsProtected.FalseValue = "0";
+			this.IsProtected.HeaderText = "保护";
+			this.IsProtected.Name = "IsProtected";
+			this.IsProtected.ReadOnly = true;
+			this.IsProtected.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.IsProtected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.IsProtected.TrueValue = "0";
+			// 
 			// DataMaintainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -554,15 +554,6 @@
 		private System.Windows.Forms.DataGridView dataGridViewGeneralParams;
 		private System.Windows.Forms.ComboBox comboBoxCategory;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Category;
-		private System.Windows.Forms.DataGridViewTextBoxColumn ItemName;
-		private System.Windows.Forms.DataGridViewTextBoxColumn DispName;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Value;
-		private System.Windows.Forms.DataGridViewTextBoxColumn DispOrder;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Memo;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn Hide;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn IsEncrypted;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn IsProtected;
 		private System.Windows.Forms.DataGridViewTextBoxColumn ItemId;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Address;
 		private System.Windows.Forms.DataGridViewTextBoxColumn DisplayName;
@@ -572,5 +563,14 @@
 		private System.Windows.Forms.DataGridViewTextBoxColumn InConverter;
 		private System.Windows.Forms.DataGridViewTextBoxColumn OutConverter;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn Status;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Category;
+		private System.Windows.Forms.DataGridViewTextBoxColumn ItemName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn DispName;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Value;
+		private System.Windows.Forms.DataGridViewTextBoxColumn DispOrder;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Memo;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn IsHide;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn IsEncrypted;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn IsProtected;
 	}
 }

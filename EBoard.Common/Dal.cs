@@ -27,7 +27,19 @@ namespace EBoard.Common
 			connection = conn;
 		}
 
-		public ProductionData GetProductionData(DateTime? lastUpdate = null)
+		public string GetCurrentShiftId()
+		{
+			var command = new SqlCommand("sp_GetCurrentShiftId", connection);
+			command.CommandType = CommandType.StoredProcedure;
+			var sqlParam = command.Parameters.Add("@ShiftId", SqlDbType.UniqueIdentifier);
+			sqlParam.Direction = ParameterDirection.Output;
+			command.ExecuteNonQuery();
+
+			return sqlParam.Value.ToString();
+		}
+
+
+		public ShiftStatInfo GetProductionData(DateTime? lastUpdate = null)
 		{
 			var ds = new DataSet();
 			var sql = @"Select a.ItemId, a.Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId;Select Max(LastUpdate) As LastUpdate From ItemLatestStatus;";
@@ -35,120 +47,65 @@ namespace EBoard.Common
 			adapter.Fill(ds, "ItemLatestStatus");
 
 			// Check if the data changed
-			var lastUpdateTable = ds.Tables["ItemLatestStatus1"];
+			var latestTable = ds.Tables["ItemLatestStatus"];
 
-			// Do query need if no items in table
-			if (lastUpdateTable.Rows[0][0] == DBNull.Value)
+			// No query need if no items in table
+			if (latestTable.Rows.Count < 1)
 				return null;
 
-			// No data change after 'lastUpdate'
-			var newUpdate = (DateTime)lastUpdateTable.Rows[0][0];
+			// No need to load data if no data change after 'lastUpdate'
+			var newUpdate = (DateTime)ds.Tables[1].Rows[0]["LastUpdate"];
 			if (lastUpdate.HasValue && lastUpdate >= newUpdate)
 				return null;
 
-			var data = new ProductionData { LastUpdate = newUpdate };
+			// Get data from ShiftStatMstr table
+			var shiftId = GetCurrentShiftId();
+			var data = new ShiftStatInfo { LastUpdate = newUpdate };
 
-			sql = @"Select Id,ShiftId,BeginTime,EndTime,IsCurrent,Status From ProductionStatMstr Where IsCurrent = 1";
-			new SqlDataAdapter(sql, connection).Fill(ds, "ProductionStatMstr");
+			sql = string.Format(@"Select CAST(ShiftId AS nvarchar(50)) ShiftId,BeginTime,ActualBeginTime,EndTime,LastLoginId,LastLoginName,LastLoginTime,Status From ShiftStatMstr Where ShiftId=CAST('{0}' as uniqueidentifier)", shiftId);
+			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatMstr");
 
-			sql = @"SELECT ItemId,SubTotal FROM ProductionStatDet, ProductionStatMstr, MonitorItem Where ProductionId=Id And ItemId = Item And IsCurrent=1";
-			new SqlDataAdapter(sql, connection).Fill(ds, "ProductionStatDet");
-
-			sql = @"SELECT WorkerId, WorkerName FROM WorkersInProduction, ProductionStatMstr Where ProductionId=Id And IsCurrent=1";
-			new SqlDataAdapter(sql, connection).Fill(ds, "WorkersInProduction");
-			
-			// Current shift
-			var mstrTable = ds.Tables["ProductionStatMstr"];
+			var mstrTable = ds.Tables["ShiftStatMstr"];
 			if ((mstrTable == null) || (mstrTable.Rows.Count < 1))
 			{
-				data.CurrentShift = "";
+				data.ShiftId = "";
 				return data;
 			}
+						
+			UpdateProperties(mstrTable.Rows[0], data);
 
-			// Workers
-			data.CurrentShift = mstrTable.Rows[0]["ShiftId"].ToString();
-			data.Workers = new List<Worker>();
-			foreach (DataRow row in ds.Tables["WorkersInProduction"].Rows)
+			// Get data from ShiftStatDet table
+			sql = string.Format(@"SELECT Item,SubTotal FROM ShiftStatDet, ShiftStatMstr Where ShiftStatMstr.ShiftId=ShiftStatDet.ShiftId and ShiftStatMstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
+			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatDet");
+
+			var detTable = ds.Tables["ShiftStatDet"];
+			data.StatInfo = new Dictionary<string, double>();
+			detTable.AsEnumerable().ToList().ForEach(row =>
 			{
-				data.Workers.Add(new Worker
+				try
 				{
-					Id = row["WorkerId"].ToString(),
-					Name = row["WorkerName"].ToString()
-				});
-			}
+					data.StatInfo[row["Item"].ToString().ToLower()] = (double)row["SubTotal"];
+				}
+				catch (Exception ex)
+				{
+					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ProductionStatDet. {2}", row["SubTotal"], row["Item"], ex);
+				}
+			});
 
-			var latestTable = ds.Tables["ItemLatestStatus"];
-			var latestDict = new Dictionary<string, double>();
+			// Add latest data into list
+			data.MonitorItems = new Dictionary<string, double>();
 			latestTable.AsEnumerable().ToList().ForEach(row =>
 			{
 				try
 				{
-					latestDict[row["ItemId"].ToString().ToLower()] = (double)row["Val"];
+					data.MonitorItems[row["ItemId"].ToString().ToLower()] = (double)row["Val"];
 				}
 				catch (Exception ex)
 				{
 					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ItemLatestStatus. {2}", row["Val"], row["ItemId"], ex);
 				}
 			});
-
-			//Energy Production
-			if (latestDict.Keys.Contains(EnergyProduction1ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.EnergyProduction1 = latestDict[EnergyProduction1ColName.ToLower()];
-			}
-
-			if (latestDict.Keys.Contains(EnergyProduction2ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.EnergyProduction2 = latestDict[EnergyProduction2ColName.ToLower()];
-			}
-
-			// Total run time
-			if (latestDict.Keys.Contains(TotalRuntime1ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.TotalRuntime1 = latestDict[TotalRuntime1ColName.ToLower()];
-			}
-
-			if (latestDict.Keys.Contains(TotalRuntime2ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.TotalRuntime2 = latestDict[TotalRuntime2ColName.ToLower()];
-			}
-
-			var detTable = ds.Tables["ProductionStatDet"];
-			var subtotalDict = new Dictionary<string, double>();
-			detTable.AsEnumerable().ToList().ForEach(row =>
-			{
-				try
-				{
-					subtotalDict[row["ItemId"].ToString().ToLower()] = (double)row["SubTotal"];
-				}
-				catch (Exception ex)
-				{
-					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ProductionStatDet. {2}", row["SubTotal"], row["ItemId"], ex);
-				}
-			});
-
-			// Biogas
-			if (subtotalDict.Keys.Contains(Biogas1ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.Biogas1 = subtotalDict[Biogas1ColName.ToLower()];
-			}
-
-			if (subtotalDict.Keys.Contains(Biogas2ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.Biogas2 = subtotalDict[Biogas2ColName.ToLower()];
-			}
-
-			// Run time
-			if (subtotalDict.Keys.Contains(Runtime1ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.Runtime1 = subtotalDict[Runtime1ColName.ToLower()];
-			}
-
-			if (subtotalDict.Keys.Contains(Runtime2ColName, StringComparer.OrdinalIgnoreCase))
-			{
-				data.Runtime2 = subtotalDict[Runtime2ColName.ToLower()];
-			}
-
+			
 			return data;
 		}
 
@@ -232,7 +189,7 @@ namespace EBoard.Common
 			{
 				user.Roles.Add(r[0].ToString());
 			}
-			
+
 			return user;
 		}
 
@@ -270,7 +227,7 @@ namespace EBoard.Common
 				throw new DuplicateNameException("The LoginId is duplicated.");
 
 			var newId = Guid.NewGuid().ToString();
-			var sql = string.Format("INSERT INTO [User] (UserId,LoginId,Name,IDCard,Status) VALUES(CONVERT(uniqueidentifier,'{0}'),'{1}','{2}','{3}','A')", 
+			var sql = string.Format("INSERT INTO [User] (UserId,LoginId,Name,IDCard,Status) VALUES(CONVERT(uniqueidentifier,'{0}'),'{1}','{2}','{3}','A')",
 							newId, user.LoginId, user.Name, user.IDCard ?? "");
 
 			using (var cmd = connection.CreateCommand())
@@ -287,7 +244,7 @@ namespace EBoard.Common
 		public bool DeleteUser(User user)
 		{
 			using (var trans = connection.BeginTransaction())
-			{				
+			{
 				using (var cmd = connection.CreateCommand())
 				{
 					var sql = string.Format("DELETE FROM UserInRole WHERE UserId=CONVERT(uniqueidentifier,'{0}')", user.UserId);
@@ -301,7 +258,7 @@ namespace EBoard.Common
 					trans.Commit();
 
 					return ret;
-				}				
+				}
 			}
 		}
 
@@ -313,13 +270,14 @@ namespace EBoard.Common
 			var adapter = new SqlDataAdapter();
 			adapter.SelectCommand = new SqlCommand(sql, connection);
 			var scb = new SqlCommandBuilder(adapter);
-			
+
 			adapter.Fill(ds);
 			if (ds.Tables[0].Rows.Count < 1)
 				throw new DllNotFoundException();
 
 			var columns = ds.Tables[0].Columns;
 			var row = ds.Tables[0].Rows[0];
+			
 			var properties = typeof(User).GetProperties()
 										.Where(p => p.CanRead && !(p.PropertyType.IsGenericType));
 
@@ -336,5 +294,41 @@ namespace EBoard.Common
 			return user;
 		}
 		#endregion
+
+		private int UpdateProperties(DataRow row, object obj)
+		{
+			if (row == null || obj == null)
+				return 0;
+
+			// Cannot get column info if the Table is null
+			var table = row.Table;
+			if (table == null)
+				return 0;
+
+			var columns = table.Columns;
+			var properties = obj.GetType().GetProperties()
+										.Where(p => p.CanWrite && !(p.PropertyType.IsGenericType));
+
+			var count = 0;
+			foreach (var prop in properties)
+			{
+				if (!columns.Contains(prop.Name))
+					continue;
+
+				var val = row[prop.Name];
+				{
+					if (val.GetType() == typeof(DBNull))
+					{
+						var propType = prop.PropertyType;
+						val = propType.IsValueType ? Activator.CreateInstance(propType) : null;
+					}
+				}
+
+				prop.SetValue(obj, val);
+				count++;
+			}
+
+			return count;
+		}
 	}
 }
