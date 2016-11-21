@@ -280,9 +280,6 @@ unsigned __stdcall OPCDataSyncThread(void*)
 **************************************************************************/
 INT SetupTimelyTasks()
 {
-	// First check if need to create new shift
-	CheckShiftTime();
-
 	vector<CTimerTask*> vTasks;
 	CTimerTaskManager::GetTimerTasks(vTasks);
 

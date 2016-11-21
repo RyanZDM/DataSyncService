@@ -80,6 +80,9 @@
       <RegisterOutput>true</RegisterOutput>
       <OutputFile>$(SolutionDir)bin\$(Configuration)\$(TargetName)$(TargetExt) </OutputFile>
     </Link>
+    <PostBuildEvent>
+      <Command>copy *.ini $(SolutionDir)bin\$(Configuration)\ /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
