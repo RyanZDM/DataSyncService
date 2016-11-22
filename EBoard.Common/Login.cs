@@ -32,6 +32,10 @@ namespace EBoard.Common
 
 		public User CurrentUser { get; private set; }
 
+		public delegate bool AdditionalCheckDelegate();
+
+		public AdditionalCheckDelegate AdditionalCheckAfterValidated;
+
 		public Login(string next = "", bool alwaysOpenNew = true)
 		{
 			InitializeComponent();
@@ -55,8 +59,6 @@ namespace EBoard.Common
 
 		private void DoLogin()
 		{
-			// TODO: after validated, update loginName, loginId,lastLoginTime. Notify user if they are not the first one log on of current shift
-
 			if (loginMode == LoginMode.IdCard)
 			{
 				DialogResult = DialogResult.OK;

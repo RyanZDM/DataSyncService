@@ -73,16 +73,16 @@ namespace EBoard
 			{
 				var conn = DbFactory.GetConnection();
 				var dal = new Dal(conn);
-				var productionData = dal.GetProductionData(lastUpdateTime);
-				if (productionData == null)
+				var shiftStatInfo = dal.GetShiftStatInfo(lastUpdateTime);
+				if (shiftStatInfo == null)
 					return;
 
 				// Need to refresh two charts the first time
 				var alwaysRefresh = (!lastUpdateTime.HasValue);
 
-				lastUpdateTime = productionData.LastUpdate;
+				lastUpdateTime = shiftStatInfo.LastUpdate;
 
-				RefreshData(productionData);
+				RefreshData(shiftStatInfo);
 
 				var reporter = new Reporter(conn);
 				var ds = reporter.GetCurrentMonthData();
@@ -102,29 +102,25 @@ namespace EBoard
 				return;
 			}
 
-			// TODO
-			//if (data.Workers.Count > 0)
-			//{
-			//	var sb = new StringBuilder();
-			//	data.Workers.ForEach(w => sb.Append(string.Format("姓名 {0}  工号 {1}    ", w.Id, w.Name)));
-			//	labelWorkers.Text = sb.ToString();
-			//}
-			//else
-			//{
-			//	labelWorkers.Text = "";
-			//}
+			labelWorkers.Text = string.Format("姓名 {0}  工号 {1}    ", data.LastLoginId, data.LastLoginName);
 
-			labelTotalRuntime1.Text = data.TotalRuntime1.ToString();
-			labelTotalRuntime2.Text = data.TotalRuntime2.ToString();
-			labelBiogas1.Text = data.Biogas1.ToString();
-			labelBiogas2.Text = data.Biogas2.ToString();
-			labelBiogasTotal.Text = (data.Biogas1 + data.Biogas2).ToString();
-			labelEnergyProduction1.Text = data.EnergyProduction1.ToString();
-			labelEnergyProduction2.Text = data.EnergyProduction2.ToString();
-			labelEnergyProductionTotal.Text = (data.EnergyProduction1 + data.EnergyProduction2).ToString();
-			labelRuntime1.Text = data.Runtime1.ToString();
-			labelRuntime2.Text = data.Runtime2.ToString();
-			labelRuntimeTotal.Text = (data.Runtime1 + data.Runtime2).ToString();
+			labelTotalRuntime1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.TotalRuntime1ColName]);
+			labelTotalRuntime2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.TotalRuntime2ColName]);
+
+			labelBiogas1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Biogas1ColName]);
+			labelBiogas2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Biogas2ColName]);
+			labelBiogasTotal.Text = ((data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName) ? data.StatInfo[ShiftStatInfo.TotalRuntime1ColName] : 0.0)
+									+ (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime2ColName) ? data.StatInfo[ShiftStatInfo.TotalRuntime2ColName] : 0.0)).ToString();
+
+			labelEnergyProduction1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.EnergyProduction1ColName]);
+			labelEnergyProduction2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.EnergyProduction2ColName]);
+			labelEnergyProductionTotal.Text = ((data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName) ? data.StatInfo[ShiftStatInfo.EnergyProduction1ColName] : 0.0)
+												+ (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName) ? data.StatInfo[ShiftStatInfo.EnergyProduction2ColName] : 0.0)).ToString();
+			
+			labelRuntime1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Runtime1ColName]);
+			labelRuntime2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Runtime2ColName]);			
+			labelRuntimeTotal.Text = ((data.StatInfo.ContainsKey(ShiftStatInfo.Runtime1ColName) ? data.StatInfo[ShiftStatInfo.Runtime1ColName] : 0.0)
+										+ (data.StatInfo.ContainsKey(ShiftStatInfo.Runtime2ColName) ? data.StatInfo[ShiftStatInfo.Runtime2ColName] : 0.0)).ToString();
 		}
 
 		#region For Chart

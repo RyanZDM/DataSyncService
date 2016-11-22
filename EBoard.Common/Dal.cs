@@ -11,15 +11,6 @@ namespace EBoard.Common
 	{
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-		private const string Biogas1ColName = "Biogas1";
-		private const string Biogas2ColName = "Biogas2";
-		private const string EnergyProduction1ColName = "EnergyProduction1";
-		private const string EnergyProduction2ColName = "EnergyProduction2";
-		private const string Runtime1ColName = "Runtime1";
-		private const string Runtime2ColName = "Runtime2";
-		private const string TotalRuntime1ColName = "TotalRuntime1";
-		private const string TotalRuntime2ColName = "TotalRuntime2";
-
 		private SqlConnection connection;
 
 		public Dal(SqlConnection conn)
@@ -39,7 +30,7 @@ namespace EBoard.Common
 		}
 
 
-		public ShiftStatInfo GetProductionData(DateTime? lastUpdate = null)
+		public ShiftStatInfo GetShiftStatInfo(DateTime? lastUpdate = null)
 		{
 			var ds = new DataSet();
 			var sql = @"Select a.ItemId, a.Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId;Select Max(LastUpdate) As LastUpdate From ItemLatestStatus;";
@@ -107,11 +98,6 @@ namespace EBoard.Common
 			});
 			
 			return data;
-		}
-
-		public IList<string> GetGeneralParamCategory()
-		{
-			return new List<string>();
 		}
 
 		#region For User and Role
@@ -295,6 +281,13 @@ namespace EBoard.Common
 		}
 		#endregion
 
+		/// <summary>
+		/// Automatically sets the value of each column in row to target obj
+		/// if there is a property of target obj which name is also belongs to row columns
+		/// </summary>
+		/// <param name="row"></param>
+		/// <param name="obj"></param>
+		/// <returns></returns>
 		private int UpdateProperties(DataRow row, object obj)
 		{
 			if (row == null || obj == null)

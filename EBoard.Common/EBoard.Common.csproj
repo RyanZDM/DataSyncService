@@ -61,7 +61,6 @@
     <Compile Include="Reporter.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="User.cs" />
-    <Compile Include="Worker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
