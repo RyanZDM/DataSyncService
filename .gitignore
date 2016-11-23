@@ -3,6 +3,9 @@ DataSyncService/ipch/*
 DataSyncService/[Dd]ebug*/*
 DataSyncService/[Rr]elease*/*
 
+*.[Vv][Cc].db
+*.[Vv][Cc].opendb
+
 # Ignore Windows Thumbnails
 Thumbs.db
 
