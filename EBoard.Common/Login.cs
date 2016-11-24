@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.Data.SqlClient;
 using System.Text;
 using System.Windows.Forms;
 
@@ -18,7 +19,7 @@ namespace EBoard.Common
 		/// <summary>
 		/// The form to open when login succeed
 		/// </summary>
-		private string nextForm;
+		private Type nextFormType;
 
 		private bool alwaysOpenNew;
 
@@ -30,20 +31,24 @@ namespace EBoard.Common
 
 		private DateTime idReadBegin;
 
+		private SqlConnection connection;
+
 		public User CurrentUser { get; private set; }
 
-		public delegate bool AdditionalCheckDelegate();
+		public delegate bool AdditionalCheckDelegate(User user);
 
 		public AdditionalCheckDelegate AdditionalCheckAfterValidated;
 
-		public Login(string next = "", bool alwaysOpenNew = true)
+		public Login(SqlConnection conn = null, Type next = null, bool alwaysOpenNew = true)
 		{
 			InitializeComponent();
 			tabControlLogin.SelectedIndex = 0;
 			textBoxUserId.Select();
-
-			nextForm = (next ?? "").Trim();
+			
+			nextFormType = next;
 			this.alwaysOpenNew = alwaysOpenNew;
+
+			connection = connection ?? DbFactory.GetConnection();
 		}
 
 		private void buttonExit_Click(object sender, EventArgs e)
@@ -59,28 +64,23 @@ namespace EBoard.Common
 
 		private void DoLogin()
 		{
-			if (loginMode == LoginMode.IdCard)
+			// If the loginMode is IdCard, would be validated already
+			if (loginMode != LoginMode.IdCard)
 			{
-				DialogResult = DialogResult.OK;
-				return;
-			}
+				var loginId = textBoxUserId.Text.Trim();
+				var pwd = textBoxPwd.Text;
 
-			var loginId = textBoxUserId.Text.Trim();
-			var pwd = textBoxPwd.Text;
-
-			// TODO: encrypt the inputted pwd and compare with the one in db
-			try
-			{
-				using (var db = DbFactory.GetConnection())
+				// TODO: encrypt the inputted pwd and compare with the one in db
+				try
 				{
-					var dal = new Dal(db);
+					var dal = new Dal(connection);
 					var user = dal.GetUser(loginId);
 					if (user == null)
 					{
 						MessageBox.Show(string.Format("用户[{0}]不存在。", loginId));
 						return;
 					}
-					
+
 					if (user.Status != "A")
 					{
 						MessageBox.Show("用户[{0}]状态异常，不允许登录。", loginId);
@@ -95,27 +95,32 @@ namespace EBoard.Common
 						textBoxPwd.Select();
 						return;
 					}
+															
+					if ((AdditionalCheckAfterValidated != null) && !AdditionalCheckAfterValidated(user))
+						return;
 
 					// Validate passed
 					CurrentUser = user;
-					DialogResult = DialogResult.OK;
-
-					OpenNextForm();
-
-					Close();
 				}
-			}
-			catch (Exception ex)
-			{
-				Logger.Error(ex, "Failed to get user info.");
-				MessageBox.Show("登录时遇到错误，请重试.");
-			}
+				catch (Exception ex)
+				{
+					Logger.Error(ex, "Failed to get user info.");
+					MessageBox.Show(string.Format("登录时遇到错误，请重试.{0}", ex));
+					return;
+				}
+			}			
+
+			DialogResult = DialogResult.OK;
+			OpenNextForm();
+			Close();
+
+			return;
 		}
 
 		#region Form operation		
 		private void OpenNextForm()
 		{
-			if (string.IsNullOrEmpty(nextForm))
+			if (nextFormType == null)
 			{
 				Close();
 				return;
@@ -126,16 +131,23 @@ namespace EBoard.Common
 
 			if (openNew)
 			{
-				next = CreateForm(nextForm);
+				next = CreateForm(nextFormType);
 			}
 			else
 			{
-				next = Application.OpenForms[nextForm];
+				foreach (Form form in Application.OpenForms)
+				{
+					if (form.GetType() == nextFormType)
+					{
+						next = form;
+						break;
+					}
+				}
 
 				// Have to open new since no existing form found
 				if (next == null)
 				{
-					next = CreateForm(nextForm);
+					next = CreateForm(nextFormType);
 				}
 			}
 
@@ -146,9 +158,8 @@ namespace EBoard.Common
 			}
 		}
 
-		private Form CreateForm(string name)
+		private Form CreateForm(Type type)
 		{
-			var type = Type.GetType(name);
 			var form = Activator.CreateInstance(type) as Form;
 			return form;
 		}

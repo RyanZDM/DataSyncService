@@ -8,6 +8,7 @@ using NLog;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Drawing;
 using EBoard.Common;
+using System.Data.SqlClient;
 
 namespace EBoard
 {
@@ -17,6 +18,8 @@ namespace EBoard
 
 		private System.Threading.Timer refreshDataTimer;
 		private System.Windows.Forms.Timer refreshTimeTimer;
+
+		private SqlConnection connection;
 
 		/// <summary>
 		/// The last time data got changed
@@ -32,6 +35,18 @@ namespace EBoard
 
 		public MainForm()
 		{
+			connection = DbFactory.GetConnection();
+
+			var loginForm = new Login(connection);
+			loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
+			if (loginForm.ShowDialog() != DialogResult.OK)
+			{
+				Close();
+				return;
+			}
+
+			CurrentUser = loginForm.CurrentUser;
+
 			InitializeComponent();
 		}
 
@@ -104,23 +119,75 @@ namespace EBoard
 
 			labelWorkers.Text = string.Format("姓名 {0}  工号 {1}    ", data.LastLoginId, data.LastLoginName);
 
-			labelTotalRuntime1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.TotalRuntime1ColName]);
-			labelTotalRuntime2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.TotalRuntime2ColName]);
+			double? runtime1 = null,
+				runtime2 = null,
+				totalRuntime1 = null,
+				totalRuntime2 = null,
+				biogas1 = null,
+				biogas2 = null,
+				energyProduction1 = null,
+				energyProduction2 = null;
 
-			labelBiogas1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Biogas1ColName]);
-			labelBiogas2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Biogas2ColName]);
-			labelBiogasTotal.Text = ((data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName) ? data.StatInfo[ShiftStatInfo.TotalRuntime1ColName] : 0.0)
-									+ (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime2ColName) ? data.StatInfo[ShiftStatInfo.TotalRuntime2ColName] : 0.0)).ToString();
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.Runtime1ColName.ToLower()))
+				runtime1 = data.StatInfo[ShiftStatInfo.Runtime1ColName.ToLower()];
 
-			labelEnergyProduction1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.EnergyProduction1ColName]);
-			labelEnergyProduction2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.EnergyProduction2ColName]);
-			labelEnergyProductionTotal.Text = ((data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName) ? data.StatInfo[ShiftStatInfo.EnergyProduction1ColName] : 0.0)
-												+ (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName) ? data.StatInfo[ShiftStatInfo.EnergyProduction2ColName] : 0.0)).ToString();
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.Runtime2ColName.ToLower()))
+				runtime2 = data.StatInfo[ShiftStatInfo.Runtime2ColName.ToLower()];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName.ToLower()))
+				totalRuntime1 = data.StatInfo[ShiftStatInfo.TotalRuntime1ColName.ToLower()];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime2ColName.ToLower()))
+				totalRuntime2 = data.StatInfo[ShiftStatInfo.TotalRuntime2ColName.ToLower()];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas1ColName.ToLower()))
+				biogas1 = data.StatInfo[ShiftStatInfo.Biogas1ColName.ToLower()];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2ColName.ToLower()))
+				biogas2 = data.StatInfo[ShiftStatInfo.Biogas2ColName.ToLower()];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName.ToLower()))
+				energyProduction1 = data.StatInfo[ShiftStatInfo.EnergyProduction1ColName.ToLower()];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName.ToLower()))
+				energyProduction2 = data.StatInfo[ShiftStatInfo.EnergyProduction2ColName.ToLower()];
+
+			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
+			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
+
+			labelBiogas1.Text = biogas1.HasValue ? biogas1.ToString() : "";
+			labelBiogas2.Text = biogas2.HasValue ? biogas2.ToString() : "";
+			labelBiogasTotal.Text = ((biogas1 ?? 0.0) + (biogas2 ?? 0.0)).ToString();
+
+			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() : "";
+			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() : "";
+			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0.0) + (energyProduction2 ?? 0.0)).ToString();
+
+			labelRuntime1.Text = runtime1.HasValue ? runtime1.ToString() : "";
+			labelRuntime2.Text = runtime2.HasValue ? runtime2.ToString() : "";
+			labelRuntimeTotal.Text = ((runtime1 ?? 0.0) + (runtime2 ?? 0.0)).ToString();
+		}
+
+		private bool CheckUserForCurrentShift(User user)
+		{
+			var dal = new Dal(connection);
+			var lastLoginUser = dal.GetUserOfCurrentShift();
+			if ((lastLoginUser == null))
+			{
+				dal.SetUserOfCurrentShift(CurrentUser);
+				return true;			
+			}
+
+			if (string.Equals(user.LoginId, lastLoginUser.LoginId, StringComparison.OrdinalIgnoreCase))
+				return true;
 			
-			labelRuntime1.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Runtime1ColName]);
-			labelRuntime2.Text = Convert.ToString(data.StatInfo[ShiftStatInfo.Runtime2ColName]);			
-			labelRuntimeTotal.Text = ((data.StatInfo.ContainsKey(ShiftStatInfo.Runtime1ColName) ? data.StatInfo[ShiftStatInfo.Runtime1ColName] : 0.0)
-										+ (data.StatInfo.ContainsKey(ShiftStatInfo.Runtime2ColName) ? data.StatInfo[ShiftStatInfo.Runtime2ColName] : 0.0)).ToString();
+			if (MessageBox.Show("已经有一个用户与当前班组关联，如果继续登录则会用当前用户覆盖关联关系，确认登录吗？", "登录", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				dal.SetUserOfCurrentShift(user);
+				return true;
+			}
+
+			return false;
 		}
 
 		#region For Chart

@@ -29,6 +29,43 @@ namespace EBoard.Common
 			return sqlParam.Value.ToString();
 		}
 
+		/// <summary>
+		/// Gets the user of current shift
+		/// Note: The current shift will automatically created if it not exist yet
+		/// </summary>
+		/// <returns></returns>
+		public User GetUserOfCurrentShift()
+		{
+			User user = null;
+			var shiftId = GetCurrentShiftId();
+			var sql = string.Format(@"Select IsNull(LastLoginId,''),IsNull(LastLoginName,'') From ShiftStatMstr Where ShiftId=CAST('{0}' as uniqueidentifier)", shiftId);
+			using (var command = new SqlCommand(sql, connection))
+			{
+				using (var reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						user = new User
+						{
+							LoginId = reader.GetString(0),
+							Name = reader.GetString(1)
+						};
+					}
+				}
+			}
+
+			return user;
+		}
+
+		public bool SetUserOfCurrentShift(User user)
+		{
+			var shiftId = GetCurrentShiftId();
+			var sql = string.Format(@"Update ShiftStatMstr Set LastLoginId='{0}',LastLoginName='{1}',LastLoginTime=IsNull(LastLoginTime,GetDate()) Where ShiftId=CAST('{2}' AS uniqueidentifier)", user.LoginId, user.Name, shiftId);
+			using (var command = new SqlCommand(sql, connection))
+			{
+				return (command.ExecuteNonQuery() > 0);
+			}
+		}
 
 		public ShiftStatInfo GetShiftStatInfo(DateTime? lastUpdate = null)
 		{
