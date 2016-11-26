@@ -18,7 +18,7 @@ Thumbs.db
 *.pch
 *.vspscc
 *.vssscc
-*_i.c
+DataSyncService/*_i.c
 *_p.c
 *_i.h
 *.ncb
