@@ -100,7 +100,7 @@ namespace EBoard
 				RefreshData(shiftStatInfo);
 
 				var reporter = new Reporter(conn);
-				var ds = reporter.GetCurrentMonthData();
+				var ds = reporter.GetCurrentMonthDataByDay();
 				RefreshCharts(ds, alwaysRefresh);
 			}
 			finally

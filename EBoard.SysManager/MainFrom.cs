@@ -1,12 +1,16 @@
-﻿using System;
+﻿using EBoard.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace EBoard.SysManager
 {
@@ -32,8 +36,26 @@ namespace EBoard.SysManager
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
+			Test();
 			// TODO:
 			OpenForm<DataMaintainForm>();
+		}
+
+		private void Test()
+		{
+			using (var app = new ExcelApp())
+			{
+				var workbook = app.CreateOrOpenExcel(@"e:\test.xls");
+				var worksheet = app.CreateOrOpenWorksheet(workbook, "data");
+
+				var sql = @"select * from generalParams";
+				var connection = DbFactory.GetConnection();
+				var adapter = new SqlDataAdapter(sql, connection);
+				var ds = new DataSet();
+				adapter.Fill(ds);
+				app.WriteData(worksheet, ds.Tables[0], true, 2);
+				workbook.Save();
+			}
 		}
 
 		private void OpenForm<T>() where T : Form, new()
