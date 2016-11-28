@@ -70,7 +70,7 @@ namespace EBoard.Common
 		public ShiftStatInfo GetShiftStatInfo(DateTime? lastUpdate = null)
 		{
 			var ds = new DataSet();
-			var sql = @"Select a.ItemId, a.Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId;Select Max(LastUpdate) As LastUpdate From ItemLatestStatus;";
+			var sql = @"Select a.ItemId, a.Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId";
 			var adapter = new SqlDataAdapter(sql, connection);
 			adapter.Fill(ds, "ItemLatestStatus");
 
@@ -81,29 +81,31 @@ namespace EBoard.Common
 			if (latestTable.Rows.Count < 1)
 				return null;
 
-			// No need to load data if no data change after 'lastUpdate'
-			var newUpdate = (DateTime)ds.Tables[1].Rows[0]["LastUpdate"];
-			if (lastUpdate.HasValue && lastUpdate >= newUpdate)
-				return null;
 
 			// Get data from ShiftStatMstr table
 			var shiftId = GetCurrentShiftId();
-			var data = new ShiftStatInfo { LastUpdate = newUpdate };
 
-			sql = string.Format(@"Select CAST(ShiftId AS nvarchar(50)) ShiftId,BeginTime,ActualBeginTime,EndTime,LastLoginId,LastLoginName,LastLoginTime,Status From ShiftStatMstr Where ShiftId=CAST('{0}' as uniqueidentifier)", shiftId);
+			sql = string.Format(@"Select CAST(ShiftId AS nvarchar(50)) ShiftId,BeginTime,ActualBeginTime,LastUpdateTime,EndTime,LastLoginId,LastLoginName,LastLoginTime,Status From ShiftStatMstr Where ShiftId=CAST('{0}' as uniqueidentifier)", shiftId);
 			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatMstr");
 
 			var mstrTable = ds.Tables["ShiftStatMstr"];
 			if ((mstrTable == null) || (mstrTable.Rows.Count < 1))
+				return null;
+
+			// No need to load data if no data change after 'lastUpdate'
+			if (lastUpdate.HasValue)
 			{
-				data.ShiftId = "";
-				return data;
+				var newUpdate = (mstrTable.Rows[0]["LastUpdateTime"].GetType() != typeof(DBNull)) ? (DateTime)mstrTable.Rows[0]["LastUpdateTime"] : DateTime.MinValue;
+				if (lastUpdate >= newUpdate)
+					return null;
 			}
-						
+
+			// Get data from ShiftStatMstr table
+			var data = new ShiftStatInfo();
 			UpdateProperties(mstrTable.Rows[0], data);
 
 			// Get data from ShiftStatDet table
-			sql = string.Format(@"SELECT Item,SubTotal FROM ShiftStatDet, ShiftStatMstr Where ShiftStatMstr.ShiftId=ShiftStatDet.ShiftId and ShiftStatMstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
+			sql = string.Format(@"SELECT Item,IsNull(det.SubTotalLast,0.0) - IsNull(det.SubTotalBegin,0.0) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
 			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatDet");
 
 			var detTable = ds.Tables["ShiftStatDet"];
@@ -120,7 +122,7 @@ namespace EBoard.Common
 				}
 			});
 
-			// Add latest data into list
+			// Get data from ItemLatestStatus table
 			data.MonitorItems = new Dictionary<string, double>();
 			latestTable.AsEnumerable().ToList().ForEach(row =>
 			{
@@ -133,7 +135,7 @@ namespace EBoard.Common
 					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ItemLatestStatus. {2}", row["Val"], row["ItemId"], ex);
 				}
 			});
-			
+
 			return data;
 		}
 
@@ -300,7 +302,7 @@ namespace EBoard.Common
 
 			var columns = ds.Tables[0].Columns;
 			var row = ds.Tables[0].Rows[0];
-			
+
 			var properties = typeof(User).GetProperties()
 										.Where(p => p.CanRead && !(p.PropertyType.IsGenericType));
 
