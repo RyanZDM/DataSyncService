@@ -163,7 +163,7 @@ BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUs
 		_bstr_t szUserId(pcszUserId);
 		_bstr_t szUserPwd(pcszUserPwd);
 
-		m_pConnection->ConnectionTimeout = 5;
+		m_pConnection->ConnectionTimeout = 10;
 		//m_pConnection->KeepConnection = true;
 
 		try

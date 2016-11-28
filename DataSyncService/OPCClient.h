@@ -150,7 +150,7 @@ typedef struct tagItemInfo
 class StrCompare
 {
 public:
-	BOOL operator()(LPCWSTR first, LPCWSTR second)
+	BOOL operator()(LPCWSTR first, LPCWSTR second) const
 	{
 		return lstrcmpiW(first, second) < 0;
 	}

@@ -472,6 +472,7 @@ BOOL CLogUtil::ForceLog(LPCSTR pszMsg, INT nMessageId, BOOL bWithTime)
 
 BOOL CLogUtil::ForceLog(LPCWSTR pszMsg, INT nMessageId, BOOL bWithTime)
 {
+	USES_CONVERSION;
 	BOOL bRet = FALSE;
 	if (Lock(m_dwMilliseconds))
 	{
@@ -496,7 +497,7 @@ BOOL CLogUtil::ForceLog(LPCWSTR pszMsg, INT nMessageId, BOOL bWithTime)
 			
 			fprintf(m_pFile, m_bNewLineAfterTimeStr ? "\n" : "\t"); // Always use ANSI encoding
 			//fwprintf(m_pFile, L"%s", pActMsg);
-			fprintf(m_pFile, "%S", pActMsg);	// Always use ANSI encoding
+			fprintf(m_pFile, "%s", W2CA(pActMsg));	// Always use ANSI encoding
 			ShowMsgInConsole(pActMsg);
 
 			fflush(m_pFile);
