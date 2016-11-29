@@ -11,6 +11,14 @@ using System.Data.SqlClient;
 
 namespace EBoard
 {
+	public enum CommunicationState
+	{
+		Querying,
+		Ready,
+		CommunicationBroke,
+		ErrorOccurred
+	}
+
 	public partial class MainForm : Form
 	{
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -40,6 +48,7 @@ namespace EBoard
 			loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
 			if (loginForm.ShowDialog() != DialogResult.OK)
 			{
+				loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
 				Close();
 				return;
 			}
@@ -80,17 +89,36 @@ namespace EBoard
 			labelCurrTime.Text = DateTime.Now.ToLocalTime().ToString("HH:mm:ss");
 		}
 
-		private void RefreshDataTimerCallback(object state)
+		private void SetCommunicateState(CommunicationState state)
 		{
+			switch (state)
+			{
+				case CommunicationState.Ready:
+					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.green;
+					break;
+				case CommunicationState.Querying:
+					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.yellow;
+					break;
+				case CommunicationState.CommunicationBroke:
+				case CommunicationState.ErrorOccurred:
+					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.red;
+					break;
+			}
+		}
+
+		private void RefreshDataTimerCallback(object state)
+		{	
 			refreshDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
 			try
 			{
+				SetCommunicateState(CommunicationState.Querying);
 				var conn = DbFactory.GetConnection();
 				var dal = new Dal(conn);
 				var shiftStatInfo = dal.GetShiftStatInfo(lastUpdateTime);
 				if (shiftStatInfo == null)
 				{
 					// TODO: show error info on GUI
+					SetCommunicateState(CommunicationState.ErrorOccurred);
 					return;
 				}
 
@@ -104,6 +132,15 @@ namespace EBoard
 				var reporter = new Reporter(conn);
 				var ds = reporter.GetCurrentMonthDataByDay();
 				RefreshCharts(ds, alwaysRefresh);
+				SetCommunicateState(CommunicationState.Ready);
+			}
+			catch(OPCCommunicationBrokeException)
+			{
+				SetCommunicateState(CommunicationState.CommunicationBroke);
+			}
+			catch(Exception)
+			{
+				SetCommunicateState(CommunicationState.ErrorOccurred);
 			}
 			finally
 			{
@@ -119,7 +156,7 @@ namespace EBoard
 				return;
 			}
 
-			labelWorkers.Text = string.Format("姓名 {0}  工号 {1}    ", data.LastLoginId, data.LastLoginName);
+			labelWorkers.Text = string.Format("姓名 {0}      工号 {1}", data.LastLoginId, data.LastLoginName);
 
 			double? biogas1 = null,
 					biogas2 = null,
@@ -323,5 +360,21 @@ namespace EBoard
 			labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString();
 		}
 		#endregion
+
+		private void buttonReLogin_Click(object sender, EventArgs e)
+		{
+			var loginForm = new Login(connection);
+			loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
+			if (loginForm.ShowDialog() != DialogResult.OK)
+			{
+				loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
+				loginForm.Dispose();
+				return;
+			}
+
+			CurrentUser = loginForm.CurrentUser;
+
+			labelWorkers.Text = string.Format("姓名 {0}      工号 {1}", CurrentUser.LoginId, CurrentUser.Name);
+		}
 	}
 }
