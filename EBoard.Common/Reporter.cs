@@ -11,9 +11,9 @@ namespace EBoard.Common
 	{
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
-		private const string DefaultReportFileTemplate = @"C:\MonthlyReport\Template\MonthlyReportTemplate.xls";
+		private const string DefaultReportFileTemplate = @"C:\MonthlyReport\Template\MonthlyReportTemplate.xlsx";
 
-		private const string DefaultReportFilenameFormat = @"MonthlyReport-{0}-{1:D2}";
+		private const string DefaultReportFilenameFormat = @"MonthlyReport-{0}-{1:D2}.xlsx";
 
 		private const string DefaultPathToReportFile = @"C:\MonthlyReport";
 
@@ -49,8 +49,11 @@ namespace EBoard.Common
 						//logger.Warn("The report file for {0}-{1} has been created already.", year, month);
 						throw new ReportFileAlreadyCreatedException(string.Format("{0}-{1}", year, month));
 					}
-					
-					CreateReportExcel(reader.GetString(0), year, month);
+
+					var reportId = reader.GetGuid(0).ToString();
+					reader.Close();
+
+					CreateReportExcel(reportId, year, month);
 				}
 			}
 		}
@@ -65,7 +68,7 @@ namespace EBoard.Common
 					if (!reader.Read())
 						throw new ReportNotFoundException(reportId);
 					
-					var isFileCreated = reader.GetBoolean(0);					
+					var isFileCreated = reader.GetBoolean(0);
 					if (isFileCreated)
 					{
 						//logger.Warn("The report file for {0} has been created already.", reportId);
@@ -73,9 +76,11 @@ namespace EBoard.Common
 					}
 
 					var yearMonth = reader.GetString(1);
-					// Assume the string must be 6 digit					
+					// Assume the string must be 6 digit	
 					var year = int.Parse(yearMonth.Substring(0, 4));
 					var month = int.Parse(yearMonth.Substring(4));
+					reader.Close();
+
 					CreateReportExcel(reportId, year, month);
 				}
 			}
@@ -134,10 +139,27 @@ namespace EBoard.Common
 				var workbook = app.CreateOrOpenExcel(targetFilename);
 				var worksheet = app.CreateOrOpenWorksheet(workbook, NameOfDataTabInExcel);
 
-				var sql = @"select * from generalParams";
+				// 4.1 Data from MonthReportMstr
+				var startRow = 2;
+				var sql = string.Format(@"Select * From MonthReportMstr Where ReportId='{0}'", reportId);
 				var reportDs = new DataSet();
 				new SqlDataAdapter(sql, connection).Fill(reportDs);
-				app.WriteData(worksheet, reportDs.Tables[0], true, 2);
+				app.WriteData(worksheet, reportDs.Tables[0], true, startRow);
+
+				// 4.2 Data from MonthReportDet
+				startRow += (reportDs.Tables[0].Rows.Count + 2);
+				var detDs = new DataSet();
+				sql = string.Format(@"Select ShiftId,Item,DisplayName As ItemName,Subtotal From MonthReportDet,MonitorItem Where Item=ItemId And MonthReportDet.Status='A' And ReportId='{0}'", reportId);
+				new SqlDataAdapter(sql, connection).Fill(detDs);
+				app.WriteData(worksheet, detDs.Tables[0], false, startRow);
+
+				// 4.3 Data from MonthWorkerReportDet
+				startRow += (detDs.Tables[0].Rows.Count + 2);
+				var workerDetDs = new DataSet();
+				sql = string.Format(@"Select WorkerId,WorkerName,Item,DisplayName As ItemName,Subtotal From MonthWorkerReportDet,MonitorItem Where Item=ItemId And MonthWorkerReportDet.Status='A' And ReportId='{0}'", reportId);
+				new SqlDataAdapter(sql, connection).Fill(workerDetDs);
+				app.WriteData(worksheet, workerDetDs.Tables[0], false, startRow);
+
 				workbook.Save();
 			}
 

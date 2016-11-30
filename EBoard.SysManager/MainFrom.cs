@@ -1,21 +1,35 @@
 ﻿using EBoard.Common;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace EBoard.SysManager
 {
 	public partial class MainFrom : Form
 	{
+		private User currentUser;
+		public User CurrentUser
+		{
+			get { return currentUser; }
+			set
+			{
+				if (currentUser != value)
+				{
+					currentUser = value;
+					UpdateFeatureMenu();
+				}
+			}
+		}
+
+		private void UpdateFeatureMenu()
+		{
+			// TODO get role settings of current user and enable/diable menu
+			this.dataMgrToolStripMenuItem.Enabled = true;
+			this.userMgrToolStripMenuItem.Enabled = true;
+			this.rptMgrToolStripMenuItem.Enabled = true;
+		}
+
 		public MainFrom()
 		{
 			InitializeComponent();
@@ -36,7 +50,7 @@ namespace EBoard.SysManager
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			OpenForm<DataMaintainForm>();
+			//OpenForm<DataMaintainForm>();
 		}
 
 		private void OpenForm<T>() where T : Form, new()
@@ -82,7 +96,11 @@ namespace EBoard.SysManager
 			OpenForm<DataMaintainForm>();
 		}
 
+		private void rptMgrToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			OpenForm<ReportMgrForm>();
+		}
+		
 		#endregion
-
 	}
 }

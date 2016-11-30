@@ -99,7 +99,19 @@ namespace EBoard.Common
 
 				for (var row = 0; row < table.Rows.Count; row++)
 				{
-					worksheet.Cells[row + startRowForHeader + 1, colNum] = table.Rows[row][i];
+					var val = table.Rows[row][i];
+					var type = val.GetType();
+					if (type != typeof(DBNull))
+					{
+						if (type != typeof(Guid))
+						{
+							worksheet.Cells[row + startRowForHeader + 1, colNum] = val;
+						}
+						else
+						{
+							worksheet.Cells[row + startRowForHeader + 1, colNum] = val.ToString();
+						}
+					}
 				}
 			}
 						

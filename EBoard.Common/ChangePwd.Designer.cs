@@ -1,4 +1,4 @@
-﻿namespace EBoard.SysManager
+﻿namespace EBoard.Common
 {
 	partial class ChangePwd
 	{

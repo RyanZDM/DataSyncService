@@ -55,6 +55,8 @@ namespace EBoard.Common
 							Name = reader.GetString(1)
 						};
 					}
+
+					reader.Close();
 				}
 			}
 
@@ -144,7 +146,7 @@ namespace EBoard.Common
 
 			return data;
 		}
-		
+
 		public IList<GeneralParamter> GetGeneralParameters()
 		{
 			var sql = @"SELECT Category,Name,Value,DispOrder,DispName,Memo,Hide,IsEncrypted,IsProtected FROM GeneralParams";

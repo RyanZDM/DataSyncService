@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EBoard.Common;
+using System;
 using System.Windows.Forms;
 
 namespace EBoard.SysManager
@@ -13,7 +14,12 @@ namespace EBoard.SysManager
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new MainFrom());
+
+			var loginForm = new Login();
+			if (loginForm.ShowDialog() != DialogResult.OK)
+				return;
+
+			Application.Run(new MainFrom { CurrentUser = loginForm.CurrentUser });
 		}
 	}
 }

@@ -28,12 +28,12 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.chartCurrMonth1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
@@ -137,16 +137,16 @@
 			this.chartCurrMonth1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			chartArea3.Name = "ChartArea1";
-			this.chartCurrMonth1.ChartAreas.Add(chartArea3);
-			legend3.Name = "Legend1";
-			this.chartCurrMonth1.Legends.Add(legend3);
+			chartArea9.Name = "ChartArea1";
+			this.chartCurrMonth1.ChartAreas.Add(chartArea9);
+			legend9.Name = "Legend1";
+			this.chartCurrMonth1.Legends.Add(legend9);
 			this.chartCurrMonth1.Location = new System.Drawing.Point(0, 0);
 			this.chartCurrMonth1.Name = "chartCurrMonth1";
-			series3.ChartArea = "ChartArea1";
-			series3.Legend = "Legend1";
-			series3.Name = "Series1";
-			this.chartCurrMonth1.Series.Add(series3);
+			series9.ChartArea = "ChartArea1";
+			series9.Legend = "Legend1";
+			series9.Name = "Series1";
+			this.chartCurrMonth1.Series.Add(series9);
 			this.chartCurrMonth1.Size = new System.Drawing.Size(1241, 138);
 			this.chartCurrMonth1.TabIndex = 0;
 			this.chartCurrMonth1.Text = "chart1";
@@ -190,16 +190,16 @@
 			this.chartCurrMonth2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			chartArea4.Name = "ChartArea1";
-			this.chartCurrMonth2.ChartAreas.Add(chartArea4);
-			legend4.Name = "Legend1";
-			this.chartCurrMonth2.Legends.Add(legend4);
+			chartArea10.Name = "ChartArea1";
+			this.chartCurrMonth2.ChartAreas.Add(chartArea10);
+			legend10.Name = "Legend1";
+			this.chartCurrMonth2.Legends.Add(legend10);
 			this.chartCurrMonth2.Location = new System.Drawing.Point(0, 3);
 			this.chartCurrMonth2.Name = "chartCurrMonth2";
-			series4.ChartArea = "ChartArea1";
-			series4.Legend = "Legend1";
-			series4.Name = "Series1";
-			this.chartCurrMonth2.Series.Add(series4);
+			series10.ChartArea = "ChartArea1";
+			series10.Legend = "Legend1";
+			series10.Name = "Series1";
+			this.chartCurrMonth2.Series.Add(series10);
 			this.chartCurrMonth2.Size = new System.Drawing.Size(880, 123);
 			this.chartCurrMonth2.TabIndex = 0;
 			this.chartCurrMonth2.Text = "chart2";
@@ -251,13 +251,14 @@
 			this.labelCurrTime.Name = "labelCurrTime";
 			this.labelCurrTime.Size = new System.Drawing.Size(100, 64);
 			this.labelCurrTime.TabIndex = 1;
+			this.labelCurrTime.Text = "CurrentTIme";
 			this.labelCurrTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// labelCurrDate
 			// 
 			this.labelCurrDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.labelCurrDate.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelCurrDate.Location = new System.Drawing.Point(866, 33);
+			this.labelCurrDate.Location = new System.Drawing.Point(865, 33);
 			this.labelCurrDate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelCurrDate.Name = "labelCurrDate";
 			this.labelCurrDate.Size = new System.Drawing.Size(281, 64);
@@ -530,7 +531,7 @@
 			this.panelIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.green;
 			this.panelIndicator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.panelIndicator.Location = new System.Drawing.Point(1206, 2);
+			this.panelIndicator.Location = new System.Drawing.Point(1269, 2);
 			this.panelIndicator.Name = "panelIndicator";
 			this.panelIndicator.Size = new System.Drawing.Size(33, 31);
 			this.panelIndicator.TabIndex = 1;
@@ -552,6 +553,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1351, 752);
+			this.ControlBox = false;
 			this.Controls.Add(this.panelIndicator);
 			this.Controls.Add(this.panel2);
 			this.Controls.Add(this.panel1);

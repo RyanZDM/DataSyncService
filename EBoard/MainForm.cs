@@ -40,11 +40,11 @@ namespace EBoard
 			loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
 			if (loginForm.ShowDialog() != DialogResult.OK)
 			{
-				loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
 				Close();
 				return;
 			}
 
+			loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
 			CurrentUser = loginForm.CurrentUser;
 
 			InitializeComponent();
@@ -358,17 +358,23 @@ namespace EBoard
 		private void buttonReLogin_Click(object sender, EventArgs e)
 		{
 			var loginForm = new Login(connection);
-			loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
-			if (loginForm.ShowDialog() != DialogResult.OK)
+			try
+			{
+				loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
+				if (loginForm.ShowDialog() != DialogResult.OK)
+				{
+					return;
+				}
+
+				CurrentUser = loginForm.CurrentUser;
+
+				labelWorkers.Text = string.Format("姓名 {0}      工号 {1}", CurrentUser.LoginId, CurrentUser.Name);
+			}
+			finally
 			{
 				loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
 				loginForm.Close();
-				return;
 			}
-
-			CurrentUser = loginForm.CurrentUser;
-
-			labelWorkers.Text = string.Format("姓名 {0}      工号 {1}", CurrentUser.LoginId, CurrentUser.Name);
 		}
 	}
 
