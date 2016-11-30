@@ -144,11 +144,28 @@ namespace EBoard.Common
 
 			return data;
 		}
+		
+		public IList<GeneralParamter> GetGeneralParameters()
+		{
+			var sql = @"SELECT Category,Name,Value,DispOrder,DispName,Memo,Hide,IsEncrypted,IsProtected FROM GeneralParams";
+			var ds = new DataSet();
+			var parameters = new List<GeneralParamter>();
+			var adapter = new SqlDataAdapter(sql, connection);
+			adapter.Fill(ds);
+			foreach (DataRow row in ds.Tables[0].Rows)
+			{
+				var param = new GeneralParamter();
+				UpdateProperties(row, param);
+				parameters.Add(param);
+			}
+
+			return parameters;
+		}
 
 		#region For User and Role
 		public User GetUser(string loginId)
 		{
-			return InternalGetUser(string.Format("LoginId='{0}'", loginId));
+			return InternalGetUser(string.Format("LoginId ='{0}'", loginId));
 		}
 
 		public ICollection<User> GetUsers()

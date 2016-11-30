@@ -29,12 +29,13 @@ namespace EBoard.SysManager
 
 		private void DataMaintainForm_Load(object sender, EventArgs e)
 		{
-			InitDataGridView();
-			RefreshData(null, false);
+			var node = InitDataGridView();			
+			RefreshData(node, false);
 		}
 
-		private void InitDataGridView()
+		private TreeNode InitDataGridView()
 		{
+			TreeNode nodeToSelect = null;
 			isInitialzing = true;
 			try
 			{
@@ -51,6 +52,9 @@ namespace EBoard.SysManager
 				var node = treeView1.Nodes[0].Nodes["MonitorItem"];
 				node.Tag = dataGridViewMonitorItem;
 				nodeMappings.Add(node.Name.ToLower(), dataGridViewMonitorItem);
+
+				// By default select this node
+				nodeToSelect = node;
 
 				// For Generatal parameters
 				adapter = (new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM GeneralParams WHERE Hide=0", connection))).DataAdapter;
@@ -72,6 +76,8 @@ namespace EBoard.SysManager
 			{
 				isInitialzing = false;
 			}
+
+			return nodeToSelect;
 		}
 
 		public DataRowView Add()
@@ -163,6 +169,8 @@ namespace EBoard.SysManager
 				return;
 
 			isRefreshing = true;
+
+			treeView1.SelectedNode = node;
 
 			var adapter = view.Tag as SqlDataAdapter;
 			var ds = new DataSet();

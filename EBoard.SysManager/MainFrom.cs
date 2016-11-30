@@ -36,26 +36,7 @@ namespace EBoard.SysManager
 
 		private void Form1_Load(object sender, EventArgs e)
 		{
-			Test();
-			// TODO:
 			OpenForm<DataMaintainForm>();
-		}
-
-		private void Test()
-		{
-			using (var app = new ExcelApp())
-			{
-				var workbook = app.CreateOrOpenExcel(@"e:\test.xls");
-				var worksheet = app.CreateOrOpenWorksheet(workbook, "data");
-
-				var sql = @"select * from generalParams";
-				var connection = DbFactory.GetConnection();
-				var adapter = new SqlDataAdapter(sql, connection);
-				var ds = new DataSet();
-				adapter.Fill(ds);
-				app.WriteData(worksheet, ds.Tables[0], true, 2);
-				workbook.Save();
-			}
 		}
 
 		private void OpenForm<T>() where T : Form, new()

@@ -11,14 +11,6 @@ using System.Data.SqlClient;
 
 namespace EBoard
 {
-	public enum CommunicationState
-	{
-		Querying,
-		Ready,
-		CommunicationBroke,
-		ErrorOccurred
-	}
-
 	public partial class MainForm : Form
 	{
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -133,6 +125,8 @@ namespace EBoard
 				var ds = reporter.GetCurrentMonthDataByDay();
 				RefreshCharts(ds, alwaysRefresh);
 				SetCommunicateState(CommunicationState.Ready);
+
+				// TODO: show last update time somewhere
 			}
 			catch(OPCCommunicationBrokeException)
 			{
@@ -368,7 +362,7 @@ namespace EBoard
 			if (loginForm.ShowDialog() != DialogResult.OK)
 			{
 				loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
-				loginForm.Dispose();
+				loginForm.Close();
 				return;
 			}
 
@@ -376,5 +370,13 @@ namespace EBoard
 
 			labelWorkers.Text = string.Format("姓名 {0}      工号 {1}", CurrentUser.LoginId, CurrentUser.Name);
 		}
+	}
+
+	public enum CommunicationState
+	{
+		Querying,
+		Ready,
+		CommunicationBroke,
+		ErrorOccurred
 	}
 }
