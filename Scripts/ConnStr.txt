@@ -1,0 +1,7 @@
+Driver={SQL Server};Server=myservername;Database=mydemodb;Uid=myusername;Pwd=mypasswd;
+
+Provider=SQLNCLI11.1;Persist Security Info=False;User ID=sa;Initial Catalog=OPC;Data Source=(local);Initial File Name="";Server SPN=""
+
+Provider=SQLOLEDB.1;Password=;Persist Security Info=True;User ID=sa;Initial Catalog=OPC;Data Source=ZDM-PC
+
+Driver={SQL Server};Database=OPC;Trusted_Connection=yes;Server=.

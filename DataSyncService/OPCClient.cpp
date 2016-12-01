@@ -711,6 +711,8 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 				throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
 
+		// TODO: First read data from reseved monitor item to see if the OPC server is broke with read h/w
+
 		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
 		{
 			COPCItemDef *pItem = (COPCItemDef*)*vi;

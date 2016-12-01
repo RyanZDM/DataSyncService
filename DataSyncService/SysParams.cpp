@@ -246,6 +246,8 @@ INT CSysParams::GetItemList(vector<LPITEMINFO>& vList)
 				DWORD dwBufLen;
 				while (!pRS->adoEOF)
 				{
+					// TODO: If the item is reserved for identifing the communication state, save it to a member var, not add to vector
+
 					LPITEMINFO pItem = new ITEMINFO();
 					GetStringValue(pRS, 0, &(pItem->pItemID), dwBufLen);
 					GetStringValue(pRS, 1, &(pItem->pAddress), dwBufLen);

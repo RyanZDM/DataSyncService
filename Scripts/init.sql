@@ -481,13 +481,13 @@ BEGIN
     Declare @currTime datetime
 	Declare @shift1StartTime nvarchar(10)
 	Declare @shift2StartTime nvarchar(10)
-	Declare @today date
+	Declare @today nvarchar(10)
 	Declare @shift1TimeToday datetime
 	Declare @shift2TimeToday datetime	
 	Declare @beginTime datetime
 	Declare @endTime datetime
 
-	Select @today = GETDATE()
+	Select @today = CONVERT(nvarchar(10), GETDATE(), 23)
 	Select @currTime = GETDATE()
 
 	Select Top 1 @shiftId = ShiftId From ShiftStatMstr Where @currTime >= BeginTime And @currTime < EndTime
