@@ -13,8 +13,10 @@ namespace EBoard
 		static void Main()
 		{
 			Application.EnableVisualStyles();
-			
-			Application.Run(new MainForm());
+
+			var mainForm = new MainForm();
+			if (!mainForm.IsDisposed)
+				Application.Run(mainForm);
 		}
 	}
 }
