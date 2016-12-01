@@ -28,15 +28,16 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea9 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend9 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series9 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea10 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Legend legend10 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-			System.Windows.Forms.DataVisualization.Charting.Series series10 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend5 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+			System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.chartCurrMonth1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+			this.buttonReLogin = new System.Windows.Forms.Button();
 			this.labelEnergyProductionMonth = new System.Windows.Forms.Label();
 			this.labelBiogasMonth = new System.Windows.Forms.Label();
 			this.label18 = new System.Windows.Forms.Label();
@@ -75,7 +76,6 @@
 			this.label6 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
 			this.panelIndicator = new System.Windows.Forms.Panel();
-			this.buttonReLogin = new System.Windows.Forms.Button();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -137,19 +137,31 @@
 			this.chartCurrMonth1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			chartArea9.Name = "ChartArea1";
-			this.chartCurrMonth1.ChartAreas.Add(chartArea9);
-			legend9.Name = "Legend1";
-			this.chartCurrMonth1.Legends.Add(legend9);
+			chartArea5.Name = "ChartArea1";
+			this.chartCurrMonth1.ChartAreas.Add(chartArea5);
+			legend5.Name = "Legend1";
+			this.chartCurrMonth1.Legends.Add(legend5);
 			this.chartCurrMonth1.Location = new System.Drawing.Point(0, 0);
 			this.chartCurrMonth1.Name = "chartCurrMonth1";
-			series9.ChartArea = "ChartArea1";
-			series9.Legend = "Legend1";
-			series9.Name = "Series1";
-			this.chartCurrMonth1.Series.Add(series9);
+			series5.ChartArea = "ChartArea1";
+			series5.Legend = "Legend1";
+			series5.Name = "Series1";
+			this.chartCurrMonth1.Series.Add(series5);
 			this.chartCurrMonth1.Size = new System.Drawing.Size(1241, 138);
 			this.chartCurrMonth1.TabIndex = 0;
 			this.chartCurrMonth1.Text = "chart1";
+			// 
+			// buttonReLogin
+			// 
+			this.buttonReLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonReLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.buttonReLogin.Location = new System.Drawing.Point(1145, 87);
+			this.buttonReLogin.Name = "buttonReLogin";
+			this.buttonReLogin.Size = new System.Drawing.Size(86, 27);
+			this.buttonReLogin.TabIndex = 2;
+			this.buttonReLogin.Text = "重新登录";
+			this.buttonReLogin.UseVisualStyleBackColor = true;
+			this.buttonReLogin.Click += new System.EventHandler(this.buttonReLogin_Click);
 			// 
 			// labelEnergyProductionMonth
 			// 
@@ -190,23 +202,23 @@
 			this.chartCurrMonth2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			chartArea10.Name = "ChartArea1";
-			this.chartCurrMonth2.ChartAreas.Add(chartArea10);
-			legend10.Name = "Legend1";
-			this.chartCurrMonth2.Legends.Add(legend10);
+			chartArea6.Name = "ChartArea1";
+			this.chartCurrMonth2.ChartAreas.Add(chartArea6);
+			legend6.Name = "Legend1";
+			this.chartCurrMonth2.Legends.Add(legend6);
 			this.chartCurrMonth2.Location = new System.Drawing.Point(0, 3);
 			this.chartCurrMonth2.Name = "chartCurrMonth2";
-			series10.ChartArea = "ChartArea1";
-			series10.Legend = "Legend1";
-			series10.Name = "Series1";
-			this.chartCurrMonth2.Series.Add(series10);
+			series6.ChartArea = "ChartArea1";
+			series6.Legend = "Legend1";
+			series6.Name = "Series1";
+			this.chartCurrMonth2.Series.Add(series6);
 			this.chartCurrMonth2.Size = new System.Drawing.Size(880, 123);
 			this.chartCurrMonth2.TabIndex = 0;
 			this.chartCurrMonth2.Text = "chart2";
 			// 
 			// labelTotalRuntime2
 			// 
-			this.labelTotalRuntime2.Location = new System.Drawing.Point(898, 102);
+			this.labelTotalRuntime2.Location = new System.Drawing.Point(905, 102);
 			this.labelTotalRuntime2.Name = "labelTotalRuntime2";
 			this.labelTotalRuntime2.Size = new System.Drawing.Size(302, 25);
 			this.labelTotalRuntime2.TabIndex = 4;
@@ -214,7 +226,7 @@
 			// 
 			// labelTotalRuntime1
 			// 
-			this.labelTotalRuntime1.Location = new System.Drawing.Point(381, 102);
+			this.labelTotalRuntime1.Location = new System.Drawing.Point(388, 106);
 			this.labelTotalRuntime1.Name = "labelTotalRuntime1";
 			this.labelTotalRuntime1.Size = new System.Drawing.Size(269, 17);
 			this.labelTotalRuntime1.TabIndex = 4;
@@ -227,7 +239,7 @@
 			this.label4.Location = new System.Drawing.Point(672, 102);
 			this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(175, 20);
+			this.label4.Size = new System.Drawing.Size(219, 25);
 			this.label4.TabIndex = 3;
 			this.label4.Text = "#2 发电机累计运行时间";
 			// 
@@ -238,7 +250,7 @@
 			this.label3.Location = new System.Drawing.Point(155, 102);
 			this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(175, 20);
+			this.label3.Size = new System.Drawing.Size(219, 25);
 			this.label3.TabIndex = 2;
 			this.label3.Text = "#1 发电机累计运行时间";
 			// 
@@ -412,7 +424,7 @@
 			this.label16.AutoSize = true;
 			this.label16.Location = new System.Drawing.Point(574, 193);
 			this.label16.Name = "label16";
-			this.label16.Size = new System.Drawing.Size(139, 20);
+			this.label16.Size = new System.Drawing.Size(174, 25);
 			this.label16.TabIndex = 4;
 			this.label16.Text = "#2机组运行时间：";
 			// 
@@ -421,7 +433,7 @@
 			this.label14.AutoSize = true;
 			this.label14.Location = new System.Drawing.Point(920, 101);
 			this.label14.Name = "label14";
-			this.label14.Size = new System.Drawing.Size(121, 20);
+			this.label14.Size = new System.Drawing.Size(152, 25);
 			this.label14.TabIndex = 3;
 			this.label14.Text = "总计沼气流量：";
 			// 
@@ -430,7 +442,7 @@
 			this.label17.AutoSize = true;
 			this.label17.Location = new System.Drawing.Point(920, 193);
 			this.label17.Name = "label17";
-			this.label17.Size = new System.Drawing.Size(121, 20);
+			this.label17.Size = new System.Drawing.Size(152, 25);
 			this.label17.TabIndex = 3;
 			this.label17.Text = "总计运行时间：";
 			// 
@@ -439,7 +451,7 @@
 			this.label11.AutoSize = true;
 			this.label11.Location = new System.Drawing.Point(940, 144);
 			this.label11.Name = "label11";
-			this.label11.Size = new System.Drawing.Size(105, 20);
+			this.label11.Size = new System.Drawing.Size(132, 25);
 			this.label11.TabIndex = 3;
 			this.label11.Text = "总计发电量：";
 			// 
@@ -448,7 +460,7 @@
 			this.label10.AutoSize = true;
 			this.label10.Location = new System.Drawing.Point(594, 144);
 			this.label10.Name = "label10";
-			this.label10.Size = new System.Drawing.Size(123, 20);
+			this.label10.Size = new System.Drawing.Size(154, 25);
 			this.label10.TabIndex = 2;
 			this.label10.Text = "#2机组发电量：";
 			// 
@@ -457,7 +469,7 @@
 			this.label13.AutoSize = true;
 			this.label13.Location = new System.Drawing.Point(596, 101);
 			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(121, 20);
+			this.label13.Size = new System.Drawing.Size(152, 25);
 			this.label13.TabIndex = 1;
 			this.label13.Tag = "";
 			this.label13.Text = "垃圾焚烧沼气：";
@@ -467,7 +479,7 @@
 			this.label12.AutoSize = true;
 			this.label12.Location = new System.Drawing.Point(308, 101);
 			this.label12.Name = "label12";
-			this.label12.Size = new System.Drawing.Size(105, 20);
+			this.label12.Size = new System.Drawing.Size(132, 25);
 			this.label12.TabIndex = 1;
 			this.label12.Tag = "";
 			this.label12.Text = "填埋场沼气：";
@@ -477,7 +489,7 @@
 			this.label15.AutoSize = true;
 			this.label15.Location = new System.Drawing.Point(266, 193);
 			this.label15.Name = "label15";
-			this.label15.Size = new System.Drawing.Size(139, 20);
+			this.label15.Size = new System.Drawing.Size(174, 25);
 			this.label15.TabIndex = 1;
 			this.label15.Text = "#1机组运行时间：";
 			// 
@@ -486,7 +498,7 @@
 			this.label9.AutoSize = true;
 			this.label9.Location = new System.Drawing.Point(286, 144);
 			this.label9.Name = "label9";
-			this.label9.Size = new System.Drawing.Size(123, 20);
+			this.label9.Size = new System.Drawing.Size(154, 25);
 			this.label9.TabIndex = 1;
 			this.label9.Text = "#1机组发电量：";
 			// 
@@ -495,7 +507,7 @@
 			this.label8.AutoSize = true;
 			this.label8.Location = new System.Drawing.Point(25, 193);
 			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(137, 20);
+			this.label8.Size = new System.Drawing.Size(172, 25);
 			this.label8.TabIndex = 0;
 			this.label8.Text = "当前班次运行时间";
 			// 
@@ -504,7 +516,7 @@
 			this.label7.AutoSize = true;
 			this.label7.Location = new System.Drawing.Point(45, 144);
 			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(121, 20);
+			this.label7.Size = new System.Drawing.Size(152, 25);
 			this.label7.TabIndex = 0;
 			this.label7.Text = "当前班次发电量";
 			// 
@@ -513,7 +525,7 @@
 			this.label6.AutoSize = true;
 			this.label6.Location = new System.Drawing.Point(25, 101);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(137, 20);
+			this.label6.Size = new System.Drawing.Size(172, 25);
 			this.label6.TabIndex = 0;
 			this.label6.Text = "当前班次沼气流量";
 			// 
@@ -522,7 +534,7 @@
 			this.label5.AutoSize = true;
 			this.label5.Location = new System.Drawing.Point(85, 59);
 			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(73, 20);
+			this.label5.Size = new System.Drawing.Size(92, 25);
 			this.label5.TabIndex = 0;
 			this.label5.Text = "当前员工";
 			// 
@@ -536,22 +548,10 @@
 			this.panelIndicator.Size = new System.Drawing.Size(33, 31);
 			this.panelIndicator.TabIndex = 1;
 			// 
-			// buttonReLogin
-			// 
-			this.buttonReLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonReLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonReLogin.Location = new System.Drawing.Point(1145, 87);
-			this.buttonReLogin.Name = "buttonReLogin";
-			this.buttonReLogin.Size = new System.Drawing.Size(86, 27);
-			this.buttonReLogin.TabIndex = 2;
-			this.buttonReLogin.Text = "重新登录";
-			this.buttonReLogin.UseVisualStyleBackColor = true;
-			this.buttonReLogin.Click += new System.EventHandler(this.buttonReLogin_Click);
-			// 
 			// MainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(1351, 752);
 			this.ControlBox = false;
 			this.Controls.Add(this.panelIndicator);

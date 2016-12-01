@@ -56,8 +56,8 @@
             this.helpToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(1003, 25);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
+			this.menuStrip1.Size = new System.Drawing.Size(1337, 29);
 			this.menuStrip1.TabIndex = 2;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -73,55 +73,55 @@
             this.toolStripMenuItem3,
             this.exitToolStripMenuItem});
 			this.functionToolStripMenuItem.Name = "functionToolStripMenuItem";
-			this.functionToolStripMenuItem.Size = new System.Drawing.Size(50, 21);
+			this.functionToolStripMenuItem.Size = new System.Drawing.Size(56, 23);
 			this.functionToolStripMenuItem.Text = "&F功能";
 			// 
 			// userMgrToolStripMenuItem
 			// 
 			this.userMgrToolStripMenuItem.Name = "userMgrToolStripMenuItem";
-			this.userMgrToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.userMgrToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
 			this.userMgrToolStripMenuItem.Text = "用户管理";
 			this.userMgrToolStripMenuItem.Click += new System.EventHandler(this.userMgrToolStripMenuItem_Click);
 			// 
 			// permissionMgrToolStripMenuItem
 			// 
 			this.permissionMgrToolStripMenuItem.Name = "permissionMgrToolStripMenuItem";
-			this.permissionMgrToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.permissionMgrToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
 			this.permissionMgrToolStripMenuItem.Text = "权限管理";
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(145, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(165, 6);
 			// 
 			// dataMgrToolStripMenuItem
 			// 
 			this.dataMgrToolStripMenuItem.Name = "dataMgrToolStripMenuItem";
-			this.dataMgrToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.dataMgrToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
 			this.dataMgrToolStripMenuItem.Text = "基础数据维护";
 			this.dataMgrToolStripMenuItem.Click += new System.EventHandler(this.dataMgrToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(145, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(165, 6);
 			// 
 			// rptMgrToolStripMenuItem
 			// 
 			this.rptMgrToolStripMenuItem.Name = "rptMgrToolStripMenuItem";
-			this.rptMgrToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.rptMgrToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
 			this.rptMgrToolStripMenuItem.Text = " 报表管理";
 			this.rptMgrToolStripMenuItem.Click += new System.EventHandler(this.rptMgrToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem3
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(145, 6);
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(165, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.exitToolStripMenuItem.Size = new System.Drawing.Size(168, 26);
 			this.exitToolStripMenuItem.Text = "退出";
 			this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
 			// 
@@ -132,27 +132,27 @@
             this.tileVerToolStripMenuItem,
             this.cascadeToolStripMenuItem});
 			this.windowsToolStripMenuItem.Name = "windowsToolStripMenuItem";
-			this.windowsToolStripMenuItem.Size = new System.Drawing.Size(73, 21);
+			this.windowsToolStripMenuItem.Size = new System.Drawing.Size(77, 23);
 			this.windowsToolStripMenuItem.Text = "Windows";
 			// 
 			// tileHorToolStripMenuItem
 			// 
 			this.tileHorToolStripMenuItem.Name = "tileHorToolStripMenuItem";
-			this.tileHorToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.tileHorToolStripMenuItem.Size = new System.Drawing.Size(140, 26);
 			this.tileHorToolStripMenuItem.Text = "水平平铺";
 			this.tileHorToolStripMenuItem.Click += new System.EventHandler(this.tileHorToolStripMenuItem_Click);
 			// 
 			// tileVerToolStripMenuItem
 			// 
 			this.tileVerToolStripMenuItem.Name = "tileVerToolStripMenuItem";
-			this.tileVerToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.tileVerToolStripMenuItem.Size = new System.Drawing.Size(140, 26);
 			this.tileVerToolStripMenuItem.Text = "垂直平铺";
 			this.tileVerToolStripMenuItem.Click += new System.EventHandler(this.tileVerToolStripMenuItem_Click);
 			// 
 			// cascadeToolStripMenuItem
 			// 
 			this.cascadeToolStripMenuItem.Name = "cascadeToolStripMenuItem";
-			this.cascadeToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+			this.cascadeToolStripMenuItem.Size = new System.Drawing.Size(140, 26);
 			this.cascadeToolStripMenuItem.Text = "层叠排列";
 			this.cascadeToolStripMenuItem.Click += new System.EventHandler(this.cascadeToolStripMenuItem_Click);
 			// 
@@ -161,25 +161,25 @@
 			this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
 			this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-			this.helpToolStripMenuItem.Size = new System.Drawing.Size(47, 21);
+			this.helpToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
 			this.helpToolStripMenuItem.Text = "Help";
 			// 
 			// aboutToolStripMenuItem
 			// 
 			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(122, 26);
 			this.aboutToolStripMenuItem.Text = "About";
 			// 
 			// MainFrom
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(1003, 644);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.ClientSize = new System.Drawing.Size(1337, 859);
 			this.Controls.Add(this.menuStrip1);
 			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.menuStrip1;
-			this.Margin = new System.Windows.Forms.Padding(2);
 			this.Name = "MainFrom";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "系统管理";
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.menuStrip1.ResumeLayout(false);

@@ -49,10 +49,9 @@
 			// 
 			// buttonLogin
 			// 
-			this.buttonLogin.Location = new System.Drawing.Point(303, 196);
-			this.buttonLogin.Margin = new System.Windows.Forms.Padding(2);
+			this.buttonLogin.Location = new System.Drawing.Point(404, 261);
 			this.buttonLogin.Name = "buttonLogin";
-			this.buttonLogin.Size = new System.Drawing.Size(71, 24);
+			this.buttonLogin.Size = new System.Drawing.Size(95, 32);
 			this.buttonLogin.TabIndex = 35;
 			this.buttonLogin.Text = "确定";
 			this.buttonLogin.UseVisualStyleBackColor = true;
@@ -62,10 +61,9 @@
 			// buttonExit
 			// 
 			this.buttonExit.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonExit.Location = new System.Drawing.Point(92, 196);
-			this.buttonExit.Margin = new System.Windows.Forms.Padding(2);
+			this.buttonExit.Location = new System.Drawing.Point(123, 261);
 			this.buttonExit.Name = "buttonExit";
-			this.buttonExit.Size = new System.Drawing.Size(71, 24);
+			this.buttonExit.Size = new System.Drawing.Size(95, 32);
 			this.buttonExit.TabIndex = 40;
 			this.buttonExit.Text = "退出";
 			this.buttonExit.UseVisualStyleBackColor = true;
@@ -77,12 +75,11 @@
 			this.tabControlLogin.Controls.Add(this.tabPageTypical);
 			this.tabControlLogin.Controls.Add(this.tabPageIdCard);
 			this.tabControlLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tabControlLogin.Location = new System.Drawing.Point(14, 9);
-			this.tabControlLogin.Margin = new System.Windows.Forms.Padding(2);
+			this.tabControlLogin.Location = new System.Drawing.Point(19, 12);
 			this.tabControlLogin.Multiline = true;
 			this.tabControlLogin.Name = "tabControlLogin";
 			this.tabControlLogin.SelectedIndex = 0;
-			this.tabControlLogin.Size = new System.Drawing.Size(405, 172);
+			this.tabControlLogin.Size = new System.Drawing.Size(540, 229);
 			this.tabControlLogin.TabIndex = 5;
 			this.tabControlLogin.SelectedIndexChanged += new System.EventHandler(this.tabControlLogin_SelectedIndexChanged);
 			this.tabControlLogin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnKeyDown);
@@ -94,11 +91,10 @@
 			this.tabPageTypical.Controls.Add(this.textBoxPwd);
 			this.tabPageTypical.Controls.Add(this.textBoxUserId);
 			this.tabPageTypical.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tabPageTypical.Location = new System.Drawing.Point(4, 22);
-			this.tabPageTypical.Margin = new System.Windows.Forms.Padding(2);
+			this.tabPageTypical.Location = new System.Drawing.Point(4, 25);
 			this.tabPageTypical.Name = "tabPageTypical";
-			this.tabPageTypical.Padding = new System.Windows.Forms.Padding(2);
-			this.tabPageTypical.Size = new System.Drawing.Size(397, 146);
+			this.tabPageTypical.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.tabPageTypical.Size = new System.Drawing.Size(532, 200);
 			this.tabPageTypical.TabIndex = 0;
 			this.tabPageTypical.Text = "使用密码登录";
 			this.tabPageTypical.ToolTipText = "使用用户名/密码登录";
@@ -107,10 +103,9 @@
 			// labelPassword
 			// 
 			this.labelPassword.AutoSize = true;
-			this.labelPassword.Location = new System.Drawing.Point(119, 80);
-			this.labelPassword.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.labelPassword.Location = new System.Drawing.Point(159, 107);
 			this.labelPassword.Name = "labelPassword";
-			this.labelPassword.Size = new System.Drawing.Size(31, 13);
+			this.labelPassword.Size = new System.Drawing.Size(36, 17);
 			this.labelPassword.TabIndex = 0;
 			this.labelPassword.Text = "密码";
 			this.labelPassword.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -118,10 +113,9 @@
 			// labelUserId
 			// 
 			this.labelUserId.AutoSize = true;
-			this.labelUserId.Location = new System.Drawing.Point(109, 58);
-			this.labelUserId.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.labelUserId.Location = new System.Drawing.Point(145, 77);
 			this.labelUserId.Name = "labelUserId";
-			this.labelUserId.Size = new System.Drawing.Size(43, 13);
+			this.labelUserId.Size = new System.Drawing.Size(50, 17);
 			this.labelUserId.TabIndex = 0;
 			this.labelUserId.Text = "用户名";
 			this.labelUserId.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -129,21 +123,19 @@
 			// textBoxPwd
 			// 
 			this.textBoxPwd.ImeMode = System.Windows.Forms.ImeMode.Off;
-			this.textBoxPwd.Location = new System.Drawing.Point(158, 77);
-			this.textBoxPwd.Margin = new System.Windows.Forms.Padding(2);
+			this.textBoxPwd.Location = new System.Drawing.Point(211, 103);
 			this.textBoxPwd.Name = "textBoxPwd";
 			this.textBoxPwd.PasswordChar = '*';
-			this.textBoxPwd.Size = new System.Drawing.Size(134, 19);
+			this.textBoxPwd.Size = new System.Drawing.Size(177, 22);
 			this.textBoxPwd.TabIndex = 2;
 			this.textBoxPwd.UseSystemPasswordChar = true;
 			this.textBoxPwd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPwd_KeyDown);
 			// 
 			// textBoxUserId
 			// 
-			this.textBoxUserId.Location = new System.Drawing.Point(158, 56);
-			this.textBoxUserId.Margin = new System.Windows.Forms.Padding(2);
+			this.textBoxUserId.Location = new System.Drawing.Point(211, 75);
 			this.textBoxUserId.Name = "textBoxUserId";
-			this.textBoxUserId.Size = new System.Drawing.Size(134, 19);
+			this.textBoxUserId.Size = new System.Drawing.Size(177, 22);
 			this.textBoxUserId.TabIndex = 1;
 			this.textBoxUserId.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxUserId_KeyDown);
 			// 
@@ -151,11 +143,10 @@
 			// 
 			this.tabPageIdCard.Controls.Add(this.listViewUserInfo);
 			this.tabPageIdCard.Controls.Add(this.labelFlashCard);
-			this.tabPageIdCard.Location = new System.Drawing.Point(4, 22);
-			this.tabPageIdCard.Margin = new System.Windows.Forms.Padding(2);
+			this.tabPageIdCard.Location = new System.Drawing.Point(4, 25);
 			this.tabPageIdCard.Name = "tabPageIdCard";
-			this.tabPageIdCard.Padding = new System.Windows.Forms.Padding(2);
-			this.tabPageIdCard.Size = new System.Drawing.Size(397, 146);
+			this.tabPageIdCard.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.tabPageIdCard.Size = new System.Drawing.Size(532, 200);
 			this.tabPageIdCard.TabIndex = 1;
 			this.tabPageIdCard.Text = "使用工卡登录";
 			this.tabPageIdCard.ToolTipText = "使用工卡登录";
@@ -171,11 +162,10 @@
 			this.listViewUserInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
 			this.listViewUserInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
             listViewItem1});
-			this.listViewUserInfo.Location = new System.Drawing.Point(53, 32);
-			this.listViewUserInfo.Margin = new System.Windows.Forms.Padding(2);
+			this.listViewUserInfo.Location = new System.Drawing.Point(71, 43);
 			this.listViewUserInfo.Name = "listViewUserInfo";
 			this.listViewUserInfo.Scrollable = false;
-			this.listViewUserInfo.Size = new System.Drawing.Size(283, 98);
+			this.listViewUserInfo.Size = new System.Drawing.Size(376, 129);
 			this.listViewUserInfo.TabIndex = 1;
 			this.listViewUserInfo.UseCompatibleStateImageBehavior = false;
 			this.listViewUserInfo.View = System.Windows.Forms.View.Details;
@@ -195,25 +185,23 @@
 			// 
 			this.labelFlashCard.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.labelFlashCard.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelFlashCard.Location = new System.Drawing.Point(2, 2);
-			this.labelFlashCard.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.labelFlashCard.Location = new System.Drawing.Point(3, 3);
 			this.labelFlashCard.Name = "labelFlashCard";
-			this.labelFlashCard.Size = new System.Drawing.Size(393, 142);
+			this.labelFlashCard.Size = new System.Drawing.Size(526, 194);
 			this.labelFlashCard.TabIndex = 0;
 			this.labelFlashCard.Text = "请刷卡...";
 			this.labelFlashCard.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// Login
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(428, 228);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.ClientSize = new System.Drawing.Size(571, 304);
 			this.ControlBox = false;
 			this.Controls.Add(this.tabControlLogin);
 			this.Controls.Add(this.buttonExit);
 			this.Controls.Add(this.buttonLogin);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-			this.Margin = new System.Windows.Forms.Padding(2);
 			this.Name = "Login";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "Login";

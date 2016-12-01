@@ -2,6 +2,7 @@ CommonNet/bak/*
 DataSyncService/ipch/*
 DataSyncService/[Dd]ebug*/*
 DataSyncService/[Rr]elease*/*
+Publish/*
 
 *.[Vv][Cc].db
 *.[Vv][Cc].opendb

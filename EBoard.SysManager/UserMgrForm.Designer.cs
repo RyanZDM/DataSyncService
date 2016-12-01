@@ -78,7 +78,7 @@
 			this.dataGridViewUser.Location = new System.Drawing.Point(0, 30);
 			this.dataGridViewUser.Name = "dataGridViewUser";
 			this.dataGridViewUser.RowTemplate.Height = 24;
-			this.dataGridViewUser.Size = new System.Drawing.Size(713, 399);
+			this.dataGridViewUser.Size = new System.Drawing.Size(753, 492);
 			this.dataGridViewUser.TabIndex = 0;
 			this.dataGridViewUser.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewUser_CellValueChanged);
 			// 
@@ -139,7 +139,7 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(656, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(696, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(57, 27);
 			this.menuStrip1.TabIndex = 1;
@@ -308,9 +308,9 @@
 			// 
 			// UserMgrForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(714, 429);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+			this.ClientSize = new System.Drawing.Size(754, 522);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.dataGridViewUser);
 			this.Controls.Add(this.menuStrip1);
