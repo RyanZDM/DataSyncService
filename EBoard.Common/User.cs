@@ -19,6 +19,6 @@ namespace EBoard.Common
 
 		public string Status { get; set; }
 
-		public ICollection<string> Roles { get; set; }
+		public IList<Role> Roles { get; set; }
 	}
 }

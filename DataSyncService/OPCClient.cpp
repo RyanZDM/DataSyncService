@@ -582,7 +582,7 @@ HRESULT COPCClient::AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside)
 	OPCITEMRESULT *pResults = NULL;
 	if (S_OK != (hr = m_pGroup->pOPCItemMgt->AddItems(1, pItem->m_pOPCItemDef, &pResults, &pErrors)) || !pResults)
 	{
-		g_Logger.VLog(_T("COPCClient::AddItem(): Failed to call IOPCItemMgt.AddItems. HRESULT=%x"), hr);
+		g_Logger.VLog(_T("COPCClient::AddItem(): Failed to call IOPCItemMgt.AddItems on %s. HRESULT=%x"), W2CT(pItem->m_pOPCItemDef->szItemID), hr);
 		if (!bNoReleaseOutside)
 			delete pActItem;
 	}
@@ -745,7 +745,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 					}
 					else
 					{
-						g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata(), return=%d,"), nAffectedRows);
+						g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata() on %s, return=%d,"), W2CT(pItem->m_pOPCItemDef->szItemID), nAffectedRows);
 					}
 				}
 				else

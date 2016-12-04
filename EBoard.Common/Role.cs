@@ -8,6 +8,8 @@ namespace EBoard.Common
 		
 		public string Name { get; set; }
 
-		public ICollection<string> Users { get; set; }
+		public string Status { get; set; }
+
+		public IList<User> Users { get; set; }
 	}
 }

@@ -24,10 +24,29 @@ namespace EBoard.SysManager
 
 		private void UpdateFeatureMenu()
 		{
-			// TODO get role settings of current user and enable/diable menu
-			this.dataMgrToolStripMenuItem.Enabled = true;
-			this.userMgrToolStripMenuItem.Enabled = true;
-			this.rptMgrToolStripMenuItem.Enabled = true;
+			var connection = DbFactory.GetConnection();
+			var dal = new Dal(connection);
+			var roles = dal.GetUserRoles(CurrentUser);
+
+			if (roles.Any(r => string.Equals(r.RoleId, "Administrators", StringComparison.OrdinalIgnoreCase)))
+			{
+				this.dataMgrToolStripMenuItem.Enabled = true;
+				this.userMgrToolStripMenuItem.Enabled = true;
+				this.rptMgrToolStripMenuItem.Enabled = true;
+
+				return;
+			}
+
+			if (roles.Any(r => string.Equals(r.RoleId, "DataMaintain", StringComparison.OrdinalIgnoreCase)))
+			{
+				this.dataMgrToolStripMenuItem.Enabled = true;
+			}
+
+			if (roles.Any(r => string.Equals(r.RoleId, "ReportManage", StringComparison.OrdinalIgnoreCase)))
+			{
+				this.rptMgrToolStripMenuItem.Enabled = true;
+			}
+
 		}
 
 		public MainFrom()

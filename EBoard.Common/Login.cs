@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using System.Windows.Forms;
@@ -95,7 +96,8 @@ namespace EBoard.Common
 						textBoxPwd.Select();
 						return;
 					}
-															
+													
+					// The worker list of current shift has been updated in this delegate		
 					if ((AdditionalCheckAfterValidated != null) && !AdditionalCheckAfterValidated(user))
 						return;
 
