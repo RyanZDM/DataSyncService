@@ -198,6 +198,7 @@ public:
 
 	vector<LPWSTR> & GetOPCServerList(CATID catID);
 	vector<LPWSTR> & CurrentOPCServerList() { return m_vOPCServerList; }
+	inline BOOL IsQualityGood(OPCITEMSTATE &value);
 
 	COPCClient();
 	virtual ~COPCClient();

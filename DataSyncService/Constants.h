@@ -19,3 +19,5 @@
 
 #define DEFAULT_SHIFT_START_1			_T("8:00:00")
 #define DEFAULT_SHIFT_START_2			_T("20:00:00")
+
+#define OPC_Good_Quality				192

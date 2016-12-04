@@ -6,11 +6,11 @@ namespace EBoard.Common
 	public class ShiftStatInfo
 	{
 		/// <summary>填埋场沼气瞬时流量</summary>
-		public static readonly string Biogas1ColName = "Biogas1".ToLower();
-		public static readonly string BiogasSubtotal1ColName = "BiogasSubtotal1".ToLower();
+		public static readonly string Biogas2TorchColName = "Biogas2Torch".ToLower();
+		public static readonly string Biogas2TorchSubtotalColName = "Biogas2TorchSubtotal".ToLower();
 		/// <summary>垃圾焚烧沼气瞬时流量</summary>
-		public static readonly string Biogas2ColName = "Biogas2".ToLower();
-		public static readonly string BiogasSubtotal2ColName = "BiogasSubtotal2".ToLower();
+		public static readonly string Biogas2GenColName = "Biogas2Gen".ToLower();
+		public static readonly string Biogas2GenSubtotalColName = "Biogas2GenSubtotal".ToLower();
 		/// <summary>#1机组累计发电量</summary>
 		public static readonly string EnergyProduction1ColName = "EnergyProduction1".ToLower();
 		/// <summary>#2机组累计发电量</summary>

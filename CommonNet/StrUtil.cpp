@@ -973,6 +973,7 @@ _bstr_t& CStrUtil::Variant2BSTR(const VARIANT &var, _bstr_t &bstrRet)
 	case VT_R4:
 		_stprintf_s(szBuf, MAX_LEN, _T("%f"),  var.fltVal);
 		bstrRet = szBuf;
+		break;
 	case VT_R8:
 		_stprintf_s(szBuf, MAX_LEN, _T("%f"),  var.dblVal);
 		bstrRet = szBuf;

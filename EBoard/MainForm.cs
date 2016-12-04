@@ -18,6 +18,10 @@ namespace EBoard
 		private System.Threading.Timer refreshDataTimer;
 		private System.Windows.Forms.Timer refreshTimeTimer;
 
+		private string firstShiftStart;
+		private string secondShiftStart;
+		private System.Threading.Timer shiftLoginTimer;
+
 		private SqlConnection connection;
 
 		/// <summary>
@@ -34,19 +38,6 @@ namespace EBoard
 
 		public MainForm()
 		{
-			connection = DbFactory.GetConnection();
-
-			var loginForm = new Login(connection);
-			loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
-			if (loginForm.ShowDialog() != DialogResult.OK)
-			{
-				Close();
-				return;
-			}
-
-			loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
-			CurrentUser = loginForm.CurrentUser;
-
 			InitializeComponent();
 		}
 
@@ -56,25 +47,144 @@ namespace EBoard
 
 			try
 			{
+				connection = DbFactory.GetConnection();
+
 				var now = DateTime.Now;
-				labelCurrDate.Text = now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));
-				refreshTimeTimer = new System.Windows.Forms.Timer();
-				refreshTimeTimer.Interval = 1000;
-				refreshTimeTimer.Tick += RefreshTimeTimer_Tick;
-				refreshTimeTimer.Enabled = true;
+				labelCurrDate.Text = now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));				
 
 				daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
 				InitChart(chartCurrMonth1, 1, 19);
 				InitChart(chartCurrMonth2, 20, daysInMonth);
 
-				refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);
+				InitTimers();
 			}
 			catch (Exception ex)
 			{
 				logger.Error(ex, "Error occurred while initializing.");
-				MessageBox.Show(string.Format("程序初始化出错. {0}", ex));
+				MessageBox.Show(string.Format("程序初始化出错. {0}", ex));				
 			}
 		}
+
+		private void InitTimers()
+		{
+			refreshTimeTimer = new System.Windows.Forms.Timer();
+			refreshTimeTimer.Interval = 1000;
+			refreshTimeTimer.Tick += RefreshTimeTimer_Tick;
+			refreshTimeTimer.Enabled = true;
+
+			var dal = new Dal(connection);
+			var parameters = dal.GetGeneralParameters();
+			var shift1Start = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase) 
+															&& string.Equals(p.Name, "ShiftStartTime1", StringComparison.OrdinalIgnoreCase));
+			firstShiftStart = (shift1Start != null) ? shift1Start.Value : "8:00:00";
+
+			var shift2Start = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
+															&& string.Equals(p.Name, "ShiftStartTime2", StringComparison.OrdinalIgnoreCase));
+			secondShiftStart = (shift1Start != null) ? shift2Start.Value : "20:00:00";
+			
+			shiftLoginTimer = new System.Threading.Timer(LoginTimerCallback, null, GetDueTimeForLoginTimer(), Timeout.Infinite);
+			refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);
+		}
+
+		#region For LoginTimer
+		private int GetDueTimeForLoginTimer()
+		{
+			var now = DateTime.Now;
+			var today = now.ToString("yyyy-MM-dd") + " ";
+			var firstShiftStartTime = DateTime.Parse(today + firstShiftStart);
+			var secondShiftStartTime = DateTime.Parse(today + secondShiftStart);
+
+			DateTime triggerTime;
+			if (now <= firstShiftStartTime)
+			{
+				triggerTime = firstShiftStartTime;
+			}
+			else if (now > firstShiftStartTime && now <= secondShiftStartTime)
+			{
+				triggerTime = secondShiftStartTime;
+			}
+			else
+			{
+				triggerTime = firstShiftStartTime.AddDays(1);
+			}
+
+			var dueTime = (triggerTime - now).TotalMilliseconds;
+
+			return (int)dueTime;
+		}
+
+		private void LoginTimerCallback(object state)
+		{
+			shiftLoginTimer.Change(Timeout.Infinite, Timeout.Infinite);
+			try
+			{
+				var loginForm = new Login(connection) { Text = "请登录当前工班 - 第一名员工" };
+				try
+				{					
+					loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
+					if (loginForm.ShowDialog() != DialogResult.OK)
+					{
+						return;
+					}
+
+					CurrentUser = loginForm.CurrentUser;
+
+					labelWorkers.Text = string.Format("姓名 {0}      工号 {1}", CurrentUser.LoginId, CurrentUser.Name);
+				}
+				finally
+				{
+					loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
+					loginForm.Close();
+				}
+			}
+			finally
+			{
+				shiftLoginTimer.Change(GetDueTimeForLoginTimer(), Timeout.Infinite);
+			}
+		}
+		
+		private User Login(string msg)
+		{
+			var loginForm = new Login(connection) { Text = msg };
+			try
+			{
+				loginForm.AdditionalCheckAfterValidated = CheckUserForCurrentShift;
+				if (loginForm.ShowDialog() != DialogResult.OK)
+				{
+					return null ;
+				}				
+			}
+			finally
+			{
+				loginForm.AdditionalCheckAfterValidated -= CheckUserForCurrentShift;
+				loginForm.Close();
+			}
+
+			return null;
+		}
+
+		private bool CheckUserForCurrentShift(User user)
+		{
+			var dal = new Dal(connection);
+			var lastLoginUser = dal.GetUserOfCurrentShift();
+			if ((lastLoginUser == null))
+			{
+				dal.SetUserOfCurrentShift(CurrentUser);
+				return true;
+			}
+
+			if (string.Equals(user.LoginId, lastLoginUser.LoginId, StringComparison.OrdinalIgnoreCase))
+				return true;
+
+			if (MessageBox.Show("已经有一个用户与当前班组关联，如果继续登录则会用当前用户覆盖关联关系，确认登录吗？", "登录", MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				dal.SetUserOfCurrentShift(user);
+				return true;
+			}
+
+			return false;
+		}
+		#endregion
 
 		private void RefreshTimeTimer_Tick(object sender, EventArgs e)
 		{
@@ -164,11 +274,11 @@ namespace EBoard
 					generatorPower2 = null;
 
 			// instantaneous values
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas1ColName))
-				biogas1 = data.MonitorItems[ShiftStatInfo.Biogas1ColName];
+			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2TorchColName))
+				biogas1 = data.MonitorItems[ShiftStatInfo.Biogas2TorchColName];
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2ColName))
-				biogas1 = data.MonitorItems[ShiftStatInfo.Biogas2ColName];
+			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2GenColName))
+				biogas1 = data.MonitorItems[ShiftStatInfo.Biogas2GenColName];
 
 			if (data.MonitorItems.ContainsKey(ShiftStatInfo.GeneratorPower1ColName))
 				generatorPower1 = data.MonitorItems[ShiftStatInfo.GeneratorPower1ColName];
@@ -177,11 +287,11 @@ namespace EBoard
 				generatorPower2 = data.MonitorItems[ShiftStatInfo.GeneratorPower2ColName];
 
 			// accumulated values
-			if (data.StatInfo.ContainsKey(ShiftStatInfo.BiogasSubtotal1ColName))
-				biogasSubtotal1 = data.StatInfo[ShiftStatInfo.BiogasSubtotal1ColName];
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2TorchSubtotalColName))
+				biogasSubtotal1 = data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
 
-			if (data.StatInfo.ContainsKey(ShiftStatInfo.BiogasSubtotal2ColName))
-				biogasSubtotal2 = data.StatInfo[ShiftStatInfo.BiogasSubtotal2ColName];
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2GenSubtotalColName))
+				biogasSubtotal2 = data.StatInfo[ShiftStatInfo.Biogas2GenSubtotalColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName))
 				energyProduction1 = data.StatInfo[ShiftStatInfo.EnergyProduction1ColName];
@@ -200,8 +310,8 @@ namespace EBoard
 			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
 
-			labelBiogas1.Text = biogasSubtotal1.HasValue ? biogasSubtotal1.ToString() : "";
-			labelBiogas2.Text = biogasSubtotal2.HasValue ? biogasSubtotal2.ToString() : "";
+			labelBiogas2Gen.Text = biogasSubtotal1.HasValue ? biogasSubtotal1.ToString() : "";
+			labelBiogas2Torch.Text = biogasSubtotal2.HasValue ? biogasSubtotal2.ToString() : "";
 			labelBiogasTotal.Text = ((biogasSubtotal1 ?? 0.0) + (biogasSubtotal2 ?? 0.0)).ToString();
 
 			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() : "";
@@ -211,28 +321,6 @@ namespace EBoard
 			labelRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
 			labelRuntimeTotal.Text = ((totalRuntime1 ?? 0.0) + (totalRuntime2 ?? 0.0)).ToString();
-		}
-
-		private bool CheckUserForCurrentShift(User user)
-		{
-			var dal = new Dal(connection);
-			var lastLoginUser = dal.GetUserOfCurrentShift();
-			if ((lastLoginUser == null))
-			{
-				dal.SetUserOfCurrentShift(CurrentUser);
-				return true;
-			}
-
-			if (string.Equals(user.LoginId, lastLoginUser.LoginId, StringComparison.OrdinalIgnoreCase))
-				return true;
-
-			if (MessageBox.Show("已经有一个用户与当前班组关联，如果继续登录则会用当前用户覆盖关联关系，确认登录吗？", "登录", MessageBoxButtons.YesNo) == DialogResult.Yes)
-			{
-				dal.SetUserOfCurrentShift(user);
-				return true;
-			}
-
-			return false;
 		}
 
 		#region For Chart

@@ -2,6 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
+#include "Constants.h"
 #include "OPCClient.h"
 #include "opcda_i.c"
 #include "ContainerUtil.h"
@@ -689,6 +690,11 @@ void COPCClient::RemoveCallback()
 	}
 }
 
+BOOL COPCClient::IsQualityGood(OPCITEMSTATE &value)
+{
+	return (value.wQuality == OPC_Good_Quality);
+}
+
 INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB, OPCITEMSTATE *pState)
 {
 	if (!pvList || (!bUpdateDB && !pState))
@@ -710,9 +716,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			CHECK_CONNECT(m_hLastHResult)
 				throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
-
-		// TODO: First read data from reseved monitor item to see if the OPC server is broke with read h/w
-
+		
 		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
 		{
 			COPCItemDef *pItem = (COPCItemDef*)*vi;
@@ -721,13 +725,15 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 				g_Logger.ForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to get pointer to COPCItemDef from vector."));
 				continue;
 			}
-
-			if (S_OK == (m_hLastHResult = pISync->Read(OPC_DS_CACHE, 1, &pItem->m_hServer, &pValues, &pErrors)))
+			
+			if ((S_OK == (m_hLastHResult = pISync->Read(OPC_DS_CACHE, 1, &pItem->m_hServer, &pValues, &pErrors))) && pValues)
 			{
-				// TODO: Need to check wQuality to see if the data is accuracy, log and do not update db
-				// TODO: Need to read flag from OPC server to see if the connection broke, log
-				// TODO: need to notify on GUI
-
+				if (!IsQualityGood(pValues[0]))
+				{
+					// TODO log the debug level info
+					// TODO: notfiy on UI?
+					continue;
+				}
 				// TODO: May need to convert the readed value by pItem->pInConverter
 
 				if (bUpdateDB)

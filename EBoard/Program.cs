@@ -14,9 +14,7 @@ namespace EBoard
 		{
 			Application.EnableVisualStyles();
 
-			var mainForm = new MainForm();
-			if (!mainForm.IsDisposed)
-				Application.Run(mainForm);
+			Application.Run(new MainForm());
 		}
 	}
 }

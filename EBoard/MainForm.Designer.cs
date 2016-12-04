@@ -59,8 +59,8 @@
 			this.labelRuntimeTotal = new System.Windows.Forms.Label();
 			this.labelRuntime2 = new System.Windows.Forms.Label();
 			this.labelEnergyProduction2 = new System.Windows.Forms.Label();
-			this.labelBiogas2 = new System.Windows.Forms.Label();
-			this.labelBiogas1 = new System.Windows.Forms.Label();
+			this.labelBiogas2Torch = new System.Windows.Forms.Label();
+			this.labelBiogas2Gen = new System.Windows.Forms.Label();
 			this.labelWorkers = new System.Windows.Forms.Label();
 			this.label16 = new System.Windows.Forms.Label();
 			this.label14 = new System.Windows.Forms.Label();
@@ -113,7 +113,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainer1.Location = new System.Drawing.Point(9, 334);
-			this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
 			this.splitContainer1.Name = "splitContainer1";
 			this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
@@ -144,7 +144,7 @@
 			legend3.Name = "Legend1";
 			this.chartCurrMonth1.Legends.Add(legend3);
 			this.chartCurrMonth1.Location = new System.Drawing.Point(0, 0);
-			this.chartCurrMonth1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.chartCurrMonth1.Margin = new System.Windows.Forms.Padding(2);
 			this.chartCurrMonth1.Name = "chartCurrMonth1";
 			series3.ChartArea = "ChartArea1";
 			series3.Legend = "Legend1";
@@ -158,8 +158,8 @@
 			// 
 			this.buttonReLogin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonReLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.buttonReLogin.Location = new System.Drawing.Point(916, 71);
-			this.buttonReLogin.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.buttonReLogin.Location = new System.Drawing.Point(916, 72);
+			this.buttonReLogin.Margin = new System.Windows.Forms.Padding(2);
 			this.buttonReLogin.Name = "buttonReLogin";
 			this.buttonReLogin.Size = new System.Drawing.Size(69, 22);
 			this.buttonReLogin.TabIndex = 2;
@@ -215,13 +215,13 @@
 			legend4.Name = "Legend1";
 			this.chartCurrMonth2.Legends.Add(legend4);
 			this.chartCurrMonth2.Location = new System.Drawing.Point(0, 2);
-			this.chartCurrMonth2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.chartCurrMonth2.Margin = new System.Windows.Forms.Padding(2);
 			this.chartCurrMonth2.Name = "chartCurrMonth2";
 			series4.ChartArea = "ChartArea1";
 			series4.Legend = "Legend1";
 			series4.Name = "Series1";
 			this.chartCurrMonth2.Series.Add(series4);
-			this.chartCurrMonth2.Size = new System.Drawing.Size(704, 99);
+			this.chartCurrMonth2.Size = new System.Drawing.Size(704, 100);
 			this.chartCurrMonth2.TabIndex = 0;
 			this.chartCurrMonth2.Text = "chart2";
 			// 
@@ -251,7 +251,7 @@
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(175, 20);
 			this.label4.TabIndex = 3;
-			this.label4.Text = "#2 发电机累计运行时间";
+			this.label4.Text = "2# 发电机累计运行时间";
 			// 
 			// label3
 			// 
@@ -261,7 +261,7 @@
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(175, 20);
 			this.label3.TabIndex = 2;
-			this.label3.Text = "#1 发电机累计运行时间";
+			this.label3.Text = "1# 发电机累计运行时间";
 			// 
 			// labelCurrTime
 			// 
@@ -321,8 +321,8 @@
 			this.groupBox1.Controls.Add(this.labelRuntimeTotal);
 			this.groupBox1.Controls.Add(this.labelRuntime2);
 			this.groupBox1.Controls.Add(this.labelEnergyProduction2);
-			this.groupBox1.Controls.Add(this.labelBiogas2);
-			this.groupBox1.Controls.Add(this.labelBiogas1);
+			this.groupBox1.Controls.Add(this.labelBiogas2Torch);
+			this.groupBox1.Controls.Add(this.labelBiogas2Gen);
 			this.groupBox1.Controls.Add(this.labelWorkers);
 			this.groupBox1.Controls.Add(this.label16);
 			this.groupBox1.Controls.Add(this.label14);
@@ -338,9 +338,9 @@
 			this.groupBox1.Controls.Add(this.label6);
 			this.groupBox1.Controls.Add(this.label5);
 			this.groupBox1.Location = new System.Drawing.Point(9, 14);
-			this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
 			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
 			this.groupBox1.Size = new System.Drawing.Size(995, 186);
 			this.groupBox1.TabIndex = 0;
 			this.groupBox1.TabStop = false;
@@ -409,23 +409,23 @@
 			this.labelEnergyProduction2.TabIndex = 6;
 			this.labelEnergyProduction2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelBiogas2
+			// labelBiogas2Torch
 			// 
-			this.labelBiogas2.Location = new System.Drawing.Point(589, 81);
-			this.labelBiogas2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			this.labelBiogas2.Name = "labelBiogas2";
-			this.labelBiogas2.Size = new System.Drawing.Size(102, 20);
-			this.labelBiogas2.TabIndex = 6;
-			this.labelBiogas2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelBiogas2Torch.Location = new System.Drawing.Point(589, 81);
+			this.labelBiogas2Torch.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.labelBiogas2Torch.Name = "labelBiogas2Torch";
+			this.labelBiogas2Torch.Size = new System.Drawing.Size(102, 20);
+			this.labelBiogas2Torch.TabIndex = 6;
+			this.labelBiogas2Torch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// labelBiogas1
+			// labelBiogas2Gen
 			// 
-			this.labelBiogas1.Location = new System.Drawing.Point(342, 81);
-			this.labelBiogas1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-			this.labelBiogas1.Name = "labelBiogas1";
-			this.labelBiogas1.Size = new System.Drawing.Size(102, 20);
-			this.labelBiogas1.TabIndex = 6;
-			this.labelBiogas1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.labelBiogas2Gen.Location = new System.Drawing.Point(342, 81);
+			this.labelBiogas2Gen.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.labelBiogas2Gen.Name = "labelBiogas2Gen";
+			this.labelBiogas2Gen.Size = new System.Drawing.Size(102, 20);
+			this.labelBiogas2Gen.TabIndex = 6;
+			this.labelBiogas2Gen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// labelWorkers
 			// 
@@ -445,7 +445,7 @@
 			this.label16.Name = "label16";
 			this.label16.Size = new System.Drawing.Size(139, 20);
 			this.label16.TabIndex = 4;
-			this.label16.Text = "#2机组运行时间：";
+			this.label16.Text = "2#机组运行时间：";
 			// 
 			// label14
 			// 
@@ -485,7 +485,7 @@
 			this.label10.Name = "label10";
 			this.label10.Size = new System.Drawing.Size(123, 20);
 			this.label10.TabIndex = 2;
-			this.label10.Text = "#2机组发电量：";
+			this.label10.Text = "2#机组发电量：";
 			// 
 			// label13
 			// 
@@ -493,10 +493,10 @@
 			this.label13.Location = new System.Drawing.Point(477, 81);
 			this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.label13.Name = "label13";
-			this.label13.Size = new System.Drawing.Size(121, 20);
+			this.label13.Size = new System.Drawing.Size(89, 20);
 			this.label13.TabIndex = 1;
 			this.label13.Tag = "";
-			this.label13.Text = "垃圾焚烧沼气：";
+			this.label13.Text = "火炬沼气：";
 			// 
 			// label12
 			// 
@@ -507,7 +507,7 @@
 			this.label12.Size = new System.Drawing.Size(105, 20);
 			this.label12.TabIndex = 1;
 			this.label12.Tag = "";
-			this.label12.Text = "填埋场沼气：";
+			this.label12.Text = "发电机沼气：";
 			// 
 			// label15
 			// 
@@ -517,7 +517,7 @@
 			this.label15.Name = "label15";
 			this.label15.Size = new System.Drawing.Size(139, 20);
 			this.label15.TabIndex = 1;
-			this.label15.Text = "#1机组运行时间：";
+			this.label15.Text = "1#机组运行时间：";
 			// 
 			// label9
 			// 
@@ -527,7 +527,7 @@
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(123, 20);
 			this.label9.TabIndex = 1;
-			this.label9.Text = "#1机组发电量：";
+			this.label9.Text = "1#机组发电量：";
 			// 
 			// label8
 			// 
@@ -575,7 +575,7 @@
 			this.panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.green;
 			this.panelIndicator.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
 			this.panelIndicator.Location = new System.Drawing.Point(1015, 2);
-			this.panelIndicator.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.panelIndicator.Margin = new System.Windows.Forms.Padding(2);
 			this.panelIndicator.Name = "panelIndicator";
 			this.panelIndicator.Size = new System.Drawing.Size(26, 25);
 			this.panelIndicator.TabIndex = 1;
@@ -640,8 +640,8 @@
 		private System.Windows.Forms.Label labelRuntimeTotal;
 		private System.Windows.Forms.Label labelRuntime2;
 		private System.Windows.Forms.Label labelEnergyProduction2;
-		private System.Windows.Forms.Label labelBiogas2;
-		private System.Windows.Forms.Label labelBiogas1;
+		private System.Windows.Forms.Label labelBiogas2Torch;
+		private System.Windows.Forms.Label labelBiogas2Gen;
 		private System.Windows.Forms.Label labelTotalRuntime2;
 		private System.Windows.Forms.Label labelTotalRuntime1;
 		private System.Windows.Forms.SplitContainer splitContainer1;
