@@ -15,7 +15,7 @@ namespace EBoard.SysManager
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			var loginForm = new Login();
+			var loginForm = new LoginDlg();
 			if (loginForm.ShowDialog() != DialogResult.OK)
 				return;
 

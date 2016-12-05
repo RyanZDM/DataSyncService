@@ -1,7 +1,6 @@
 ﻿using System;
 using EBoard.Common;
 using System.Data.SqlClient;
-using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
 
@@ -12,6 +11,8 @@ namespace EBoard.SysManager
 		private SqlConnection connection;
 
 		private SqlDataAdapter adapter;
+
+		private int previousRow = -1;
 
 		public UserMgrForm()
 		{
@@ -45,9 +46,9 @@ namespace EBoard.SysManager
 			HasDirtyData = false;
 		}
 
-		protected override void UpdateDefaultButton()
+		protected override void UpdateMenuState()
 		{
-			base.UpdateDefaultButton();
+			base.UpdateMenuState();
 
 			var hasRow = (dataGridViewUser.RowCount > 0);
 
@@ -56,6 +57,12 @@ namespace EBoard.SysManager
 
 			changePwdToolStripMenuItem.Enabled = hasRow;
 			changePwdToolStripButton.Enabled = hasRow;
+
+			if (!hasRow)
+			{
+				propertyToolStripMenuItem.Enabled = false;
+				propertyToolStripButton.Enabled = false;
+			}
 
 			saveToolStripMenuItem.Enabled = HasDirtyData;
 			saveToolStripButton.Enabled = HasDirtyData;
@@ -106,21 +113,7 @@ namespace EBoard.SysManager
 				return false;
 			}
 		}
-
-		protected override void UpdateMenuState()
-		{
-			base.UpdateMenuState();
-
-			saveToolStripMenuItem.Enabled = HasDirtyData;
-			saveToolStripButton.Enabled = HasDirtyData;
-
-			var hasData = dataGridViewUser.Rows.Count > 0;
-			deleteToolStripMenuItem.Enabled = hasData;
-			deleteToolStripButton.Enabled = hasData;
-			changePwdToolStripMenuItem.Enabled = hasData;
-			changePwdToolStripButton.Enabled = hasData;
-		}
-
+		
 		public DataRow AddRecord()
 		{
 			var row = (dataGridViewUser.DataSource as DataTable).Rows.Add();
@@ -174,7 +167,7 @@ namespace EBoard.SysManager
 
 			var dlg = new ChangePwd
 			{
-				LogId = row.Cells["LoginId"].Value.ToString(),
+				LoginId = row.Cells["LoginId"].Value.ToString(),
 				UserName = row.Cells["UserName"].Value.ToString()
 			};
 			if (dlg.ShowDialog() == DialogResult.OK)
@@ -183,6 +176,21 @@ namespace EBoard.SysManager
 			}
 
 			// TODO: accept data and save immediately
+		}
+
+		private void ChangeUserProperty()
+		{
+			// TODO: need to save before change property
+
+			var row = dataGridViewUser.CurrentRow;
+			if (row == null)
+				return;
+
+			var dlg = new UserPropertyDlg() { LoginId = row.Cells["LoginId"].Value.ToString() };
+			if ((dlg.ShowDialog() == DialogResult.OK) && dlg.DataChanged)
+			{
+				Refresh();
+			}
 		}
 
 		private void dataGridViewUser_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -213,6 +221,32 @@ namespace EBoard.SysManager
 		private void saveToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Save();
+		}
+
+		private void propertyToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			ChangeUserProperty();
+		}
+		
+		private void dataGridViewUser_CurrentCellChanged(object sender, EventArgs e)
+		{
+			var rowCount = dataGridViewUser.Rows.Count;
+			if (rowCount < 1 && previousRow == -1)
+				return;
+
+			var currRow = dataGridViewUser.CurrentRow;
+			if (currRow == null)
+			{
+				previousRow = -1;
+				return;
+			}
+						
+			if (previousRow == currRow.Index)
+				return;
+
+			previousRow = currRow.Index;
+			propertyToolStripMenuItem.Enabled = ((dataGridViewUser.DataSource as DataTable).Rows[currRow.Index].RowState != DataRowState.Added);
+			propertyToolStripButton.Enabled = propertyToolStripMenuItem.Enabled;
 		}
 	}
 }

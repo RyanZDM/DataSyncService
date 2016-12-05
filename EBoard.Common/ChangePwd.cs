@@ -7,7 +7,7 @@ namespace EBoard.Common
 {
 	public partial class ChangePwd : Form
 	{
-		public string LogId { get; set; }
+		public string LoginId { get; set; }
 
 		public string UserName { get; set; }
 
@@ -20,7 +20,7 @@ namespace EBoard.Common
 
 		private void ChangePwd_Load(object sender, EventArgs e)
 		{
-			this.Text = string.Format("为 {0} 设定新的密码", LogId);
+			this.Text = string.Format("为 {0} 设定新的密码", LoginId);
 		}
 
 		private void buttonOk_Click(object sender, EventArgs e)

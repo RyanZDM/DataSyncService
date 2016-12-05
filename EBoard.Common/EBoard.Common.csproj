@@ -58,17 +58,23 @@
     <Compile Include="DbFactory.cs" />
     <Compile Include="ExcelApp.cs" />
     <Compile Include="GeneralParamter.cs" />
-    <Compile Include="Login.cs">
+    <Compile Include="LoginDlg.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Login.Designer.cs">
-      <DependentUpon>Login.cs</DependentUpon>
+    <Compile Include="LoginDlg.Designer.cs">
+      <DependentUpon>LoginDlg.cs</DependentUpon>
     </Compile>
     <Compile Include="ShiftStatInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reporter.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserPropertyDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserPropertyDlg.Designer.cs">
+      <DependentUpon>UserPropertyDlg.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -77,8 +83,11 @@
     <EmbeddedResource Include="ChangePwd.resx">
       <DependentUpon>ChangePwd.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Login.resx">
-      <DependentUpon>Login.cs</DependentUpon>
+    <EmbeddedResource Include="LoginDlg.resx">
+      <DependentUpon>LoginDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserPropertyDlg.resx">
+      <DependentUpon>UserPropertyDlg.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

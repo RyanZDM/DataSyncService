@@ -1,6 +1,6 @@
 ﻿namespace EBoard.Common
 {
-	partial class Login
+	partial class LoginDlg
 	{
 		/// <summary>
 		/// Required designer variable.

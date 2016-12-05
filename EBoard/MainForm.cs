@@ -155,7 +155,7 @@ namespace EBoard
 
 		private User Login(string title)
 		{
-			var loginForm = new Login(connection) { Text = title, AdditionalCheckAfterValidated = CheckUserForCurrentShift };
+			var loginForm = new LoginDlg(connection) { Text = title, AdditionalCheckAfterValidated = CheckUserForCurrentShift };
 			try
 			{
 				if (loginForm.ShowDialog() != DialogResult.OK)

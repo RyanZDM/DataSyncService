@@ -13,7 +13,7 @@ namespace EBoard.Common
 		IdCard
 	}
 
-	public partial class Login : Form
+	public partial class LoginDlg : Form
 	{
 		private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -40,7 +40,7 @@ namespace EBoard.Common
 
 		public AdditionalCheckDelegate AdditionalCheckAfterValidated;
 
-		public Login(SqlConnection conn = null, Type next = null, bool alwaysOpenNew = true)
+		public LoginDlg(SqlConnection conn = null, Type next = null, bool alwaysOpenNew = true)
 		{
 			InitializeComponent();
 			tabControlLogin.SelectedIndex = 0;
