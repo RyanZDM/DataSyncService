@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -50,6 +51,16 @@ namespace EBoard.Common
 				textBoxIDCard.DataBindings.Add("Text", user, "IDCard");
 				checkBoxDisable.Checked = user.Status != "A";
 
+				// Roles
+				dal.GetUserRoles(user);
+				dataGridViewRoles.Rows.Clear();
+				foreach (var role in user.Roles)
+				{
+					var rowNum = dataGridViewRoles.Rows.Add();
+					dataGridViewRoles.Rows[rowNum].Cells["RoleId"].Value = role.RoleId;
+					dataGridViewRoles.Rows[rowNum].Cells["RoleName"].Value = role.Name;
+				}
+
 				DataChanged = false;
 			}
 		}
@@ -96,6 +107,16 @@ namespace EBoard.Common
 		private void checkBoxDisable_CheckedChanged(object sender, System.EventArgs e)
 		{
 			DataChanged = true;
+		}
+
+		private void buttonAdd_Click(object sender, EventArgs e)
+		{
+			//
+		}
+
+		private void buttonDelete_Click(object sender, EventArgs e)
+		{
+			//
 		}
 	}
 }

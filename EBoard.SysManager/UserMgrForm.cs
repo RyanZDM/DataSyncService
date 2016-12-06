@@ -12,7 +12,7 @@ namespace EBoard.SysManager
 
 		private SqlDataAdapter adapter;
 
-		private int previousRow = -1;
+		private int CurrentRow { get; set; }
 
 		public UserMgrForm()
 		{
@@ -21,6 +21,8 @@ namespace EBoard.SysManager
 
 		private void UserMgrForm_Load(object sender, EventArgs e)
 		{
+			CurrentRow = -1;
+
 			RefreshData(false);
 		}
 
@@ -231,22 +233,27 @@ namespace EBoard.SysManager
 		private void dataGridViewUser_CurrentCellChanged(object sender, EventArgs e)
 		{
 			var rowCount = dataGridViewUser.Rows.Count;
-			if (rowCount < 1 && previousRow == -1)
+			if (rowCount < 1 && CurrentRow == -1)
 				return;
 
 			var currRow = dataGridViewUser.CurrentRow;
 			if (currRow == null)
 			{
-				previousRow = -1;
+				CurrentRow = -1;
 				return;
 			}
 						
-			if (previousRow == currRow.Index)
+			if (CurrentRow == currRow.Index)
 				return;
 
-			previousRow = currRow.Index;
+			CurrentRow = currRow.Index;
 			propertyToolStripMenuItem.Enabled = ((dataGridViewUser.DataSource as DataTable).Rows[currRow.Index].RowState != DataRowState.Added);
 			propertyToolStripButton.Enabled = propertyToolStripMenuItem.Enabled;
+		}
+
+		private void dataGridViewUser_DoubleClick(object sender, EventArgs e)
+		{
+			ChangeUserProperty();
 		}
 	}
 }

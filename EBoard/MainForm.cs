@@ -68,11 +68,9 @@ namespace EBoard
 				connection = DbFactory.GetConnection();
 
 				var now = DateTime.Now;
-				labelCurrDate.Text = now.ToString("yyyy年MM月dd日 dddd", new System.Globalization.CultureInfo("zh-cn"));
-
 				daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
-				InitChart(chartCurrMonth1, 1, 19);
-				InitChart(chartCurrMonth2, 20, daysInMonth);
+				InitChart(chartCurrMonth1, 1, 18);
+				InitChart(chartCurrMonth2, 19, daysInMonth);
 
 				InitTimers();
 
@@ -201,7 +199,10 @@ namespace EBoard
 
 		private void RefreshTimeTimer_Tick(object sender, EventArgs e)
 		{
-			labelCurrTime.Text = DateTime.Now.ToLocalTime().ToString("HH:mm:ss");
+			var now = DateTime.Now;
+			labelCurrDate.Text = now.ToString("yyyy年MM月dd日", new System.Globalization.CultureInfo("zh-cn"));
+			labelCurrWeekDay.Text = now.ToString("dddd", new System.Globalization.CultureInfo("zh-cn"));
+			labelCurrTime.Text = now.ToLocalTime().ToString("HH:mm:ss");
 		}
 
 		private void SetCommunicateState(CommunicationState state)
@@ -334,7 +335,7 @@ namespace EBoard
 
 			// Update labels on GUI
 
-			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
+			labelTotalRuntime2.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
 
 			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() : "";
@@ -364,6 +365,10 @@ namespace EBoard
 			chart.ChartAreas[0].AxisX.Minimum = begin - 1;
 			chart.ChartAreas[0].AxisX.Maximum = end;
 			chart.ChartAreas[0].AxisX.Interval = 1;
+			chart.BackColor = Color.Transparent;
+			chart.Legends.Clear();
+			//chart.ChartAreas[0].AxisX.LineWidth = 0;
+			//chart.ChartAreas[0].AxisY.LineWidth = 0;
 
 			while (chart.Series.Count > 0)
 			{
@@ -374,9 +379,10 @@ namespace EBoard
 
 			series1.XValueMember = "Day";
 			series1.YValueMembers = "Biogas";
-			series1.BackHatchStyle = ChartHatchStyle.DarkUpwardDiagonal;
-			series1.Color = Color.Black;
+			series1.BackHatchStyle = ChartHatchStyle.None;
+			series1.Color = Color.FromArgb(72, 130, 189);//.Black;
 			series1.BorderColor = Color.Black;
+			series1.LabelBackColor = Color.Transparent;
 
 			var series2 = chart.Series.Add("发电量");
 			series2.XValueMember = "Day";

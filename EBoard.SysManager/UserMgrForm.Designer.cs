@@ -53,11 +53,11 @@
 			this.addToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.deleteToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+			this.propertyToolStripButton = new System.Windows.Forms.ToolStripButton();
+			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.changePwdToolStripButton = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.refreshToolStripButton = new System.Windows.Forms.ToolStripButton();
-			this.propertyToolStripButton = new System.Windows.Forms.ToolStripButton();
-			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridViewUser)).BeginInit();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
@@ -86,6 +86,7 @@
 			this.dataGridViewUser.TabIndex = 0;
 			this.dataGridViewUser.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewUser_CellValueChanged);
 			this.dataGridViewUser.CurrentCellChanged += new System.EventHandler(this.dataGridViewUser_CurrentCellChanged);
+			this.dataGridViewUser.DoubleClick += new System.EventHandler(this.dataGridViewUser_DoubleClick);
 			// 
 			// UserId
 			// 
@@ -247,7 +248,7 @@
             this.refreshToolStripButton});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(276, 27);
+			this.toolStrip1.Size = new System.Drawing.Size(245, 27);
 			this.toolStrip1.TabIndex = 2;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -295,6 +296,22 @@
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
 			this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
 			// 
+			// propertyToolStripButton
+			// 
+			this.propertyToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+			this.propertyToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("propertyToolStripButton.Image")));
+			this.propertyToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.propertyToolStripButton.Margin = new System.Windows.Forms.Padding(5, 1, 5, 2);
+			this.propertyToolStripButton.Name = "propertyToolStripButton";
+			this.propertyToolStripButton.Size = new System.Drawing.Size(24, 24);
+			this.propertyToolStripButton.Text = "toolStripButton1";
+			this.propertyToolStripButton.Click += new System.EventHandler(this.propertyToolStripMenuItem_Click);
+			// 
+			// toolStripSeparator4
+			// 
+			this.toolStripSeparator4.Name = "toolStripSeparator4";
+			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
+			// 
 			// changePwdToolStripButton
 			// 
 			this.changePwdToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -321,22 +338,6 @@
 			this.refreshToolStripButton.Size = new System.Drawing.Size(24, 24);
 			this.refreshToolStripButton.Text = "刷新";
 			this.refreshToolStripButton.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
-			// 
-			// propertyToolStripButton
-			// 
-			this.propertyToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-			this.propertyToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("propertyToolStripButton.Image")));
-			this.propertyToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-			this.propertyToolStripButton.Margin = new System.Windows.Forms.Padding(5, 1, 5, 2);
-			this.propertyToolStripButton.Name = "propertyToolStripButton";
-			this.propertyToolStripButton.Size = new System.Drawing.Size(24, 24);
-			this.propertyToolStripButton.Text = "toolStripButton1";
-			this.propertyToolStripButton.Click += new System.EventHandler(this.propertyToolStripMenuItem_Click);
-			// 
-			// toolStripSeparator4
-			// 
-			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
 			// 
 			// UserMgrForm
 			// 
