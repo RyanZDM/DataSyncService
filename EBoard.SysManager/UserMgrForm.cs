@@ -186,7 +186,7 @@ namespace EBoard.SysManager
 			if (row == null)
 				return;
 
-			var dlg = new UserPropertyDlg() { LoginId = row.Cells["LoginId"].Value.ToString() };
+			var dlg = new UserPropertyDlg(connection) { LoginId = row.Cells["LoginId"].Value.ToString() };
 			if ((dlg.ShowDialog() == DialogResult.OK) && dlg.DataChanged)
 			{
 				Refresh();
