@@ -355,8 +355,21 @@ namespace EBoard
 
 		private void UpdateWorksOnGUI()
 		{
-			labelWorker1.Text = (CurrentWorkers.Count > 0) ? string.Format("姓名 {0}      工号 {1}", CurrentWorkers.Values[0].LoginId, CurrentWorkers.Values[0].Name) : "";
-			labelWorker2.Text = (CurrentWorkers.Count > 1) ? string.Format("姓名 {0}      工号 {1}", CurrentWorkers.Values[1].LoginId, CurrentWorkers.Values[1].Name) : "";
+			if (CurrentWorkers.Count < 1)
+			{
+				labelWorker.Text = "";
+				return;
+			}
+
+			if (CurrentWorkers.Count > 0)
+			{
+				labelWorker.Text = string.Format("姓名：{0}\t工号：{1}", CurrentWorkers.Values[0].Name, CurrentWorkers.Values[0].LoginId);
+			}
+
+			if (CurrentWorkers.Count > 1)
+			{
+				labelWorker.Text = string.Format("{0}\t姓名：{1}\t工号：{2}", labelWorker.Text, CurrentWorkers.Values[1].Name, CurrentWorkers.Values[1].LoginId);
+			}
 		}
 
 		#region For Chart
@@ -367,29 +380,45 @@ namespace EBoard
 			chart.ChartAreas[0].AxisX.Interval = 1;
 			chart.BackColor = Color.Transparent;
 			chart.Legends.Clear();
-			//chart.ChartAreas[0].AxisX.LineWidth = 0;
-			//chart.ChartAreas[0].AxisY.LineWidth = 0;
 
 			while (chart.Series.Count > 0)
 			{
 				chart.Series.RemoveAt(0);
 			}
 
-			var series1 = chart.Series.Add("沼气量");
-
+			var series1 = chart.Series.Add("沼气量日");
 			series1.XValueMember = "Day";
-			series1.YValueMembers = "Biogas";
+			series1.YValueMembers = "BiogasDay";
 			series1.BackHatchStyle = ChartHatchStyle.None;
-			series1.Color = Color.FromArgb(72, 130, 189);//.Black;
+			series1.Color = Color.FromArgb(72, 130, 189);
 			series1.BorderColor = Color.Black;
 			series1.LabelBackColor = Color.Transparent;
+			series1.CustomProperties = "PointWidth=0.8";
 
-			var series2 = chart.Series.Add("发电量");
+
+			var series2 = chart.Series.Add("发电量日");
 			series2.XValueMember = "Day";
-			series2.YValueMembers = "EngeryProduction";
-			series2.BackHatchStyle = ChartHatchStyle.SmallGrid;
-			series2.Color = Color.Black;
+			series2.YValueMembers = "EngeryProductionDay";
+			series2.BackHatchStyle = ChartHatchStyle.None;
+			series2.Color = Color.FromArgb(22, 52, 121);
 			series2.BorderColor = Color.Black;
+			series2.CustomProperties = "PointWidth=0.8";
+
+			var series3 = chart.Series.Add("沼气量夜");
+			series3.XValueMember = "Day";
+			series3.YValueMembers = "BiogasNight";
+			series3.BackHatchStyle = ChartHatchStyle.None;
+			series3.Color = Color.FromArgb(147, 37, 32);
+			series3.BorderColor = Color.Black;
+			series3.CustomProperties = "PointWidth=0.8";
+
+			var series4 = chart.Series.Add("发电量夜");
+			series4.XValueMember = "Day";
+			series4.YValueMembers = "EngeryProductionNight";
+			series4.BackHatchStyle = ChartHatchStyle.None;
+			series4.Color = Color.FromArgb(120, 30, 25);
+			series4.BorderColor = Color.Black;
+			series4.CustomProperties = "PointWidth=0.8";
 
 			while (chart.ChartAreas[0].AxisX.CustomLabels.Count > 0)
 			{
@@ -397,17 +426,31 @@ namespace EBoard
 			}
 
 			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "日期", 0, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量", 1, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量", 2, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量日", 1, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量日", 2, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 3, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 4, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量夜", 5, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量夜", 6, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 7, LabelMarkStyle.None);
+			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
 
 			for (var i = begin; i <= end; i++)
 			{
 				var from = i - 0.5;
 				var to = i + 0.5;
 
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, i.ToString(), 0, LabelMarkStyle.None);
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 1, LabelMarkStyle.None).Tag = i;
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 2, LabelMarkStyle.None).Tag = i;
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, i.ToString(), 0, LabelMarkStyle.None);		// day
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 1, LabelMarkStyle.None).Tag = i;		// biogas day
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 2, LabelMarkStyle.None).Tag = i;		// kwh day
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 3, LabelMarkStyle.None).Tag = i;		// worker1
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 4, LabelMarkStyle.None).Tag = i;       // worker2
+
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 5, LabelMarkStyle.None).Tag = i;       // biogas night
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 6, LabelMarkStyle.None).Tag = i;       // kwh night
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 7, LabelMarkStyle.None).Tag = i;       // worker1
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 8, LabelMarkStyle.None).Tag = i;       // worker2
+
 			}
 		}
 
@@ -448,13 +491,35 @@ namespace EBoard
 			}
 		}
 
+		private Dictionary<int, string> ChartLabelMapping = new Dictionary<int, string>
+		{
+			{1, "BiogasDay" }
+			,{2, "EngeryProductionDay" }
+			,{3, "DayWorkers1" }
+			,{4, "DayWorkers2" }
+			,{5, "BiogasNight" }
+			,{6, "EngeryProductionNight" }
+			,{7, "NightWorkers1" }
+			,{8, "NightWorkers2" }
+		};
+
 		private void RefreshChart(Chart chart, DataSet ds)
 		{
+			// Refresh to total data
+			if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+			{
+				var sumRow = ds.Tables[1].Rows[0];
+				labelBiogasMonth.Text = sumRow["Biogas"].ToString();
+				labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString();
+			}
+
+			// Refresh the chart label
 			var axis = chart.ChartAreas[0].AxisX;
 			var begin = axis.Minimum + 1;
 			var end = axis.Maximum;
+			var today = DateTime.Now.Day;
 
-			chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
+				chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
 
 			for (var i = begin; i <= end; i++)
 			{
@@ -464,23 +529,35 @@ namespace EBoard
 				var labels = axis.CustomLabels.Where(c => c.RowIndex > 0 && c.Tag != null && (int)c.Tag == i).ToList();
 				foreach (var label in labels)
 				{
-					if (label.RowIndex == 1)
+					if (today < i)
 					{
-						label.Text = row["Biogas"].ToString();
+						label.Text = "";    // No need to write the value since the day is later than today
+						continue;
+					}
+
+					if (!ChartLabelMapping.ContainsKey(label.RowIndex))
+						continue;
+					
+					var colName = ChartLabelMapping[label.RowIndex];
+					if (colName.EndsWith("1") || colName.EndsWith("2"))
+					{
+						// Need to split the workers
+						var realColumn = colName.Substring(0, colName.Length - 1);
+						var workerIndex = int.Parse(colName.Substring(colName.Length - 1));
+						var workers = row[realColumn].ToString();
+						if (string.IsNullOrWhiteSpace(workers))
+							continue;
+
+						var workerList = workers.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+						if (workerList.Length >= 1)
+							label.Text = workerList[workerIndex - 1];
 					}
 					else
 					{
-						label.Text = row["EngeryProduction"].ToString();
+						label.Text = row[ChartLabelMapping[label.RowIndex]].ToString();
 					}
 				}
-			}
-
-			if (ds.Tables.Count < 1 || ds.Tables[1].Rows.Count < 1)
-				return;
-
-			var sumRow = ds.Tables[1].Rows[0];
-			labelBiogasMonth.Text = sumRow["Biogas"].ToString();
-			labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString();
+			}			
 		}
 		#endregion
 
