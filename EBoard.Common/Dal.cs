@@ -453,6 +453,32 @@ namespace EBoard.Common
 			return roles;
 		}
 
+		public bool AddRole(string roleId, string userId)
+		{
+			if (string.IsNullOrWhiteSpace(roleId) || string.IsNullOrWhiteSpace(userId))
+				throw new ArgumentNullException();
+
+			var sql = string.Format("Select Count(*) From UserInRole Where RoleId='{0}' And UserId='{1}'", roleId, userId);
+			var cmd = new SqlCommand(sql, connection);
+			var count = (int)cmd.ExecuteScalar();
+			if (count > 0)
+				throw new Exception(string.Format("用户已经属于该角色-'{0}'", roleId));
+
+			sql = string.Format("Insert Into UserInRole (RoleId,UserId) Values ('{0}','{1}')", roleId, userId);
+			cmd.CommandText = sql;
+			return (cmd.ExecuteNonQuery() > 0);
+		}
+
+		public bool DeleteRole(string roleId, string userId)
+		{
+			if (string.IsNullOrWhiteSpace(roleId) || string.IsNullOrWhiteSpace(userId))
+				throw new ArgumentNullException();
+
+			var sql = string.Format("Delete From UserInRole Where RoleId='{0}' And UserId=CAST('{1}' AS uniqueidentifier)", roleId, userId);
+			var cmd = new SqlCommand(sql, connection);
+			return (cmd.ExecuteNonQuery() > 0);
+		}
+
 		/// <summary>
 		/// Gets roles of a user belongs to
 		/// </summary>

@@ -64,6 +64,15 @@
     <Compile Include="LoginDlg.Designer.cs">
       <DependentUpon>LoginDlg.cs</DependentUpon>
     </Compile>
+    <Compile Include="RolesDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RolesDlg.Designer.cs">
+      <DependentUpon>RolesDlg.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoundPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ShiftStatInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reporter.cs" />
@@ -85,6 +94,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="LoginDlg.resx">
       <DependentUpon>LoginDlg.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RolesDlg.resx">
+      <DependentUpon>RolesDlg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserPropertyDlg.resx">
       <DependentUpon>UserPropertyDlg.cs</DependentUpon>

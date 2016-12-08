@@ -60,9 +60,10 @@
 			this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonSave.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.buttonSave.Enabled = false;
-			this.buttonSave.Location = new System.Drawing.Point(240, 359);
+			this.buttonSave.Location = new System.Drawing.Point(337, 479);
+			this.buttonSave.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonSave.Name = "buttonSave";
-			this.buttonSave.Size = new System.Drawing.Size(75, 23);
+			this.buttonSave.Size = new System.Drawing.Size(90, 31);
 			this.buttonSave.TabIndex = 0;
 			this.buttonSave.Text = "保存";
 			this.buttonSave.UseVisualStyleBackColor = true;
@@ -72,11 +73,12 @@
 			// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(159, 359);
+			this.buttonCancel.Location = new System.Drawing.Point(12, 479);
+			this.buttonCancel.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+			this.buttonCancel.Size = new System.Drawing.Size(100, 31);
 			this.buttonCancel.TabIndex = 1;
-			this.buttonCancel.Text = "取消";
+			this.buttonCancel.Text = "退出";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			// 
 			// tabControlProperty
@@ -86,12 +88,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.tabControlProperty.Controls.Add(this.tabPageGeneral);
 			this.tabControlProperty.Controls.Add(this.tabPageRole);
-			this.tabControlProperty.Location = new System.Drawing.Point(9, 9);
-			this.tabControlProperty.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.tabControlProperty.Location = new System.Drawing.Point(12, 12);
 			this.tabControlProperty.Name = "tabControlProperty";
 			this.tabControlProperty.SelectedIndex = 0;
-			this.tabControlProperty.Size = new System.Drawing.Size(309, 337);
+			this.tabControlProperty.Size = new System.Drawing.Size(412, 449);
 			this.tabControlProperty.TabIndex = 2;
+			this.tabControlProperty.SelectedIndexChanged += new System.EventHandler(this.tabControlProperty_SelectedIndexChanged);
 			// 
 			// tabPageGeneral
 			// 
@@ -105,11 +107,10 @@
 			this.tabPageGeneral.Controls.Add(this.label3);
 			this.tabPageGeneral.Controls.Add(this.label2);
 			this.tabPageGeneral.Controls.Add(this.label1);
-			this.tabPageGeneral.Location = new System.Drawing.Point(4, 22);
-			this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.tabPageGeneral.Location = new System.Drawing.Point(4, 25);
 			this.tabPageGeneral.Name = "tabPageGeneral";
-			this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-			this.tabPageGeneral.Size = new System.Drawing.Size(301, 311);
+			this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageGeneral.Size = new System.Drawing.Size(404, 420);
 			this.tabPageGeneral.TabIndex = 0;
 			this.tabPageGeneral.Text = "通用";
 			this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -118,119 +119,103 @@
 			// 
 			this.textBoxPassowrdConfirm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPassowrdConfirm.Location = new System.Drawing.Point(91, 140);
-			this.textBoxPassowrdConfirm.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.textBoxPassowrdConfirm.Location = new System.Drawing.Point(121, 187);
 			this.textBoxPassowrdConfirm.Name = "textBoxPassowrdConfirm";
-			this.textBoxPassowrdConfirm.Size = new System.Drawing.Size(200, 21);
+			this.textBoxPassowrdConfirm.Size = new System.Drawing.Size(265, 22);
 			this.textBoxPassowrdConfirm.TabIndex = 6;
-			this.textBoxPassowrdConfirm.UseSystemPasswordChar = true;
-			this.textBoxPassowrdConfirm.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+			this.textBoxPassowrdConfirm.UseSystemPasswordChar = true;			
 			// 
 			// textBoxPassword
 			// 
 			this.textBoxPassword.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxPassword.Location = new System.Drawing.Point(91, 116);
-			this.textBoxPassword.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.textBoxPassword.Location = new System.Drawing.Point(121, 155);
 			this.textBoxPassword.Name = "textBoxPassword";
-			this.textBoxPassword.Size = new System.Drawing.Size(200, 21);
+			this.textBoxPassword.Size = new System.Drawing.Size(265, 22);
 			this.textBoxPassword.TabIndex = 6;
 			this.textBoxPassword.UseSystemPasswordChar = true;
-			this.textBoxPassword.TextChanged += new System.EventHandler(this.textBox_TextChanged);
 			// 
 			// textBoxIDCard
 			// 
 			this.textBoxIDCard.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxIDCard.Location = new System.Drawing.Point(91, 93);
-			this.textBoxIDCard.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.textBoxIDCard.Location = new System.Drawing.Point(121, 124);
 			this.textBoxIDCard.Name = "textBoxIDCard";
-			this.textBoxIDCard.Size = new System.Drawing.Size(200, 21);
+			this.textBoxIDCard.Size = new System.Drawing.Size(265, 22);
 			this.textBoxIDCard.TabIndex = 6;
-			this.textBoxIDCard.TextChanged += new System.EventHandler(this.textBox_TextChanged);
 			// 
 			// textBoxUserName
 			// 
 			this.textBoxUserName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.textBoxUserName.Location = new System.Drawing.Point(91, 70);
-			this.textBoxUserName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.textBoxUserName.Location = new System.Drawing.Point(121, 93);
 			this.textBoxUserName.Name = "textBoxUserName";
-			this.textBoxUserName.Size = new System.Drawing.Size(200, 21);
+			this.textBoxUserName.Size = new System.Drawing.Size(265, 22);
 			this.textBoxUserName.TabIndex = 6;
-			this.textBoxUserName.TextChanged += new System.EventHandler(this.textBox_TextChanged);
 			// 
 			// labelLoginId
 			// 
 			this.labelLoginId.AutoSize = true;
 			this.labelLoginId.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelLoginId.Location = new System.Drawing.Point(44, 22);
-			this.labelLoginId.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.labelLoginId.Location = new System.Drawing.Point(59, 29);
 			this.labelLoginId.Name = "labelLoginId";
-			this.labelLoginId.Size = new System.Drawing.Size(14, 20);
+			this.labelLoginId.Size = new System.Drawing.Size(19, 25);
 			this.labelLoginId.TabIndex = 5;
 			this.labelLoginId.Text = "-";
 			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(15, 95);
-			this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.label4.Location = new System.Drawing.Point(20, 127);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(53, 12);
+			this.label4.Size = new System.Drawing.Size(65, 17);
 			this.label4.TabIndex = 4;
 			this.label4.Text = "IDCard：";
 			// 
 			// checkBoxDisable
 			// 
 			this.checkBoxDisable.AutoSize = true;
-			this.checkBoxDisable.Location = new System.Drawing.Point(15, 186);
-			this.checkBoxDisable.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.checkBoxDisable.Location = new System.Drawing.Point(20, 248);
 			this.checkBoxDisable.Name = "checkBoxDisable";
-			this.checkBoxDisable.Size = new System.Drawing.Size(84, 16);
+			this.checkBoxDisable.Size = new System.Drawing.Size(100, 21);
 			this.checkBoxDisable.TabIndex = 3;
 			this.checkBoxDisable.Text = "禁用该账号";
 			this.checkBoxDisable.UseVisualStyleBackColor = true;
-			this.checkBoxDisable.CheckedChanged += new System.EventHandler(this.checkBoxDisable_CheckedChanged);
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(15, 142);
-			this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.label3.Location = new System.Drawing.Point(20, 189);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(29, 12);
+			this.label3.Size = new System.Drawing.Size(36, 17);
 			this.label3.TabIndex = 2;
 			this.label3.Text = "确认";
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(15, 118);
-			this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.label2.Location = new System.Drawing.Point(20, 157);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(41, 12);
+			this.label2.Size = new System.Drawing.Size(50, 17);
 			this.label2.TabIndex = 1;
 			this.label2.Text = "密码：";
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(15, 72);
-			this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+			this.label1.Location = new System.Drawing.Point(20, 96);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(53, 12);
+			this.label1.Size = new System.Drawing.Size(64, 17);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "用户名：";
 			// 
 			// tabPageRole
 			// 
 			this.tabPageRole.Controls.Add(this.dataGridViewRoles);
-			this.tabPageRole.Location = new System.Drawing.Point(4, 22);
-			this.tabPageRole.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.tabPageRole.Location = new System.Drawing.Point(4, 25);
 			this.tabPageRole.Name = "tabPageRole";
-			this.tabPageRole.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-			this.tabPageRole.Size = new System.Drawing.Size(301, 311);
+			this.tabPageRole.Padding = new System.Windows.Forms.Padding(3);
+			this.tabPageRole.Size = new System.Drawing.Size(404, 420);
 			this.tabPageRole.TabIndex = 1;
 			this.tabPageRole.Text = "角色";
 			this.tabPageRole.UseVisualStyleBackColor = true;
@@ -245,12 +230,11 @@
             this.RoleId,
             this.RoleName});
 			this.dataGridViewRoles.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridViewRoles.Location = new System.Drawing.Point(2, 2);
-			this.dataGridViewRoles.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.dataGridViewRoles.Location = new System.Drawing.Point(3, 3);
 			this.dataGridViewRoles.Name = "dataGridViewRoles";
 			this.dataGridViewRoles.ReadOnly = true;
 			this.dataGridViewRoles.RowTemplate.Height = 24;
-			this.dataGridViewRoles.Size = new System.Drawing.Size(297, 307);
+			this.dataGridViewRoles.Size = new System.Drawing.Size(398, 414);
 			this.dataGridViewRoles.TabIndex = 0;
 			// 
 			// UserId
@@ -279,40 +263,43 @@
 			// 
 			// buttonAdd
 			// 
-			this.buttonAdd.Location = new System.Drawing.Point(9, 359);
-			this.buttonAdd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.buttonAdd.Location = new System.Drawing.Point(157, 479);
 			this.buttonAdd.Name = "buttonAdd";
-			this.buttonAdd.Size = new System.Drawing.Size(56, 23);
+			this.buttonAdd.Size = new System.Drawing.Size(90, 31);
 			this.buttonAdd.TabIndex = 3;
 			this.buttonAdd.Text = "添加";
 			this.buttonAdd.UseVisualStyleBackColor = true;
+			this.buttonAdd.Visible = false;
 			this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
 			// 
 			// buttonDelete
 			// 
-			this.buttonDelete.Location = new System.Drawing.Point(70, 359);
-			this.buttonDelete.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.buttonDelete.Location = new System.Drawing.Point(247, 479);
 			this.buttonDelete.Name = "buttonDelete";
-			this.buttonDelete.Size = new System.Drawing.Size(56, 23);
+			this.buttonDelete.Size = new System.Drawing.Size(90, 31);
 			this.buttonDelete.TabIndex = 4;
 			this.buttonDelete.Text = "删除";
 			this.buttonDelete.UseVisualStyleBackColor = true;
+			this.buttonDelete.Visible = false;
 			this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
 			// 
 			// UserPropertyDlg
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(327, 394);
+			this.ClientSize = new System.Drawing.Size(436, 525);
 			this.Controls.Add(this.buttonDelete);
 			this.Controls.Add(this.buttonAdd);
 			this.Controls.Add(this.tabControlProperty);
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonSave);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "UserPropertyDlg";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "UserProperty";
+			this.Load += new System.EventHandler(this.UserPropertyDlg_Load);
 			this.tabControlProperty.ResumeLayout(false);
 			this.tabPageGeneral.ResumeLayout(false);
 			this.tabPageGeneral.PerformLayout();
