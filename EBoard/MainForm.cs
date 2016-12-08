@@ -14,6 +14,8 @@ namespace EBoard
 {
 	public partial class MainForm : Form
 	{
+		private const string UnitM3 = @" M³";
+		private const string UnitKWh = " kWh";
 		private const int WorkersInShift = 2;
 		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
@@ -341,19 +343,17 @@ namespace EBoard
 			labelTotalRuntime2.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
 
-			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() : "";
-			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal.ToString() : "";
-			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0.0) + (biogas2GenSubtotal ?? 0.0)).ToString();
+			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() + UnitM3 : "";
+			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal.ToString() + UnitM3 : "";
+			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0.0) + (biogas2GenSubtotal ?? 0.0)).ToString() + UnitM3;
 
-			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() : "";
-			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() : "";
-			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0.0) + (energyProduction2 ?? 0.0)).ToString();
+			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() + UnitKWh : "";
+			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() + UnitKWh : "";
+			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0.0) + (energyProduction2 ?? 0.0)).ToString() + UnitKWh;
 
 			labelRuntime1.Text = subtotalRuntime1.HasValue ? subtotalRuntime1.ToString() : "";
 			labelRuntime2.Text = subtotalRuntime2.HasValue ? subtotalRuntime2.ToString() : "";
 			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0.0) + (subtotalRuntime2 ?? 0.0)).ToString();
-
-			// TODO: if generator not running, show alert on GUI?
 		}
 
 		private void UpdateWorksOnGUI()
@@ -378,7 +378,7 @@ namespace EBoard
 		#region For Chart
 		private void InitChart(Chart chart, int begin, int end)
 		{
-			chart.ChartAreas[0].AxisX.Minimum = begin - 1;
+			chart.ChartAreas[0].AxisX.Minimum = begin;
 			chart.ChartAreas[0].AxisX.Maximum = end;
 			chart.ChartAreas[0].AxisX.Interval = 1;
 			chart.BackColor = Color.Transparent;
@@ -428,15 +428,25 @@ namespace EBoard
 				chart.ChartAreas[0].AxisX.CustomLabels.RemoveAt(0);
 			}
 
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "日期", 0, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量日", 1, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量日", 2, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 3, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 4, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量夜", 5, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量夜", 6, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 7, LabelMarkStyle.None);
-			chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "日期", 0, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量日", 1, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量日", 2, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 3, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 4, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量夜", 5, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量夜", 6, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 7, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
+
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 0, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 1, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 2, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 3, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 4, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 5, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 6, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 7, LabelMarkStyle.None);
+			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
 
 			for (var i = begin; i <= end; i++)
 			{
@@ -471,7 +481,7 @@ namespace EBoard
 			var lastDay = DateTime.DaysInMonth(now.Year, now.Month);
 			if (daysInMonth != lastDay)
 			{
-				InitChart(chartCurrMonth2, 20, lastDay);
+				InitChart(chartCurrMonth2, 19, lastDay);
 				daysInMonth = lastDay;
 			}
 
@@ -512,13 +522,13 @@ namespace EBoard
 			if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
 			{
 				var sumRow = ds.Tables[1].Rows[0];
-				labelBiogasMonth.Text = sumRow["Biogas"].ToString();
-				labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString();
+				labelBiogasMonth.Text = sumRow["Biogas"].ToString() + UnitM3;
+				labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString() + UnitKWh;
 			}
 
 			// Refresh the chart label
 			var axis = chart.ChartAreas[0].AxisX;
-			var begin = axis.Minimum + 1;
+			var begin = axis.Minimum;
 			var end = axis.Maximum;
 			var today = DateTime.Now.Day;
 
@@ -564,7 +574,7 @@ namespace EBoard
 		}
 		#endregion
 
-		private void buttonReLogin_Click(object sender, EventArgs e)
+		private void label1_DoubleClick(object sender, EventArgs e)
 		{
 			if (currentWorkers.Count < 1)
 			{
