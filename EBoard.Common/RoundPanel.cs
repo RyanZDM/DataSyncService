@@ -12,14 +12,14 @@ namespace EBoard.Common
 		{
 			//InitializeComponent();
 
-			this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
-			this.Margin = new System.Windows.Forms.Padding(0, 0, 0, 0);
-			this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			Padding = new Padding(0, 0, 0, 0);
+			Margin = new Padding(0, 0, 0, 0);
+			BackgroundImageLayout = ImageLayout.Stretch;
 		}
 
-		private int radius;  // Ô²½Ç»¡¶È
+		private int radius;
 
-		/// <summary>Ô²½Ç»¡¶È(0Îª²»ÒªÔ²½Ç)</summary>
+		/// <summary>Angle of round</summary>
 		[Browsable(true)]
 		[Description("Angle of round")]
 		public int RoundRadius
@@ -52,7 +52,6 @@ namespace EBoard.Common
 			}
 		}
 
-		// Ô²½Ç´úÂë
 		public void Round(Region region)
 		{
 			// -----------------------------------------------------------------------------------------------
@@ -68,7 +67,7 @@ namespace EBoard.Common
 				var g = CreateGraphics();
 				if ((roundCorners & RoundCornerEnum.TopLeft) == RoundCornerEnum.TopLeft)
 				{
-					oPath.AddArc(x, y, angle, angle, 180, 90);                                 // ×óÉÏ½Ç
+					oPath.AddArc(x, y, angle, angle, 180, 90);                                  // Top left
 				}
 				else
 				{
@@ -77,7 +76,7 @@ namespace EBoard.Common
 
 				if ((roundCorners & RoundCornerEnum.TopRight) == RoundCornerEnum.TopRight)
 				{
-					oPath.AddArc(thisWidth - angle, y, angle, angle, 270, 90);                 // ÓÒÉÏ½Ç
+					oPath.AddArc(thisWidth - angle, y, angle, angle, 270, 90);                 // Top right
 				}
 				else
 				{
@@ -86,7 +85,7 @@ namespace EBoard.Common
 
 				if ((roundCorners & RoundCornerEnum.BottomRight) == RoundCornerEnum.BottomRight)
 				{
-					oPath.AddArc(thisWidth - angle, thisHeight - angle, angle, angle, 0, 90);  // ÓÒÏÂ½Ç
+					oPath.AddArc(thisWidth - angle, thisHeight - angle, angle, angle, 0, 90);  // Bottom right
 				}
 				else
 				{
@@ -95,7 +94,7 @@ namespace EBoard.Common
 
 				if ((roundCorners & RoundCornerEnum.BottomLeft) == RoundCornerEnum.BottomLeft)
 				{
-					oPath.AddArc(x, thisHeight - angle, angle, angle, 90, 90);                 // ×óÏÂ½Ç
+					oPath.AddArc(x, thisHeight - angle, angle, angle, 90, 90);                 // Bottom left
 				}
 				else
 				{
@@ -108,10 +107,10 @@ namespace EBoard.Common
 			// -----------------------------------------------------------------------------------------------
 			else
 			{
-				oPath.AddLine(x + angle, y, thisWidth - angle, y);                         // ¶¥¶Ë
-				oPath.AddLine(thisWidth, y + angle, thisWidth, thisHeight - angle);        // ÓÒ±ß
-				oPath.AddLine(thisWidth - angle, thisHeight, x + angle, thisHeight);       // µ×±ß
-				oPath.AddLine(x, y + angle, x, thisHeight - angle);                        // ×ó±ß
+				oPath.AddLine(x + angle, y, thisWidth - angle, y);                         // Top
+				oPath.AddLine(thisWidth, y + angle, thisWidth, thisHeight - angle);        // Right
+				oPath.AddLine(thisWidth - angle, thisHeight, x + angle, thisHeight);       // Bottom
+				oPath.AddLine(x, y + angle, x, thisHeight - angle);                        // Left
 				oPath.CloseAllFigures();
 				Region = new Region(oPath);
 			}

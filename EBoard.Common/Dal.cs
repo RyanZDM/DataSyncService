@@ -118,9 +118,6 @@ namespace EBoard.Common
 			if (latestTable.Rows.Count < 1)
 				return null;
 
-			// TODO: Check a special flag to see if the communication break and throw exception
-			//throw new OPCCommunicationBrokeException();
-
 			// Get data from ShiftStatMstr table
 			var shiftId = GetCurrentShiftId();
 

@@ -14,10 +14,15 @@ namespace EBoard
 {
 	public partial class MainForm : Form
 	{
+		#region Variables and properties
+		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private const string UnitM3 = @" M³";
 		private const string UnitKWh = " kWh";
 		private const int WorkersInShift = 2;
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private const int DefaultRefreshInterval = 2000;
+
+		private int refreshInterval = DefaultRefreshInterval;
 
 		private System.Threading.Timer refreshDataTimer;
 		private System.Windows.Forms.Timer refreshTimeTimer;
@@ -27,11 +32,29 @@ namespace EBoard
 		private System.Threading.Timer shiftLoginTimer;
 
 		private SqlConnection connection;
-
+				
+		private DateTime? lastUpdateTime;
 		/// <summary>
 		/// The last time data got changed
 		/// </summary>
-		private DateTime? lastUpdateTime;
+		public DateTime? LastUpdateTime
+		{
+			get { return lastUpdateTime; }
+			set
+			{
+				lastUpdateTime = value;
+
+				if (InvokeRequired)
+				{
+					BeginInvoke((MethodInvoker)(() => Text = string.Format("最后更新于：{0}", (lastUpdateTime.HasValue) ? lastUpdateTime.Value.ToLongTimeString() : "")));
+					return;
+				}
+				else
+				{
+					Text = string.Format("最后更新于：{0}", (lastUpdateTime.HasValue) ? lastUpdateTime.Value.ToLongTimeString() : "");
+				}
+			}
+		}
 
 		/// <summary>
 		/// How many days in current month
@@ -55,6 +78,7 @@ namespace EBoard
 				}
 			}
 		}
+		#endregion
 
 		public MainForm()
 		{
@@ -64,6 +88,8 @@ namespace EBoard
 		private void MainForm_Load(object sender, EventArgs e)
 		{
 			logger.Info("Electronic Board System started.");
+
+			InitToolTips();
 
 			try
 			{
@@ -105,8 +131,26 @@ namespace EBoard
 															&& string.Equals(p.Name, "ShiftStartTime2", StringComparison.OrdinalIgnoreCase));
 			secondShiftStart = (shift1Start != null) ? shift2Start.Value : "20:00:00";
 
+
 			shiftLoginTimer = new System.Threading.Timer(LoginTimerCallback, null, GetDueTimeForLoginTimer(), Timeout.Infinite);
+
+			var param = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
+													&& string.Equals(p.Name, "RefreshDataInterval", StringComparison.OrdinalIgnoreCase));
+			if (param != null)
+			{
+				if (!int.TryParse(param.Value, out refreshInterval))
+					logger.Error("Failed to convert value string '{0}' of RefreshDataInterval to integer, use the default value {1}", param.Value, DefaultRefreshInterval);
+			}
 			refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);
+		}
+
+		private void InitToolTips()
+		{
+			toolTip.SetToolTip(labelTitle, "可以双击鼠标，进行工班登录");
+			toolTip.SetToolTip(panelIndicator, "指示当前通讯状态，绿：正常 黄：正在通讯 红：通讯失败");
+			toolTip.SetToolTip(labelCurrDate, "可以双击鼠标，进行全屏与普通窗口模式切换");
+			toolTip.SetToolTip(labelCurrWeekDay, "可以双击鼠标，进行全屏与普通窗口模式切换");
+			toolTip.SetToolTip(labelCurrTime, "可以双击鼠标，进行全屏与普通窗口模式切换");
 		}
 
 		#region For LoginTimer
@@ -169,7 +213,6 @@ namespace EBoard
 			finally
 			{
 				loginForm.AdditionalCheckAfterValidated = null;
-				// TODO: disposed?
 				loginForm.Close();
 			}
 		}
@@ -209,6 +252,48 @@ namespace EBoard
 			labelCurrWeekDay.Text = now.ToString("dddd", new System.Globalization.CultureInfo("zh-cn"));
 			labelCurrTime.Text = now.ToLocalTime().ToString("HH:mm:ss");
 		}
+		
+		private void RefreshDataTimerCallback(object state)
+		{
+			refreshDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
+			try
+			{
+				SetCommunicateState(CommunicationState.Querying);
+				var conn = DbFactory.GetConnection();
+				var dal = new Dal(conn);
+				var shiftStatInfo = dal.GetShiftStatInfo(LastUpdateTime);
+				if (shiftStatInfo == null)
+				{
+					SetCommunicateState(CommunicationState.ErrorOccurred);
+					return;
+				}
+
+				// Need to refresh two charts the first time
+				var alwaysRefresh = (!LastUpdateTime.HasValue);
+
+				LastUpdateTime = shiftStatInfo.LastUpdateTime;
+
+				RefreshData(shiftStatInfo);
+
+				var reporter = new Reporter(conn);
+				var ds = reporter.GetCurrentMonthDataByDay();
+				RefreshCharts(ds, alwaysRefresh);
+				SetCommunicateState(CommunicationState.Ready);
+			}
+			catch (OPCCommunicationBrokeException)
+			{
+				SetCommunicateState(CommunicationState.CommunicationBroke);
+			}
+			catch (Exception ex)
+			{
+				logger.Error("Error occurred while getting data. {0}", ex.ToString());
+				SetCommunicateState(CommunicationState.ErrorOccurred);
+			}
+			finally
+			{
+				refreshDataTimer.Change(refreshInterval, Timeout.Infinite);
+			}
+		}
 
 		private void SetCommunicateState(CommunicationState state)
 		{
@@ -224,50 +309,6 @@ namespace EBoard
 				case CommunicationState.ErrorOccurred:
 					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.red;
 					break;
-			}
-		}
-
-		private void RefreshDataTimerCallback(object state)
-		{
-			refreshDataTimer.Change(Timeout.Infinite, Timeout.Infinite);
-			try
-			{
-				SetCommunicateState(CommunicationState.Querying);
-				var conn = DbFactory.GetConnection();
-				var dal = new Dal(conn);
-				var shiftStatInfo = dal.GetShiftStatInfo(lastUpdateTime);
-				if (shiftStatInfo == null)
-				{
-					// TODO: show error info on GUI
-					SetCommunicateState(CommunicationState.ErrorOccurred);
-					return;
-				}
-
-				// Need to refresh two charts the first time
-				var alwaysRefresh = (!lastUpdateTime.HasValue);
-
-				lastUpdateTime = shiftStatInfo.LastUpdateTime;
-
-				RefreshData(shiftStatInfo);
-
-				var reporter = new Reporter(conn);
-				var ds = reporter.GetCurrentMonthDataByDay();
-				RefreshCharts(ds, alwaysRefresh);
-				SetCommunicateState(CommunicationState.Ready);
-
-				// TODO: show last update time somewhere
-			}
-			catch (OPCCommunicationBrokeException)
-			{
-				SetCommunicateState(CommunicationState.CommunicationBroke);
-			}
-			catch (Exception)
-			{
-				SetCommunicateState(CommunicationState.ErrorOccurred);
-			}
-			finally
-			{
-				refreshDataTimer.Change(2000, Timeout.Infinite);
 			}
 		}
 
@@ -438,25 +479,15 @@ namespace EBoard
 			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 7, LabelMarkStyle.None);
 			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
 
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 0, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 1, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 2, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 3, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 4, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 5, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 6, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 7, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
-
 			for (var i = begin; i <= end; i++)
 			{
 				var from = i - 0.5;
 				var to = i + 0.5;
 
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, i.ToString(), 0, LabelMarkStyle.None);		// day
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 1, LabelMarkStyle.None).Tag = i;		// biogas day
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 2, LabelMarkStyle.None).Tag = i;		// kwh day
-				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 3, LabelMarkStyle.None).Tag = i;		// worker1
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, i.ToString(), 0, LabelMarkStyle.None);     // day
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 1, LabelMarkStyle.None).Tag = i;       // biogas day
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 2, LabelMarkStyle.None).Tag = i;       // kwh day
+				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 3, LabelMarkStyle.None).Tag = i;       // worker1
 				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 4, LabelMarkStyle.None).Tag = i;       // worker2
 
 				chart.ChartAreas[0].AxisX.CustomLabels.Add(from, to, "", 5, LabelMarkStyle.None).Tag = i;       // biogas night
@@ -532,7 +563,7 @@ namespace EBoard
 			var end = axis.Maximum;
 			var today = DateTime.Now.Day;
 
-				chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
+			chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
 
 			for (var i = begin; i <= end; i++)
 			{
@@ -550,7 +581,7 @@ namespace EBoard
 
 					if (!ChartLabelMapping.ContainsKey(label.RowIndex))
 						continue;
-					
+
 					var colName = ChartLabelMapping[label.RowIndex];
 					if (colName.EndsWith("1") || colName.EndsWith("2"))
 					{
@@ -570,7 +601,7 @@ namespace EBoard
 						label.Text = row[ChartLabelMapping[label.RowIndex]].ToString();
 					}
 				}
-			}			
+			}
 		}
 		#endregion
 
@@ -582,6 +613,12 @@ namespace EBoard
 			}
 
 			Login("请登录当前工班 - 第二名员工");
+		}
+
+		private void labelCurrent_DoubleClick(object sender, EventArgs e)
+		{
+			var newStyle = (FormBorderStyle == FormBorderStyle.None) ? FormBorderStyle.Sizable : FormBorderStyle.None;
+			FormBorderStyle = newStyle;
 		}
 	}
 

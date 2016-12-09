@@ -34,8 +34,8 @@
 			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("基础数据", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.operationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,15 +57,6 @@
 			this.comboBoxCategory = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.dataGridViewGeneralParams = new System.Windows.Forms.DataGridView();
-			this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.DispName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.DispOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.IsHide = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.IsEncrypted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.IsProtected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.dataGridViewMonitorItem = new System.Windows.Forms.DataGridView();
 			this.ItemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +67,15 @@
 			this.InConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.OutConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.DispName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.DispOrder = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Memo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.IsHide = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.IsEncrypted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.IsProtected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -94,10 +94,10 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(1030, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(819, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 3, 0, 3);
-			this.menuStrip1.Size = new System.Drawing.Size(56, 29);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+			this.menuStrip1.Size = new System.Drawing.Size(50, 25);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -113,14 +113,14 @@
 			this.operationToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.Insert;
 			this.operationToolStripMenuItem.MergeIndex = 1;
 			this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
-			this.operationToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
+			this.operationToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
 			this.operationToolStripMenuItem.Text = "操作";
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
 			this.addToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Insert)));
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
 			this.addToolStripMenuItem.Text = "添加";
 			this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
 			// 
@@ -128,33 +128,33 @@
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
 			this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
 			this.deleteToolStripMenuItem.Text = "删除";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(170, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(153, 6);
 			// 
 			// refreshToolStripMenuItem
 			// 
 			this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
 			this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
 			this.refreshToolStripMenuItem.Text = "刷新";
 			this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(170, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(153, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
 			this.saveToolStripMenuItem.Text = "保存";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
@@ -169,7 +169,7 @@
             this.toolStripButtonDelete,
             this.toolStripSeparator2,
             this.toolStripButtonRefresh});
-			this.toolStrip1.Location = new System.Drawing.Point(13, 0);
+			this.toolStrip1.Location = new System.Drawing.Point(10, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(165, 27);
 			this.toolStrip1.TabIndex = 1;
@@ -234,7 +234,8 @@
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainer1.Location = new System.Drawing.Point(0, 29);
+			this.splitContainer1.Location = new System.Drawing.Point(0, 23);
+			this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
@@ -245,14 +246,16 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.panelGeneralParams);
 			this.splitContainer1.Panel2.Controls.Add(this.dataGridViewMonitorItem);
-			this.splitContainer1.Size = new System.Drawing.Size(1094, 575);
-			this.splitContainer1.SplitterDistance = 133;
+			this.splitContainer1.Size = new System.Drawing.Size(875, 460);
+			this.splitContainer1.SplitterDistance = 106;
+			this.splitContainer1.SplitterWidth = 3;
 			this.splitContainer1.TabIndex = 2;
 			// 
 			// treeView1
 			// 
 			this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView1.Location = new System.Drawing.Point(0, 0);
+			this.treeView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.treeView1.Name = "treeView1";
 			treeNode1.Name = "MonitorItem";
 			treeNode1.Text = "监控项";
@@ -262,7 +265,7 @@
 			treeNode3.Text = "基础数据";
 			this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3});
-			this.treeView1.Size = new System.Drawing.Size(133, 575);
+			this.treeView1.Size = new System.Drawing.Size(106, 460);
 			this.treeView1.TabIndex = 0;
 			this.treeView1.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeSelect);
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -274,25 +277,28 @@
 			this.panelGeneralParams.Controls.Add(this.dataGridViewGeneralParams);
 			this.panelGeneralParams.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelGeneralParams.Location = new System.Drawing.Point(0, 0);
+			this.panelGeneralParams.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.panelGeneralParams.Name = "panelGeneralParams";
-			this.panelGeneralParams.Size = new System.Drawing.Size(957, 575);
+			this.panelGeneralParams.Size = new System.Drawing.Size(766, 460);
 			this.panelGeneralParams.TabIndex = 2;
 			// 
 			// comboBoxCategory
 			// 
 			this.comboBoxCategory.FormattingEnabled = true;
-			this.comboBoxCategory.Location = new System.Drawing.Point(119, 13);
+			this.comboBoxCategory.Location = new System.Drawing.Point(95, 10);
+			this.comboBoxCategory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.comboBoxCategory.Name = "comboBoxCategory";
-			this.comboBoxCategory.Size = new System.Drawing.Size(273, 24);
+			this.comboBoxCategory.Size = new System.Drawing.Size(219, 20);
 			this.comboBoxCategory.TabIndex = 2;
 			this.comboBoxCategory.SelectedIndexChanged += new System.EventHandler(this.comboBoxCategory_SelectedIndexChanged);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(63, 13);
+			this.label1.Location = new System.Drawing.Point(50, 10);
+			this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(50, 17);
+			this.label1.Size = new System.Drawing.Size(41, 12);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "类别：";
 			// 
@@ -314,93 +320,13 @@
             this.IsHide,
             this.IsEncrypted,
             this.IsProtected});
-			this.dataGridViewGeneralParams.Location = new System.Drawing.Point(0, 51);
+			this.dataGridViewGeneralParams.Location = new System.Drawing.Point(0, 41);
+			this.dataGridViewGeneralParams.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.dataGridViewGeneralParams.Name = "dataGridViewGeneralParams";
 			this.dataGridViewGeneralParams.RowTemplate.Height = 24;
-			this.dataGridViewGeneralParams.Size = new System.Drawing.Size(957, 522);
+			this.dataGridViewGeneralParams.Size = new System.Drawing.Size(766, 418);
 			this.dataGridViewGeneralParams.TabIndex = 0;
 			this.dataGridViewGeneralParams.DataSourceChanged += new System.EventHandler(this.dataGridViewGeneralParams_DataSourceChanged);
-			// 
-			// Category
-			// 
-			this.Category.DataPropertyName = "Category";
-			this.Category.HeaderText = "分类";
-			this.Category.Name = "Category";
-			this.Category.Visible = false;
-			// 
-			// ItemName
-			// 
-			this.ItemName.DataPropertyName = "Name";
-			this.ItemName.HeaderText = "名称";
-			this.ItemName.MaxInputLength = 50;
-			this.ItemName.Name = "ItemName";
-			this.ItemName.Width = 200;
-			// 
-			// DispName
-			// 
-			this.DispName.DataPropertyName = "DispName";
-			this.DispName.HeaderText = "显示名称";
-			this.DispName.Name = "DispName";
-			this.DispName.Width = 200;
-			// 
-			// Value
-			// 
-			this.Value.DataPropertyName = "Value";
-			this.Value.HeaderText = "值";
-			this.Value.MaxInputLength = 200;
-			this.Value.Name = "Value";
-			this.Value.Width = 200;
-			// 
-			// DispOrder
-			// 
-			this.DispOrder.DataPropertyName = "DispOrder";
-			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.DispOrder.DefaultCellStyle = dataGridViewCellStyle1;
-			this.DispOrder.HeaderText = "显示序号";
-			this.DispOrder.MaxInputLength = 5;
-			this.DispOrder.Name = "DispOrder";
-			this.DispOrder.Width = 80;
-			// 
-			// Memo
-			// 
-			this.Memo.DataPropertyName = "Memo";
-			this.Memo.HeaderText = "备注";
-			this.Memo.MaxInputLength = 100;
-			this.Memo.Name = "Memo";
-			this.Memo.Width = 300;
-			// 
-			// IsHide
-			// 
-			this.IsHide.DataPropertyName = "Hide";
-			this.IsHide.FalseValue = "0";
-			this.IsHide.HeaderText = "隐藏";
-			this.IsHide.Name = "IsHide";
-			this.IsHide.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.IsHide.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.IsHide.TrueValue = "1";
-			this.IsHide.Visible = false;
-			// 
-			// IsEncrypted
-			// 
-			this.IsEncrypted.DataPropertyName = "IsEncrypted";
-			this.IsEncrypted.FalseValue = "0";
-			this.IsEncrypted.HeaderText = "加密";
-			this.IsEncrypted.Name = "IsEncrypted";
-			this.IsEncrypted.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.IsEncrypted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.IsEncrypted.TrueValue = "1";
-			this.IsEncrypted.Visible = false;
-			// 
-			// IsProtected
-			// 
-			this.IsProtected.DataPropertyName = "IsProtected";
-			this.IsProtected.FalseValue = "0";
-			this.IsProtected.HeaderText = "保护";
-			this.IsProtected.Name = "IsProtected";
-			this.IsProtected.ReadOnly = true;
-			this.IsProtected.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.IsProtected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.IsProtected.TrueValue = "0";
 			// 
 			// dataGridViewMonitorItem
 			// 
@@ -418,9 +344,10 @@
             this.Status});
 			this.dataGridViewMonitorItem.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dataGridViewMonitorItem.Location = new System.Drawing.Point(0, 0);
+			this.dataGridViewMonitorItem.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
 			this.dataGridViewMonitorItem.Name = "dataGridViewMonitorItem";
 			this.dataGridViewMonitorItem.RowTemplate.Height = 24;
-			this.dataGridViewMonitorItem.Size = new System.Drawing.Size(957, 575);
+			this.dataGridViewMonitorItem.Size = new System.Drawing.Size(766, 460);
 			this.dataGridViewMonitorItem.TabIndex = 1;
 			// 
 			// ItemId
@@ -493,16 +420,98 @@
 			this.Status.Name = "Status";
 			this.Status.TrueValue = "A";
 			// 
+			// Category
+			// 
+			this.Category.DataPropertyName = "Category";
+			this.Category.HeaderText = "分类";
+			this.Category.Name = "Category";
+			this.Category.Visible = false;
+			// 
+			// ItemName
+			// 
+			this.ItemName.DataPropertyName = "Name";
+			this.ItemName.HeaderText = "名称";
+			this.ItemName.MaxInputLength = 50;
+			this.ItemName.Name = "ItemName";
+			this.ItemName.Width = 200;
+			// 
+			// DispName
+			// 
+			this.DispName.DataPropertyName = "DispName";
+			this.DispName.HeaderText = "显示名称";
+			this.DispName.Name = "DispName";
+			this.DispName.Width = 200;
+			// 
+			// Value
+			// 
+			this.Value.DataPropertyName = "Value";
+			this.Value.HeaderText = "值";
+			this.Value.MaxInputLength = 200;
+			this.Value.Name = "Value";
+			this.Value.Width = 200;
+			// 
+			// DispOrder
+			// 
+			this.DispOrder.DataPropertyName = "DispOrder";
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.DispOrder.DefaultCellStyle = dataGridViewCellStyle1;
+			this.DispOrder.HeaderText = "显示序号";
+			this.DispOrder.MaxInputLength = 5;
+			this.DispOrder.Name = "DispOrder";
+			this.DispOrder.Visible = false;
+			this.DispOrder.Width = 80;
+			// 
+			// Memo
+			// 
+			this.Memo.DataPropertyName = "Memo";
+			this.Memo.HeaderText = "备注";
+			this.Memo.MaxInputLength = 100;
+			this.Memo.Name = "Memo";
+			this.Memo.Width = 300;
+			// 
+			// IsHide
+			// 
+			this.IsHide.DataPropertyName = "Hide";
+			this.IsHide.FalseValue = "0";
+			this.IsHide.HeaderText = "隐藏";
+			this.IsHide.Name = "IsHide";
+			this.IsHide.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.IsHide.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.IsHide.TrueValue = "1";
+			this.IsHide.Visible = false;
+			// 
+			// IsEncrypted
+			// 
+			this.IsEncrypted.DataPropertyName = "IsEncrypted";
+			this.IsEncrypted.FalseValue = "0";
+			this.IsEncrypted.HeaderText = "加密";
+			this.IsEncrypted.Name = "IsEncrypted";
+			this.IsEncrypted.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.IsEncrypted.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.IsEncrypted.TrueValue = "1";
+			this.IsEncrypted.Visible = false;
+			// 
+			// IsProtected
+			// 
+			this.IsProtected.DataPropertyName = "IsProtected";
+			this.IsProtected.FalseValue = "0";
+			this.IsProtected.HeaderText = "保护";
+			this.IsProtected.Name = "IsProtected";
+			this.IsProtected.ReadOnly = true;
+			this.IsProtected.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.IsProtected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.IsProtected.TrueValue = "0";
+			// 
 			// DataMaintainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1094, 604);
+			this.ClientSize = new System.Drawing.Size(875, 483);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
-			this.Margin = new System.Windows.Forms.Padding(4);
+			this.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
 			this.Name = "DataMaintainForm";
 			this.Text = "基础数据维护";
 			this.Load += new System.EventHandler(this.DataMaintainForm_Load);

@@ -57,12 +57,15 @@ namespace EBoard.SysManager
 				nodeToSelect = node;
 
 				// For Generatal parameters
-				adapter = (new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM GeneralParams WHERE Hide=0", connection))).DataAdapter;
+				adapter = (new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM GeneralParams WHERE Hide=0 ORDER BY DispOrder", connection))).DataAdapter;
 				ds = new DataSet();
 				adapter.Fill(ds);
 				dataGridViewGeneralParams.DataSource = ds.Tables[0].DefaultView;
 				dataGridViewGeneralParams.CellValueChanged += dataGridView_CellValueChanged;
 				dataGridViewGeneralParams.Tag = adapter;
+				
+				ProtectSystemColumnsInDataGridView(dataGridViewGeneralParams, 1, CheckColumnToProtectForGeneralParameters);
+
 				node = treeView1.Nodes[0].Nodes["SysParam"];
 				node.Tag = dataGridViewGeneralParams;
 				nodeMappings.Add(node.Name.ToLower(), panelGeneralParams);
@@ -103,7 +106,7 @@ namespace EBoard.SysManager
 			var rowsDeleted = 0;
 			var protectNotification = @"不允许删除被保护的记录";
 
-			if (MessageBox.Show("确定要删除当前选中的记录吗？", "确认", MessageBoxButtons.YesNo) != DialogResult.Yes)
+			if (MessageBox.Show("记录删除后不可恢复，确定要删除当前选中的记录吗？", "确认", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return 0;
 
 			if (view.SelectedRows.Count > 0)
@@ -138,12 +141,8 @@ namespace EBoard.SysManager
 				}
 			}
 
-			if (rowsDeleted > 0)
-			{
-				HasDirtyData = true;
-			}
-
-			// TODO: save immediately
+			// Save immediately
+			Save();
 
 			return rowsDeleted;
 		}
@@ -176,6 +175,11 @@ namespace EBoard.SysManager
 			var ds = new DataSet();
 			adapter.Fill(ds);
 			view.DataSource = ds.Tables[0].DefaultView;
+
+			if (view.Name.Equals("dataGridViewGeneralParams", StringComparison.OrdinalIgnoreCase))
+			{
+				ProtectSystemColumnsInDataGridView(view, 1, CheckColumnToProtectForGeneralParameters);
+			}
 
 			// Refresh data may trigger the CellValueChanged event, need to reset hasDirtyData flag
 			HasDirtyData = false;
@@ -251,6 +255,33 @@ namespace EBoard.SysManager
 			HasDirtyData = false;
 		}
 
+		private void ProtectSystemColumnsInDataGridView(DataGridView view, int colToProtect, Func<DataGridViewRow, bool> checkDelegate)
+		{
+			if (view == null)
+				return;
+
+			if (checkDelegate == null)
+			{
+				view.Columns[colToProtect].ReadOnly = true;
+				return;
+			}
+			else
+			{
+				foreach (DataGridViewRow row in view.Rows)
+				{
+					if (checkDelegate(row))
+					{
+						view[colToProtect, row.Index].ReadOnly = true;
+					}
+				}
+			}
+		}
+
+		private bool CheckColumnToProtectForGeneralParameters(DataGridViewRow row)
+		{
+			return (row.Cells[0].Value.ToString().Equals("System", StringComparison.OrdinalIgnoreCase));
+		}
+
 		private DataGridView GetCurrentDataGridView()
 		{
 			var node = treeView1.SelectedNode;
@@ -265,7 +296,7 @@ namespace EBoard.SysManager
 			if (row == null)
 				return false;
 
-			if (!(row.DataGridView.DataSource as DataTable).Columns.Contains("IsProtected"))
+			if (!(row.DataGridView.DataSource as DataView).Table.Columns.Contains("IsProtected"))
 				return false;
 
 			bool ret;

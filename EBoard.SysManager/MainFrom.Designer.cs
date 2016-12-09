@@ -71,8 +71,8 @@
             this.toolStripMenuItem3,
             this.exitToolStripMenuItem});
 			this.functionToolStripMenuItem.Name = "functionToolStripMenuItem";
-			this.functionToolStripMenuItem.Size = new System.Drawing.Size(50, 21);
-			this.functionToolStripMenuItem.Text = "&F功能";
+			this.functionToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+			this.functionToolStripMenuItem.Text = "功能";
 			// 
 			// userMgrToolStripMenuItem
 			// 
@@ -173,7 +173,7 @@
 			this.Controls.Add(this.menuStrip1);
 			this.IsMdiContainer = true;
 			this.MainMenuStrip = this.menuStrip1;
-			this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.Margin = new System.Windows.Forms.Padding(2);
 			this.Name = "MainFrom";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "系统管理";
