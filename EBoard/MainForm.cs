@@ -103,9 +103,6 @@ namespace EBoard
 				InitTimers();
 
 				CurrentWorkers = new Dal(connection).GetWorkersOfShift();
-
-				// temp
-				//panelChartDesc1.
 			}
 			catch (Exception ex)
 			{

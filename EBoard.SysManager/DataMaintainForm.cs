@@ -43,6 +43,22 @@ namespace EBoard.SysManager
 				nodeMappings.Clear();
 
 				// For monitor items
+				var dataTypeTable = new DataTable();
+				dataTypeTable.Columns.AddRange(new DataColumn[]
+												{
+													new DataColumn("Data", typeof(int)),
+													new DataColumn("Display", typeof(string))
+												});
+				dataTypeTable.Rows.Add(2, "short");
+				dataTypeTable.Rows.Add(3, "DWORD");
+				dataTypeTable.Rows.Add(4, "float");
+				dataTypeTable.Rows.Add(5, "Double");
+				dataTypeTable.Rows.Add(11, "bool");
+
+				DataType.DataSource = dataTypeTable;
+				DataType.ValueMember = "Data";
+				DataType.DisplayMember = "Display";
+
 				var adapter = (new SqlCommandBuilder(new SqlDataAdapter("SELECT * FROM MonitorItem", connection))).DataAdapter;
 				var ds = new DataSet();
 				adapter.Fill(ds);
@@ -343,8 +359,17 @@ namespace EBoard.SysManager
 			if (isInitialzing)
 				return;
 
-
-			// TODO: accept test
+			// Accept the curret changee
+			var node = treeView1.SelectedNode;
+			if (node != null)
+			{
+				var view = node.Tag as DataGridView;
+				if (view != null)
+				{
+					view.EndEdit();
+					//(view.DataSource as DataView)
+				}
+			}
 
 			if (!CheckDirtyData())
 				e.Cancel = true;

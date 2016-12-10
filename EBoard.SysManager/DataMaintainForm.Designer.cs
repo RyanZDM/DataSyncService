@@ -34,8 +34,8 @@
 			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("基础数据", new System.Windows.Forms.TreeNode[] {
             treeNode1,
             treeNode2});
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.operationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,16 +57,6 @@
 			this.comboBoxCategory = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.dataGridViewGeneralParams = new System.Windows.Forms.DataGridView();
-			this.dataGridViewMonitorItem = new System.Windows.Forms.DataGridView();
-			this.ItemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.DisplayName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.DataType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.NeedAccumulate = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.UpdateHistory = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-			this.InConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.OutConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.Status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.Category = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.ItemName = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.DispName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +66,16 @@
 			this.IsHide = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.IsEncrypted = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.IsProtected = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.dataGridViewMonitorItem = new System.Windows.Forms.DataGridView();
+			this.ItemId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.DisplayName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.DataType = new System.Windows.Forms.DataGridViewComboBoxColumn();
+			this.NeedAccumulate = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.UpdateHistory = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+			this.InConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.OutConverter = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Status = new System.Windows.Forms.DataGridViewCheckBoxColumn();
 			this.menuStrip1.SuspendLayout();
 			this.toolStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -94,10 +94,10 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(819, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(1030, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(50, 25);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+			this.menuStrip1.Size = new System.Drawing.Size(56, 27);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -113,14 +113,14 @@
 			this.operationToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.Insert;
 			this.operationToolStripMenuItem.MergeIndex = 1;
 			this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
-			this.operationToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+			this.operationToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
 			this.operationToolStripMenuItem.Text = "操作";
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
 			this.addToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Insert)));
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.addToolStripMenuItem.Text = "添加";
 			this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
 			// 
@@ -128,33 +128,33 @@
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
 			this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.deleteToolStripMenuItem.Text = "删除";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(153, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(170, 6);
 			// 
 			// refreshToolStripMenuItem
 			// 
 			this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
 			this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.refreshToolStripMenuItem.Text = "刷新";
 			this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(153, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(170, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.saveToolStripMenuItem.Text = "保存";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
@@ -169,7 +169,7 @@
             this.toolStripButtonDelete,
             this.toolStripSeparator2,
             this.toolStripButtonRefresh});
-			this.toolStrip1.Location = new System.Drawing.Point(10, 0);
+			this.toolStrip1.Location = new System.Drawing.Point(12, 0);
 			this.toolStrip1.Name = "toolStrip1";
 			this.toolStrip1.Size = new System.Drawing.Size(165, 27);
 			this.toolStrip1.TabIndex = 1;
@@ -234,8 +234,8 @@
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainer1.Location = new System.Drawing.Point(0, 23);
-			this.splitContainer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.splitContainer1.Location = new System.Drawing.Point(0, 29);
+			this.splitContainer1.Margin = new System.Windows.Forms.Padding(2);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
@@ -246,16 +246,15 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.panelGeneralParams);
 			this.splitContainer1.Panel2.Controls.Add(this.dataGridViewMonitorItem);
-			this.splitContainer1.Size = new System.Drawing.Size(875, 460);
-			this.splitContainer1.SplitterDistance = 106;
-			this.splitContainer1.SplitterWidth = 3;
+			this.splitContainer1.Size = new System.Drawing.Size(1094, 575);
+			this.splitContainer1.SplitterDistance = 132;
 			this.splitContainer1.TabIndex = 2;
 			// 
 			// treeView1
 			// 
 			this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView1.Location = new System.Drawing.Point(0, 0);
-			this.treeView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.treeView1.Margin = new System.Windows.Forms.Padding(2);
 			this.treeView1.Name = "treeView1";
 			treeNode1.Name = "MonitorItem";
 			treeNode1.Text = "监控项";
@@ -265,7 +264,7 @@
 			treeNode3.Text = "基础数据";
 			this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode3});
-			this.treeView1.Size = new System.Drawing.Size(106, 460);
+			this.treeView1.Size = new System.Drawing.Size(132, 575);
 			this.treeView1.TabIndex = 0;
 			this.treeView1.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeSelect);
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -277,28 +276,28 @@
 			this.panelGeneralParams.Controls.Add(this.dataGridViewGeneralParams);
 			this.panelGeneralParams.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelGeneralParams.Location = new System.Drawing.Point(0, 0);
-			this.panelGeneralParams.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.panelGeneralParams.Margin = new System.Windows.Forms.Padding(2);
 			this.panelGeneralParams.Name = "panelGeneralParams";
-			this.panelGeneralParams.Size = new System.Drawing.Size(766, 460);
+			this.panelGeneralParams.Size = new System.Drawing.Size(958, 575);
 			this.panelGeneralParams.TabIndex = 2;
 			// 
 			// comboBoxCategory
 			// 
 			this.comboBoxCategory.FormattingEnabled = true;
-			this.comboBoxCategory.Location = new System.Drawing.Point(95, 10);
-			this.comboBoxCategory.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.comboBoxCategory.Location = new System.Drawing.Point(119, 12);
+			this.comboBoxCategory.Margin = new System.Windows.Forms.Padding(2);
 			this.comboBoxCategory.Name = "comboBoxCategory";
-			this.comboBoxCategory.Size = new System.Drawing.Size(219, 20);
+			this.comboBoxCategory.Size = new System.Drawing.Size(273, 24);
 			this.comboBoxCategory.TabIndex = 2;
 			this.comboBoxCategory.SelectedIndexChanged += new System.EventHandler(this.comboBoxCategory_SelectedIndexChanged);
 			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(50, 10);
+			this.label1.Location = new System.Drawing.Point(62, 12);
 			this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(41, 12);
+			this.label1.Size = new System.Drawing.Size(50, 17);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "类别：";
 			// 
@@ -320,105 +319,13 @@
             this.IsHide,
             this.IsEncrypted,
             this.IsProtected});
-			this.dataGridViewGeneralParams.Location = new System.Drawing.Point(0, 41);
-			this.dataGridViewGeneralParams.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+			this.dataGridViewGeneralParams.Location = new System.Drawing.Point(0, 51);
+			this.dataGridViewGeneralParams.Margin = new System.Windows.Forms.Padding(2);
 			this.dataGridViewGeneralParams.Name = "dataGridViewGeneralParams";
 			this.dataGridViewGeneralParams.RowTemplate.Height = 24;
-			this.dataGridViewGeneralParams.Size = new System.Drawing.Size(766, 418);
+			this.dataGridViewGeneralParams.Size = new System.Drawing.Size(958, 522);
 			this.dataGridViewGeneralParams.TabIndex = 0;
 			this.dataGridViewGeneralParams.DataSourceChanged += new System.EventHandler(this.dataGridViewGeneralParams_DataSourceChanged);
-			// 
-			// dataGridViewMonitorItem
-			// 
-			this.dataGridViewMonitorItem.AllowUserToAddRows = false;
-			this.dataGridViewMonitorItem.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.dataGridViewMonitorItem.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.ItemId,
-            this.Address,
-            this.DisplayName,
-            this.DataType,
-            this.NeedAccumulate,
-            this.UpdateHistory,
-            this.InConverter,
-            this.OutConverter,
-            this.Status});
-			this.dataGridViewMonitorItem.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.dataGridViewMonitorItem.Location = new System.Drawing.Point(0, 0);
-			this.dataGridViewMonitorItem.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-			this.dataGridViewMonitorItem.Name = "dataGridViewMonitorItem";
-			this.dataGridViewMonitorItem.RowTemplate.Height = 24;
-			this.dataGridViewMonitorItem.Size = new System.Drawing.Size(766, 460);
-			this.dataGridViewMonitorItem.TabIndex = 1;
-			// 
-			// ItemId
-			// 
-			this.ItemId.DataPropertyName = "ItemId";
-			this.ItemId.HeaderText = "ID";
-			this.ItemId.Name = "ItemId";
-			// 
-			// Address
-			// 
-			this.Address.DataPropertyName = "Address";
-			this.Address.HeaderText = "地址";
-			this.Address.Name = "Address";
-			this.Address.Width = 120;
-			// 
-			// DisplayName
-			// 
-			this.DisplayName.DataPropertyName = "DisplayName";
-			this.DisplayName.HeaderText = "显示名称";
-			this.DisplayName.Name = "DisplayName";
-			this.DisplayName.Width = 120;
-			// 
-			// DataType
-			// 
-			this.DataType.DataPropertyName = "DataType";
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-			this.DataType.DefaultCellStyle = dataGridViewCellStyle2;
-			this.DataType.HeaderText = "数据类型";
-			this.DataType.Name = "DataType";
-			// 
-			// NeedAccumulate
-			// 
-			this.NeedAccumulate.DataPropertyName = "NeedAccumulate";
-			this.NeedAccumulate.FalseValue = "false";
-			this.NeedAccumulate.HeaderText = "累积";
-			this.NeedAccumulate.Name = "NeedAccumulate";
-			this.NeedAccumulate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.NeedAccumulate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-			this.NeedAccumulate.TrueValue = "true";
-			this.NeedAccumulate.Width = 50;
-			// 
-			// UpdateHistory
-			// 
-			this.UpdateHistory.DataPropertyName = "UpdateHistory";
-			this.UpdateHistory.FalseValue = "false";
-			this.UpdateHistory.HeaderText = "统计历史";
-			this.UpdateHistory.Name = "UpdateHistory";
-			this.UpdateHistory.TrueValue = "true";
-			this.UpdateHistory.Width = 50;
-			// 
-			// InConverter
-			// 
-			this.InConverter.DataPropertyName = "InConverter";
-			this.InConverter.HeaderText = "输入转换";
-			this.InConverter.Name = "InConverter";
-			this.InConverter.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-			this.InConverter.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// OutConverter
-			// 
-			this.OutConverter.DataPropertyName = "OutConverter";
-			this.OutConverter.HeaderText = "输出转换";
-			this.OutConverter.Name = "OutConverter";
-			// 
-			// Status
-			// 
-			this.Status.DataPropertyName = "Status";
-			this.Status.FalseValue = "X";
-			this.Status.HeaderText = "状态";
-			this.Status.Name = "Status";
-			this.Status.TrueValue = "A";
 			// 
 			// Category
 			// 
@@ -502,16 +409,111 @@
 			this.IsProtected.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
 			this.IsProtected.TrueValue = "0";
 			// 
+			// dataGridViewMonitorItem
+			// 
+			this.dataGridViewMonitorItem.AllowUserToAddRows = false;
+			this.dataGridViewMonitorItem.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridViewMonitorItem.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ItemId,
+            this.Address,
+            this.DisplayName,
+            this.DataType,
+            this.NeedAccumulate,
+            this.UpdateHistory,
+            this.InConverter,
+            this.OutConverter,
+            this.Status});
+			this.dataGridViewMonitorItem.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.dataGridViewMonitorItem.Location = new System.Drawing.Point(0, 0);
+			this.dataGridViewMonitorItem.Margin = new System.Windows.Forms.Padding(2);
+			this.dataGridViewMonitorItem.Name = "dataGridViewMonitorItem";
+			this.dataGridViewMonitorItem.RowTemplate.Height = 24;
+			this.dataGridViewMonitorItem.Size = new System.Drawing.Size(958, 575);
+			this.dataGridViewMonitorItem.TabIndex = 1;
+			// 
+			// ItemId
+			// 
+			this.ItemId.DataPropertyName = "ItemId";
+			this.ItemId.HeaderText = "ID";
+			this.ItemId.Name = "ItemId";
+			// 
+			// Address
+			// 
+			this.Address.DataPropertyName = "Address";
+			this.Address.HeaderText = "地址";
+			this.Address.Name = "Address";
+			this.Address.Width = 120;
+			// 
+			// DisplayName
+			// 
+			this.DisplayName.DataPropertyName = "DisplayName";
+			this.DisplayName.HeaderText = "显示名称";
+			this.DisplayName.Name = "DisplayName";
+			this.DisplayName.Width = 120;
+			// 
+			// DataType
+			// 
+			this.DataType.DataPropertyName = "DataType";
+			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+			this.DataType.DefaultCellStyle = dataGridViewCellStyle2;
+			this.DataType.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.ComboBox;
+			this.DataType.HeaderText = "数据类型";
+			this.DataType.Name = "DataType";
+			this.DataType.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.DataType.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			// 
+			// NeedAccumulate
+			// 
+			this.NeedAccumulate.DataPropertyName = "NeedAccumulate";
+			this.NeedAccumulate.FalseValue = "false";
+			this.NeedAccumulate.HeaderText = "累积";
+			this.NeedAccumulate.Name = "NeedAccumulate";
+			this.NeedAccumulate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.NeedAccumulate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+			this.NeedAccumulate.TrueValue = "true";
+			this.NeedAccumulate.Width = 50;
+			// 
+			// UpdateHistory
+			// 
+			this.UpdateHistory.DataPropertyName = "UpdateHistory";
+			this.UpdateHistory.FalseValue = "false";
+			this.UpdateHistory.HeaderText = "统计历史";
+			this.UpdateHistory.Name = "UpdateHistory";
+			this.UpdateHistory.TrueValue = "true";
+			this.UpdateHistory.Width = 50;
+			// 
+			// InConverter
+			// 
+			this.InConverter.DataPropertyName = "InConverter";
+			this.InConverter.HeaderText = "输入转换";
+			this.InConverter.Name = "InConverter";
+			this.InConverter.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+			this.InConverter.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// OutConverter
+			// 
+			this.OutConverter.DataPropertyName = "OutConverter";
+			this.OutConverter.HeaderText = "输出转换";
+			this.OutConverter.Name = "OutConverter";
+			// 
+			// Status
+			// 
+			this.Status.DataPropertyName = "Status";
+			this.Status.FalseValue = "X";
+			this.Status.HeaderText = "状态";
+			this.Status.Name = "Status";
+			this.Status.TrueValue = "A";
+			// 
 			// DataMaintainForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(875, 483);
+			this.ClientSize = new System.Drawing.Size(1094, 604);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
-			this.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "DataMaintainForm";
 			this.Text = "基础数据维护";
 			this.Load += new System.EventHandler(this.DataMaintainForm_Load);
@@ -556,15 +558,6 @@
 		private System.Windows.Forms.DataGridView dataGridViewGeneralParams;
 		private System.Windows.Forms.ComboBox comboBoxCategory;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.DataGridViewTextBoxColumn ItemId;
-		private System.Windows.Forms.DataGridViewTextBoxColumn Address;
-		private System.Windows.Forms.DataGridViewTextBoxColumn DisplayName;
-		private System.Windows.Forms.DataGridViewTextBoxColumn DataType;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn NeedAccumulate;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn UpdateHistory;
-		private System.Windows.Forms.DataGridViewTextBoxColumn InConverter;
-		private System.Windows.Forms.DataGridViewTextBoxColumn OutConverter;
-		private System.Windows.Forms.DataGridViewCheckBoxColumn Status;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Category;
 		private System.Windows.Forms.DataGridViewTextBoxColumn ItemName;
 		private System.Windows.Forms.DataGridViewTextBoxColumn DispName;
@@ -574,5 +567,14 @@
 		private System.Windows.Forms.DataGridViewCheckBoxColumn IsHide;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn IsEncrypted;
 		private System.Windows.Forms.DataGridViewCheckBoxColumn IsProtected;
+		private System.Windows.Forms.DataGridViewTextBoxColumn ItemId;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Address;
+		private System.Windows.Forms.DataGridViewTextBoxColumn DisplayName;
+		private System.Windows.Forms.DataGridViewComboBoxColumn DataType;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn NeedAccumulate;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn UpdateHistory;
+		private System.Windows.Forms.DataGridViewTextBoxColumn InConverter;
+		private System.Windows.Forms.DataGridViewTextBoxColumn OutConverter;
+		private System.Windows.Forms.DataGridViewCheckBoxColumn Status;
 	}
 }

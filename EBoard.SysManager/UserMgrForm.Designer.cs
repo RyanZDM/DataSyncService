@@ -78,11 +78,11 @@
             this.Password,
             this.IDCard,
             this.Status});
-			this.dataGridViewUser.Location = new System.Drawing.Point(0, 24);
+			this.dataGridViewUser.Location = new System.Drawing.Point(0, 30);
 			this.dataGridViewUser.Margin = new System.Windows.Forms.Padding(2);
 			this.dataGridViewUser.Name = "dataGridViewUser";
 			this.dataGridViewUser.RowTemplate.Height = 24;
-			this.dataGridViewUser.Size = new System.Drawing.Size(828, 532);
+			this.dataGridViewUser.Size = new System.Drawing.Size(1035, 665);
 			this.dataGridViewUser.TabIndex = 0;
 			this.dataGridViewUser.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewUser_CellValueChanged);
 			this.dataGridViewUser.CurrentCellChanged += new System.EventHandler(this.dataGridViewUser_CurrentCellChanged);
@@ -145,10 +145,9 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(778, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(979, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-			this.menuStrip1.Size = new System.Drawing.Size(51, 25);
+			this.menuStrip1.Size = new System.Drawing.Size(57, 27);
 			this.menuStrip1.TabIndex = 1;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -167,14 +166,14 @@
 			this.operationToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.Insert;
 			this.operationToolStripMenuItem.MergeIndex = 1;
 			this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
-			this.operationToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+			this.operationToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
 			this.operationToolStripMenuItem.Text = "操作";
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
 			this.addToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Insert)));
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.addToolStripMenuItem.Text = "添加";
 			this.addToolStripMenuItem.Click += new System.EventHandler(this.addToolStripMenuItem_Click);
 			// 
@@ -182,52 +181,52 @@
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
 			this.deleteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Delete)));
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.deleteToolStripMenuItem.Text = "删除";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// propertyToolStripMenuItem
 			// 
 			this.propertyToolStripMenuItem.Name = "propertyToolStripMenuItem";
-			this.propertyToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.propertyToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.propertyToolStripMenuItem.Text = "属性...";
 			this.propertyToolStripMenuItem.Click += new System.EventHandler(this.propertyToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(153, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(170, 6);
 			// 
 			// changePwdToolStripMenuItem
 			// 
 			this.changePwdToolStripMenuItem.Name = "changePwdToolStripMenuItem";
-			this.changePwdToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.changePwdToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.changePwdToolStripMenuItem.Text = "修改密码";
 			this.changePwdToolStripMenuItem.Click += new System.EventHandler(this.changePwdToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem2
 			// 
 			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(153, 6);
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(170, 6);
 			// 
 			// refreshToolStripMenuItem
 			// 
 			this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
 			this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.refreshToolStripMenuItem.Text = "刷新";
 			this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem3
 			// 
 			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(153, 6);
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(170, 6);
 			// 
 			// saveToolStripMenuItem
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.saveToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
 			this.saveToolStripMenuItem.Text = "保存";
 			this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
 			// 
@@ -248,7 +247,7 @@
             this.refreshToolStripButton});
 			this.toolStrip1.Location = new System.Drawing.Point(0, 0);
 			this.toolStrip1.Name = "toolStrip1";
-			this.toolStrip1.Size = new System.Drawing.Size(245, 27);
+			this.toolStrip1.Size = new System.Drawing.Size(284, 27);
 			this.toolStrip1.TabIndex = 2;
 			this.toolStrip1.Text = "toolStrip1";
 			// 
@@ -304,7 +303,8 @@
 			this.propertyToolStripButton.Margin = new System.Windows.Forms.Padding(5, 1, 5, 2);
 			this.propertyToolStripButton.Name = "propertyToolStripButton";
 			this.propertyToolStripButton.Size = new System.Drawing.Size(24, 24);
-			this.propertyToolStripButton.Text = "toolStripButton1";
+			this.propertyToolStripButton.Text = "属性";
+			this.propertyToolStripButton.ToolTipText = "查看或修改用户属性";
 			this.propertyToolStripButton.Click += new System.EventHandler(this.propertyToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator4
@@ -341,13 +341,14 @@
 			// 
 			// UserMgrForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(829, 556);
+			this.ClientSize = new System.Drawing.Size(1036, 695);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.dataGridViewUser);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
+			this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
 			this.Name = "UserMgrForm";
 			this.Text = "用户管理";
 			this.Load += new System.EventHandler(this.UserMgrForm_Load);
