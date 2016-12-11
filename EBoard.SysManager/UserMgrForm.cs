@@ -2,7 +2,9 @@
 using EBoard.Common;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace EBoard.SysManager
 {
@@ -94,15 +96,14 @@ namespace EBoard.SysManager
 
 		public override bool Save()
 		{
-			// TODO: For adding a new row but not move focus to other row yet, cannot save since the new data has not been validated
 			dataGridViewUser.EndEdit();
+			dataGridViewUser.CurrentCell = null;
 
 			if (!base.Save())
 				return false;
 
 			try
 			{
-				//dataGridViewUser.RefreshEdit();
 				var table = dataGridViewUser.DataSource as DataTable;
 				adapter.Update(table);
 				table.AcceptChanges();
@@ -131,34 +132,54 @@ namespace EBoard.SysManager
 		{
 			var rowsDeleted = 0;
 
-			if (dataGridViewUser.SelectedRows.Count > 0)
+			if (MessageBox.Show("用户被删除后，无法恢复，确认删除吗？", "确认", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return 0;
+
+			var selectedRows = (dataGridViewUser.SelectedRows.Count > 0) ?
+																	  dataGridViewUser.SelectedRows.OfType<DataGridViewRow>().ToList()
+																	: ((dataGridViewUser.CurrentRow != null) ?
+																											new List<DataGridViewRow>() { dataGridViewUser.CurrentRow }
+																											: null);
+			if (selectedRows != null)
 			{
-				foreach (DataGridViewRow row in dataGridViewUser.SelectedRows)
+				foreach (var row in selectedRows)
 				{
-					dataGridViewUser.Rows.Remove(row);
+					DeleteUserRow(row);
 					rowsDeleted++;
-				}
-			}
-			else
-			{
-				// Delete current row
-				var row = dataGridViewUser.CurrentRow;
-				if (row != null)
-				{
-					dataGridViewUser.Rows.Remove(row);
-					rowsDeleted = 1;
 				}
 			}
 
 			if (rowsDeleted > 0)
 			{
 				HasDirtyData = true;
+				if (!Save())
+					return 0;
+			}
+			
+			return rowsDeleted;
+		}
+
+		private bool DeleteUserRow(DataGridViewRow row)
+		{
+			if (row == null)
+				return false;
+
+			var table = row.DataGridView.DataSource as DataTable;
+			if (table == null)
+				return false;
+
+			var isNewRow = (table.Rows[row.Index].RowState == DataRowState.Added);
+			if (!isNewRow)
+			{
+				// Need to delete roles assigned that user
+				var userId = row.Cells["UserId"].Value.ToString();
+				var dal = new Dal(connection);
+				dal.DeleteRole("*", userId);
 			}
 
-			// TODO: save immediately
-			//Table.AcceptChanges()
+			row.DataGridView.Rows.Remove(row);
 
-			return rowsDeleted;
+			return true;
 		}
 
 		public void ChangePassword()
@@ -172,27 +193,36 @@ namespace EBoard.SysManager
 				LoginId = row.Cells["LoginId"].Value.ToString(),
 				UserName = row.Cells["UserName"].Value.ToString()
 			};
+
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				row.Cells["Password"].Value = dlg.NewEncyptedPassword;
+				(dataGridViewUser.DataSource as DataTable).Rows[row.Index]["Password"] = dlg.NewEncyptedPassword;
 			}
-
-			// TODO: accept data and save immediately
+			
+			Save();
 		}
 
 		private void ChangeUserProperty()
 		{
-			// TODO: need to save before change property
-
 			var row = dataGridViewUser.CurrentRow;
 			if (row == null)
 				return;
 
-			var dlg = new UserPropertyDlg(connection) { LoginId = row.Cells["LoginId"].Value.ToString() };
+			var loginId = row.Cells["LoginId"].Value.ToString();
+			if (HasDirtyData)
+			{
+				if (MessageBox.Show("查看或修改用户属性之前，会自动保存已做过的修改，继续吗？", "查看或修改属性", MessageBoxButtons.YesNo) != DialogResult.Yes)
+					return;
+
+				if (!Save())
+					return;
+			}
+
+			var dlg = new UserPropertyDlg(connection) { LoginId = loginId };
 			dlg.ShowDialog();
 			if (dlg.DataChanged)
 			{
-				Refresh();
+				RefreshData();
 			}
 		}
 

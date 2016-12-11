@@ -38,9 +38,10 @@
 			// 
 			// buttonOk
 			// 
-			this.buttonOk.Location = new System.Drawing.Point(114, 154);
+			this.buttonOk.Location = new System.Drawing.Point(88, 110);
+			this.buttonOk.Margin = new System.Windows.Forms.Padding(2);
 			this.buttonOk.Name = "buttonOk";
-			this.buttonOk.Size = new System.Drawing.Size(104, 32);
+			this.buttonOk.Size = new System.Drawing.Size(78, 24);
 			this.buttonOk.TabIndex = 10;
 			this.buttonOk.Text = "确定";
 			this.buttonOk.UseVisualStyleBackColor = true;
@@ -49,9 +50,10 @@
 			// buttonCancel
 			// 
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(235, 154);
+			this.buttonCancel.Location = new System.Drawing.Point(178, 110);
+			this.buttonCancel.Margin = new System.Windows.Forms.Padding(2);
 			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(104, 32);
+			this.buttonCancel.Size = new System.Drawing.Size(78, 24);
 			this.buttonCancel.TabIndex = 20;
 			this.buttonCancel.Text = "取消";
 			this.buttonCancel.UseVisualStyleBackColor = true;
@@ -60,48 +62,52 @@
 			// label1
 			// 
 			this.label1.AutoSize = true;
-			this.label1.Location = new System.Drawing.Point(28, 25);
+			this.label1.Location = new System.Drawing.Point(21, 19);
+			this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(50, 17);
+			this.label1.Size = new System.Drawing.Size(41, 12);
 			this.label1.TabIndex = 0;
 			this.label1.Text = "新密码";
 			// 
 			// textBoxPwd
 			// 
-			this.textBoxPwd.Location = new System.Drawing.Point(123, 25);
+			this.textBoxPwd.Location = new System.Drawing.Point(92, 19);
+			this.textBoxPwd.Margin = new System.Windows.Forms.Padding(2);
 			this.textBoxPwd.MaxLength = 50;
 			this.textBoxPwd.Name = "textBoxPwd";
 			this.textBoxPwd.PasswordChar = '*';
-			this.textBoxPwd.Size = new System.Drawing.Size(300, 22);
+			this.textBoxPwd.Size = new System.Drawing.Size(226, 21);
 			this.textBoxPwd.TabIndex = 4;
 			this.textBoxPwd.UseSystemPasswordChar = true;
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(28, 63);
+			this.label2.Location = new System.Drawing.Point(21, 47);
+			this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(64, 17);
+			this.label2.Size = new System.Drawing.Size(53, 12);
 			this.label2.TabIndex = 0;
 			this.label2.Text = "确认密码";
 			// 
 			// textBoxConfirm
 			// 
-			this.textBoxConfirm.Location = new System.Drawing.Point(123, 63);
+			this.textBoxConfirm.Location = new System.Drawing.Point(92, 47);
+			this.textBoxConfirm.Margin = new System.Windows.Forms.Padding(2);
 			this.textBoxConfirm.MaxLength = 50;
 			this.textBoxConfirm.Name = "textBoxConfirm";
 			this.textBoxConfirm.PasswordChar = '*';
-			this.textBoxConfirm.Size = new System.Drawing.Size(300, 22);
+			this.textBoxConfirm.Size = new System.Drawing.Size(226, 21);
 			this.textBoxConfirm.TabIndex = 5;
 			this.textBoxConfirm.UseSystemPasswordChar = true;
 			// 
 			// ChangePwd
 			// 
 			this.AcceptButton = this.buttonOk;
-			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(457, 207);
+			this.ClientSize = new System.Drawing.Size(343, 155);
 			this.ControlBox = false;
 			this.Controls.Add(this.textBoxConfirm);
 			this.Controls.Add(this.label2);
@@ -110,7 +116,9 @@
 			this.Controls.Add(this.buttonCancel);
 			this.Controls.Add(this.buttonOk);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.Margin = new System.Windows.Forms.Padding(2);
 			this.Name = "ChangePwd";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "ChangePwd";
 			this.Load += new System.EventHandler(this.ChangePwd_Load);
 			this.ResumeLayout(false);

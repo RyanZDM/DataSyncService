@@ -471,7 +471,8 @@ namespace EBoard.Common
 			if (string.IsNullOrWhiteSpace(roleId) || string.IsNullOrWhiteSpace(userId))
 				throw new ArgumentNullException();
 
-			var sql = string.Format("Delete From UserInRole Where RoleId='{0}' And UserId=CAST('{1}' AS uniqueidentifier)", roleId, userId);
+			var sql = (roleId == "*") ? string.Format("Delete From UserInRole Where UserId=CAST('{0}' AS uniqueidentifier)", userId)
+										: string.Format("Delete From UserInRole Where RoleId='{0}' And UserId=CAST('{1}' AS uniqueidentifier)", roleId, userId);
 			var cmd = new SqlCommand(sql, connection);
 			return (cmd.ExecuteNonQuery() > 0);
 		}

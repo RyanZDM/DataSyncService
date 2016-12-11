@@ -367,7 +367,7 @@ namespace EBoard.SysManager
 				if (view != null)
 				{
 					view.EndEdit();
-					//(view.DataSource as DataView)
+					view.CurrentCell = null;
 				}
 			}
 

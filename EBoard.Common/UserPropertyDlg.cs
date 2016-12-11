@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
@@ -126,20 +126,26 @@ namespace EBoard.Common
 		{
 			var dlg = new RolesDlg(connection);
 			dlg.ShowDialog();
-			if (dlg.ReturnedRole == null)
+			if (dlg.ReturnedRoles == null)
 				return;
 
 			try
 			{
 				var dal = new Dal(connection);
-				if (dal.AddRole(dlg.ReturnedRole.RoleId, user.UserId))
+				foreach (var role in dlg.ReturnedRoles)
 				{
-					var rowNum = dataGridViewRoles.Rows.Add();
-					var row = dataGridViewRoles.Rows[rowNum];
-					row.Cells["RoleId"].Value = dlg.ReturnedRole.RoleId;
-					row.Cells["RoleName"].Value = dlg.ReturnedRole.Name;
-					user.Roles.Add(dlg.ReturnedRole);
-				}
+					if (user.Roles.Any(r => string.Equals(r.RoleId, role.RoleId, StringComparison.OrdinalIgnoreCase)))
+						continue;
+
+					if (dal.AddRole(role.RoleId, user.UserId))
+					{
+						var rowNum = dataGridViewRoles.Rows.Add();
+						var row = dataGridViewRoles.Rows[rowNum];
+						row.Cells["RoleId"].Value = role.RoleId;
+						row.Cells["RoleName"].Value = role.Name;
+						user.Roles.Add(role);
+					}
+				}				
 			}
 			catch (Exception ex)
 			{
@@ -151,21 +157,27 @@ namespace EBoard.Common
 		{
 			if (dataGridViewRoles.Rows.Count < 1)
 				return;
-
-			if (dataGridViewRoles.SelectedRows == null)
-				return;
-
+			
 			try
 			{
 				var dal = new Dal(connection);
-				foreach (DataGridViewRow row in dataGridViewRoles.SelectedRows)
+				var selectedRows = (dataGridViewRoles.SelectedRows.Count > 0) ?
+																			  dataGridViewRoles.SelectedRows.OfType<DataGridViewRow>().ToList()
+																			: ((dataGridViewRoles.CurrentRow != null) ?
+																													new List<DataGridViewRow>() { dataGridViewRoles.CurrentRow }
+																													: null);
+
+				if (selectedRows != null)
 				{
-					var roleId = row.Cells["RoleId"].Value.ToString();
-					dal.DeleteRole(roleId, user.UserId.ToString());
-					dataGridViewRoles.Rows.Remove(row);
-					var found = user.Roles.FirstOrDefault(r => r.RoleId.ToString() == roleId);
-					if (found != null)
-						user.Roles.Remove(found);
+					foreach (var row in selectedRows)
+					{
+						var roleId = row.Cells["RoleId"].Value.ToString();
+						dal.DeleteRole(roleId, user.UserId.ToString());
+						dataGridViewRoles.Rows.Remove(row);
+						var found = user.Roles.FirstOrDefault(r => r.RoleId.ToString() == roleId);
+						if (found != null)
+							user.Roles.Remove(found);
+					}
 				}
 			}
 			catch (Exception ex)
