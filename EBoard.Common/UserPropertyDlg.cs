@@ -25,6 +25,19 @@ namespace EBoard.Common
 			}
 		}
 
+		private bool isUserProtected;
+		public bool IsUserProtected
+		{
+			get { return isUserProtected; }
+			set
+			{
+				isUserProtected = value;
+				buttonAdd.Enabled = !isUserProtected;
+				buttonDelete.Enabled = !isUserProtected;
+				checkBoxDisable.Enabled = !IsUserProtected;
+			}
+		}
+
 		public UserPropertyDlg(SqlConnection conn)
 		{
 			InitializeComponent();

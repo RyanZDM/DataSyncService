@@ -80,8 +80,6 @@ namespace EBoard.SysManager
 				dataGridViewGeneralParams.CellValueChanged += dataGridView_CellValueChanged;
 				dataGridViewGeneralParams.Tag = adapter;
 				
-				ProtectSystemColumnsInDataGridView(dataGridViewGeneralParams, 1, CheckColumnToProtectForGeneralParameters);
-
 				node = treeView1.Nodes[0].Nodes["SysParam"];
 				node.Tag = dataGridViewGeneralParams;
 				nodeMappings.Add(node.Name.ToLower(), panelGeneralParams);
@@ -192,11 +190,6 @@ namespace EBoard.SysManager
 			adapter.Fill(ds);
 			view.DataSource = ds.Tables[0].DefaultView;
 
-			if (view.Name.Equals("dataGridViewGeneralParams", StringComparison.OrdinalIgnoreCase))
-			{
-				ProtectSystemColumnsInDataGridView(view, 1, CheckColumnToProtectForGeneralParameters);
-			}
-
 			// Refresh data may trigger the CellValueChanged event, need to reset hasDirtyData flag
 			HasDirtyData = false;
 
@@ -269,33 +262,6 @@ namespace EBoard.SysManager
 
 			(view.DataSource as DataView).Table.RejectChanges();
 			HasDirtyData = false;
-		}
-
-		private void ProtectSystemColumnsInDataGridView(DataGridView view, int colToProtect, Func<DataGridViewRow, bool> checkDelegate)
-		{
-			if (view == null)
-				return;
-
-			if (checkDelegate == null)
-			{
-				view.Columns[colToProtect].ReadOnly = true;
-				return;
-			}
-			else
-			{
-				foreach (DataGridViewRow row in view.Rows)
-				{
-					if (checkDelegate(row))
-					{
-						view[colToProtect, row.Index].ReadOnly = true;
-					}
-				}
-			}
-		}
-
-		private bool CheckColumnToProtectForGeneralParameters(DataGridViewRow row)
-		{
-			return (row.Cells[0].Value.ToString().Equals("System", StringComparison.OrdinalIgnoreCase));
 		}
 
 		private DataGridView GetCurrentDataGridView()
@@ -407,6 +373,18 @@ namespace EBoard.SysManager
 				return;
 
 			HasDirtyData = true;
+		}
+
+		private void dataGridViewGeneralParams_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+		{
+			var colName = dataGridViewGeneralParams.Columns[e.ColumnIndex].Name;
+			if (colName.Equals("ItemName", StringComparison.OrdinalIgnoreCase))
+			{
+				if (string.Equals("System", dataGridViewGeneralParams.Rows[e.RowIndex].Cells["Category"].Value.ToString(), StringComparison.OrdinalIgnoreCase))
+				{
+					e.Cancel = true;
+				}
+			}
 		}
 	}
 }

@@ -269,7 +269,7 @@ namespace EBoard.Common
 
 		private User InternalGetUser(string condition)
 		{
-			var sql = @"SELECT UserId,LoginId,Name,Password,IDCard,Status FROM [User]";
+			var sql = @"SELECT UserId,LoginId,Name,Password,IDCard,Status,IsProtected FROM [User]";
 			if (!string.IsNullOrWhiteSpace(condition))
 			{
 				sql += string.Format(" WHERE {0}", condition);
@@ -290,6 +290,7 @@ namespace EBoard.Common
 				Name = row["Name"].ToString(),
 				Password = row["Password"].ToString(),
 				IDCard = row["IDCard"].ToString(),
+				IsProtected = (bool)row["IsProtected"],
 				Status = row["Status"].ToString()
 			};
 

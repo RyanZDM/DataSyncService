@@ -26,6 +26,8 @@ namespace EBoard.SysManager
 			CurrentRow = -1;
 
 			RefreshData(false);
+
+			RefreshData(false);
 		}
 
 		public void RefreshData(bool checkDirtyData = true)
@@ -108,6 +110,7 @@ namespace EBoard.SysManager
 				adapter.Update(table);
 				table.AcceptChanges();
 				HasDirtyData = false;
+				RefreshData();
 				return true;
 			}
 			catch (Exception ex)
@@ -116,7 +119,7 @@ namespace EBoard.SysManager
 				return false;
 			}
 		}
-		
+
 		public DataRow AddRecord()
 		{
 			var row = (dataGridViewUser.DataSource as DataTable).Rows.Add();
@@ -144,8 +147,8 @@ namespace EBoard.SysManager
 			{
 				foreach (var row in selectedRows)
 				{
-					DeleteUserRow(row);
-					rowsDeleted++;
+					if (DeleteUserRow(row))
+						rowsDeleted++;
 				}
 			}
 
@@ -155,7 +158,7 @@ namespace EBoard.SysManager
 				if (!Save())
 					return 0;
 			}
-			
+
 			return rowsDeleted;
 		}
 
@@ -171,6 +174,13 @@ namespace EBoard.SysManager
 			var isNewRow = (table.Rows[row.Index].RowState == DataRowState.Added);
 			if (!isNewRow)
 			{
+				var isProtected = (row.Cells["IsProtected"].Value.GetType() != typeof(DBNull) && (bool)row.Cells["IsProtected"].Value);
+				if (isProtected)
+				{
+					MessageBox.Show("该记录不允许被删除");
+					return false;
+				}
+
 				// Need to delete roles assigned that user
 				var userId = row.Cells["UserId"].Value.ToString();
 				var dal = new Dal(connection);
@@ -198,7 +208,7 @@ namespace EBoard.SysManager
 			{
 				(dataGridViewUser.DataSource as DataTable).Rows[row.Index]["Password"] = dlg.NewEncyptedPassword;
 			}
-			
+
 			Save();
 		}
 
@@ -218,7 +228,10 @@ namespace EBoard.SysManager
 					return;
 			}
 
-			var dlg = new UserPropertyDlg(connection) { LoginId = loginId };
+			var val = row.Cells["IsProtected"].Value;
+			var isProtected = (val.GetType() != typeof(DBNull)) ? (bool)val : false;
+
+			var dlg = new UserPropertyDlg(connection) { LoginId = loginId, IsUserProtected = isProtected };
 			dlg.ShowDialog();
 			if (dlg.DataChanged)
 			{
@@ -260,7 +273,7 @@ namespace EBoard.SysManager
 		{
 			ChangeUserProperty();
 		}
-		
+
 		private void dataGridViewUser_CurrentCellChanged(object sender, EventArgs e)
 		{
 			var rowCount = dataGridViewUser.Rows.Count;
@@ -273,7 +286,7 @@ namespace EBoard.SysManager
 				CurrentRow = -1;
 				return;
 			}
-						
+
 			if (CurrentRow == currRow.Index)
 				return;
 
@@ -285,6 +298,19 @@ namespace EBoard.SysManager
 		private void dataGridViewUser_DoubleClick(object sender, EventArgs e)
 		{
 			ChangeUserProperty();
+		}
+
+		private void dataGridViewUser_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+		{
+			var colName = dataGridViewUser.Columns[e.ColumnIndex].Name;
+			if (colName.Equals("LoginId", StringComparison.OrdinalIgnoreCase) || colName.Equals("Status", StringComparison.OrdinalIgnoreCase))
+			{
+				var val = dataGridViewUser.Rows[e.RowIndex].Cells["IsProtected"].Value;
+				if (val.GetType() != typeof(DBNull) && (bool)val)
+				{
+					e.Cancel = true; ;
+				}
+			}
 		}
 	}
 }

@@ -17,6 +17,8 @@ namespace EBoard.Common
 
 		public string IDCard { get; set; }
 
+		public bool IsProtected { get; set; }
+
 		public string Status { get; set; }
 
 		public IList<Role> Roles { get; set; }
