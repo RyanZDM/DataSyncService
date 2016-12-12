@@ -53,3 +53,4 @@ InstallUtil.InstallLog
 # Ignore KDiff Original Files - Created on merges
 *.orig
 
+Scripts/Output/*
