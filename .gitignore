@@ -54,3 +54,4 @@ InstallUtil.InstallLog
 *.orig
 
 Scripts/Output/*
+EBoardSetup/EBoardSetup/Express/*
