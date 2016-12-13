@@ -378,7 +378,7 @@ namespace EBoard
 
 			// Update labels on GUI
 
-			labelTotalRuntime2.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
+			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
 
 			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() + UnitM3 : "";
@@ -404,12 +404,12 @@ namespace EBoard
 
 			if (CurrentWorkers.Count > 0)
 			{
-				labelWorker.Text = string.Format("姓名：{0}\t工号：{1}", CurrentWorkers.Values[0].Name, CurrentWorkers.Values[0].LoginId);
+				labelWorker.Text = string.Format("姓名：{0}    工号：{1}", CurrentWorkers.Values[0].Name, CurrentWorkers.Values[0].LoginId);
 			}
 
 			if (CurrentWorkers.Count > 1)
 			{
-				labelWorker.Text = string.Format("{0}\t姓名：{1}\t工号：{2}", labelWorker.Text, CurrentWorkers.Values[1].Name, CurrentWorkers.Values[1].LoginId);
+				labelWorker.Text = string.Format("{0}        姓名：{1}    工号：{2}", labelWorker.Text, CurrentWorkers.Values[1].Name, CurrentWorkers.Values[1].LoginId);
 			}
 		}
 
@@ -546,58 +546,65 @@ namespace EBoard
 
 		private void RefreshChart(Chart chart, DataSet ds)
 		{
-			// Refresh to total data
-			if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
+			try
 			{
-				var sumRow = ds.Tables[1].Rows[0];
-				labelBiogasMonth.Text = sumRow["Biogas"].ToString() + UnitM3;
-				labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString() + UnitKWh;
-			}
-
-			// Refresh the chart label
-			var axis = chart.ChartAreas[0].AxisX;
-			var begin = axis.Minimum;
-			var end = axis.Maximum;
-			var today = DateTime.Now.Day;
-
-			chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
-
-			for (var i = begin; i <= end; i++)
-			{
-				var row = ds.Tables[0].AsEnumerable().FirstOrDefault(d => (int)d["Day"] == i);
-				if (row == null) continue;
-
-				var labels = axis.CustomLabels.Where(c => c.RowIndex > 0 && c.Tag != null && (int)c.Tag == i).ToList();
-				foreach (var label in labels)
+				// Refresh to total data
+				if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
 				{
-					if (today < i)
-					{
-						label.Text = "";    // No need to write the value since the day is later than today
-						continue;
-					}
+					var sumRow = ds.Tables[1].Rows[0];
+					labelBiogasMonth.Text = sumRow["Biogas"].ToString() + UnitM3;
+					labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString() + UnitKWh;
+				}
 
-					if (!ChartLabelMapping.ContainsKey(label.RowIndex))
-						continue;
+				// Refresh the chart label
+				var axis = chart.ChartAreas[0].AxisX;
+				var begin = axis.Minimum;
+				var end = axis.Maximum;
+				var today = DateTime.Now.Day;
 
-					var colName = ChartLabelMapping[label.RowIndex];
-					if (colName.EndsWith("1") || colName.EndsWith("2"))
+				chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
+
+				for (var i = begin; i <= end; i++)
+				{
+					var row = ds.Tables[0].AsEnumerable().FirstOrDefault(d => (int)d["Day"] == i);
+					if (row == null) continue;
+
+					var labels = axis.CustomLabels.Where(c => c.RowIndex > 0 && c.Tag != null && (int)c.Tag == i).ToList();
+					foreach (var label in labels)
 					{
-						// Need to split the workers
-						var realColumn = colName.Substring(0, colName.Length - 1);
-						var workerIndex = int.Parse(colName.Substring(colName.Length - 1));
-						var workers = row[realColumn].ToString();
-						if (string.IsNullOrWhiteSpace(workers))
+						if (today < i)
+						{
+							label.Text = "";    // No need to write the value since the day is later than today
+							continue;
+						}
+
+						if (!ChartLabelMapping.ContainsKey(label.RowIndex))
 							continue;
 
-						var workerList = workers.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-						if (workerList.Length >= 1)
-							label.Text = workerList[workerIndex - 1];
-					}
-					else
-					{
-						label.Text = row[ChartLabelMapping[label.RowIndex]].ToString();
+						var colName = ChartLabelMapping[label.RowIndex];
+						if (colName.EndsWith("1") || colName.EndsWith("2"))
+						{
+							// Need to split the workers
+							var realColumn = colName.Substring(0, colName.Length - 1);
+							var workerIndex = int.Parse(colName.Substring(colName.Length - 1));
+							var workers = row[realColumn].ToString();
+							if (string.IsNullOrWhiteSpace(workers))
+								continue;
+
+							var workerList = workers.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+							if (workerList.Length >= workerIndex)
+								label.Text = workerList[workerIndex - 1];
+						}
+						else
+						{
+							label.Text = row[ChartLabelMapping[label.RowIndex]].ToString();
+						}
 					}
 				}
+			}
+			catch (Exception ex)
+			{
+				logger.Error(ex, "Error occurred while refreshing chart.");
 			}
 		}
 		#endregion

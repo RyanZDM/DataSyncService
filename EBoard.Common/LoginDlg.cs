@@ -24,7 +24,7 @@ namespace EBoard.Common
 
 		private bool alwaysOpenNew;
 
-		private LoginMode loginMode = LoginMode.Typical;
+		private LoginMode loginMode = LoginMode.IdCard;
 
 		private const int MaxSecondsForIdCardScan = 2;
 
@@ -43,9 +43,11 @@ namespace EBoard.Common
 		public LoginDlg(SqlConnection conn = null, Type next = null, bool alwaysOpenNew = true)
 		{
 			InitializeComponent();
-			tabControlLogin.SelectedIndex = 0;
-			textBoxUserId.Select();
-			
+			tabControlLogin.SelectedIndex = 1;
+			ChangeLoginMode(LoginMode.IdCard);
+
+			//textBoxUserId.Select();			
+
 			nextFormType = next;
 			this.alwaysOpenNew = alwaysOpenNew;
 
@@ -110,7 +112,13 @@ namespace EBoard.Common
 					MessageBox.Show(string.Format("登录时遇到错误，请重试.{0}", ex));
 					return;
 				}
-			}			
+			}
+			else
+			{
+				// The worker list of current shift has been updated in this delegate		
+				if ((AdditionalCheckAfterValidated != null) && !AdditionalCheckAfterValidated(CurrentUser))
+					return;
+			}		
 
 			DialogResult = DialogResult.OK;
 			OpenNextForm();

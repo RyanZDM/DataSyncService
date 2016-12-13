@@ -132,8 +132,11 @@ namespace EBoard.Common
 			if (lastUpdate.HasValue)
 			{
 				var newUpdate = (mstrTable.Rows[0]["LastUpdateTime"].GetType() != typeof(DBNull)) ? (DateTime)mstrTable.Rows[0]["LastUpdateTime"] : DateTime.MinValue;
-				if (lastUpdate >= newUpdate)
-					return null;
+				//if (lastUpdate >= newUpdate)
+				//{
+				//	logger.Info("No data change at time {0}, last={1].", lastUpdate.Value.ToLongTimeString(), newUpdate.ToLongTimeString());
+				//	return null;
+				//}
 			}
 
 			// Get data from ShiftStatMstr table
