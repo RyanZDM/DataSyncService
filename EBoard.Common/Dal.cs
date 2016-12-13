@@ -128,16 +128,16 @@ namespace EBoard.Common
 			if ((mstrTable == null) || (mstrTable.Rows.Count < 1))
 				return null;
 
-			// No need to load data if no data change after 'lastUpdate'
-			if (lastUpdate.HasValue)
-			{
-				var newUpdate = (mstrTable.Rows[0]["LastUpdateTime"].GetType() != typeof(DBNull)) ? (DateTime)mstrTable.Rows[0]["LastUpdateTime"] : DateTime.MinValue;
-				//if (lastUpdate >= newUpdate)
-				//{
-				//	logger.Info("No data change at time {0}, last={1].", lastUpdate.Value.ToLongTimeString(), newUpdate.ToLongTimeString());
-				//	return null;
-				//}
-			}
+			//// No need to load data if no data change after 'lastUpdate'
+			//if (lastUpdate.HasValue)
+			//{
+			//	var newUpdate = (mstrTable.Rows[0]["LastUpdateTime"].GetType() != typeof(DBNull)) ? (DateTime)mstrTable.Rows[0]["LastUpdateTime"] : DateTime.MinValue;
+			//	if (lastUpdate >= newUpdate)
+			//	{
+			//		logger.Info("No data change at time {0}, last={1].", lastUpdate.Value.ToLongTimeString(), newUpdate.ToLongTimeString());
+			//		return null;
+			//	}
+			//}
 
 			// Get data from ShiftStatMstr table
 			var data = new ShiftStatInfo();
