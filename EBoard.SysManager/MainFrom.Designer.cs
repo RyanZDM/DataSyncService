@@ -106,7 +106,6 @@
 			this.rptMgrToolStripMenuItem.Name = "rptMgrToolStripMenuItem";
 			this.rptMgrToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.rptMgrToolStripMenuItem.Text = " 报表管理";
-			this.rptMgrToolStripMenuItem.Visible = false;
 			this.rptMgrToolStripMenuItem.Click += new System.EventHandler(this.rptMgrToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem3

@@ -65,10 +65,9 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(1067, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(1062, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 3, 0, 3);
-			this.menuStrip1.Size = new System.Drawing.Size(59, 29);
+			this.menuStrip1.Size = new System.Drawing.Size(52, 25);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -77,14 +76,14 @@
 			this.operationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem});
 			this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
-			this.operationToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
+			this.operationToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
 			this.operationToolStripMenuItem.Text = "操作";
 			// 
 			// refreshToolStripMenuItem
 			// 
 			this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
 			this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
+			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
 			this.refreshToolStripMenuItem.Text = "刷新";
 			// 
 			// toolStrip1
@@ -123,8 +122,7 @@
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainer1.Location = new System.Drawing.Point(1, 37);
-			this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
+			this.splitContainer1.Location = new System.Drawing.Point(1, 30);
 			this.splitContainer1.Name = "splitContainer1";
 			// 
 			// splitContainer1.Panel1
@@ -134,41 +132,36 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-			this.splitContainer1.Size = new System.Drawing.Size(1125, 559);
-			this.splitContainer1.SplitterDistance = 274;
-			this.splitContainer1.SplitterWidth = 5;
+			this.splitContainer1.Size = new System.Drawing.Size(1113, 624);
+			this.splitContainer1.SplitterDistance = 271;
 			this.splitContainer1.TabIndex = 2;
 			// 
 			// treeView1
 			// 
 			this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView1.Location = new System.Drawing.Point(0, 0);
-			this.treeView1.Margin = new System.Windows.Forms.Padding(4);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(274, 559);
+			this.treeView1.Size = new System.Drawing.Size(271, 624);
 			this.treeView1.TabIndex = 0;
 			// 
 			// splitContainer2
 			// 
 			this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer2.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainer2.Name = "splitContainer2";
 			this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-			this.splitContainer2.Size = new System.Drawing.Size(846, 559);
-			this.splitContainer2.SplitterDistance = 130;
-			this.splitContainer2.SplitterWidth = 5;
+			this.splitContainer2.Size = new System.Drawing.Size(838, 624);
+			this.splitContainer2.SplitterDistance = 145;
 			this.splitContainer2.TabIndex = 0;
 			// 
 			// splitContainer3
 			// 
 			this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-			this.splitContainer3.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainer3.Name = "splitContainer3";
 			// 
 			// splitContainer3.Panel1
@@ -178,9 +171,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.dataGridViewWorkerReport);
-			this.splitContainer3.Size = new System.Drawing.Size(846, 424);
-			this.splitContainer3.SplitterDistance = 410;
-			this.splitContainer3.SplitterWidth = 5;
+			this.splitContainer3.Size = new System.Drawing.Size(838, 475);
+			this.splitContainer3.SplitterDistance = 406;
 			this.splitContainer3.TabIndex = 0;
 			// 
 			// dataGridViewReportDet
@@ -190,10 +182,9 @@
 			this.dataGridViewReportDet.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewReportDet.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dataGridViewReportDet.Location = new System.Drawing.Point(0, 0);
-			this.dataGridViewReportDet.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewReportDet.Name = "dataGridViewReportDet";
 			this.dataGridViewReportDet.RowTemplate.Height = 23;
-			this.dataGridViewReportDet.Size = new System.Drawing.Size(410, 424);
+			this.dataGridViewReportDet.Size = new System.Drawing.Size(406, 475);
 			this.dataGridViewReportDet.TabIndex = 0;
 			// 
 			// dataGridViewWorkerReport
@@ -201,22 +192,21 @@
 			this.dataGridViewWorkerReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridViewWorkerReport.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dataGridViewWorkerReport.Location = new System.Drawing.Point(0, 0);
-			this.dataGridViewWorkerReport.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewWorkerReport.Name = "dataGridViewWorkerReport";
 			this.dataGridViewWorkerReport.RowTemplate.Height = 23;
-			this.dataGridViewWorkerReport.Size = new System.Drawing.Size(431, 424);
+			this.dataGridViewWorkerReport.Size = new System.Drawing.Size(428, 475);
 			this.dataGridViewWorkerReport.TabIndex = 0;
 			// 
 			// ReportMgrForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1125, 597);
+			this.ClientSize = new System.Drawing.Size(1113, 655);
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
-			this.Margin = new System.Windows.Forms.Padding(4);
+			this.Margin = new System.Windows.Forms.Padding(3, 3, 3, 3);
 			this.Name = "ReportMgrForm";
 			this.Text = "ReportMgrForm";
 			this.Load += new System.EventHandler(this.ReportMgrForm_Load);

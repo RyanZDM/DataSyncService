@@ -317,16 +317,17 @@ namespace EBoard
 				return;
 			}
 
-			double? biogas2Torch = null,
-					biogas2Gen = null,
+			double? 
+					//biogas2Torch = null,
+					//biogas2Gen = null,
 					biogas2TorchSubtotal = null,
 					biogas2GenSubtotal = null,
 					subtotalRuntime1 = null,
 					subtotalRuntime2 = null,
 					energyProduction1 = null,
 					energyProduction2 = null,
-					generatorPower1 = null,
-					generatorPower2 = null,
+					//generatorPower1 = null,
+					//generatorPower2 = null,
 					totalRuntime1 = null,
 					totalRuntime2 = null;
 			bool? generator1Running = null,
@@ -338,38 +339,44 @@ namespace EBoard
 			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator2RunningColName))
 				generator2Running = ((int)data.MonitorItems[ShiftStatInfo.Generator2RunningColName]) != 0;
 
-			// instantaneous values
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2TorchColName))
-				biogas2Torch = data.MonitorItems[ShiftStatInfo.Biogas2TorchColName];
+			/// 1. instantaneous values
+			// 1.1 Biogas
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2TorchColName))
+			//	biogas2Torch = data.MonitorItems[ShiftStatInfo.Biogas2TorchColName];
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2GenColName))
-				biogas2Gen = data.MonitorItems[ShiftStatInfo.Biogas2GenColName];
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2GenColName))
+			//	biogas2Gen = data.MonitorItems[ShiftStatInfo.Biogas2GenColName];
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.GeneratorPower1ColName))
-				generatorPower1 = data.MonitorItems[ShiftStatInfo.GeneratorPower1ColName];
+			// 1.2 Generator power P
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.GeneratorPower1ColName))
+			//	generatorPower1 = data.MonitorItems[ShiftStatInfo.GeneratorPower1ColName];
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.GeneratorPower2ColName))
-				generatorPower2 = data.MonitorItems[ShiftStatInfo.GeneratorPower2ColName];
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.GeneratorPower2ColName))
+			//	generatorPower2 = data.MonitorItems[ShiftStatInfo.GeneratorPower2ColName];
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.EnergyProduction1ColName))
-				energyProduction1 = data.MonitorItems[ShiftStatInfo.EnergyProduction1ColName];
-
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.EnergyProduction2ColName))
-				energyProduction2 = data.MonitorItems[ShiftStatInfo.EnergyProduction2ColName];
-
-			// accumulated values
+			/// 2. accumulated values
+			// 2.1 Subtotal biogas of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2TorchSubtotalColName))
 				biogas2TorchSubtotal = data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2GenSubtotalColName))
 				biogas2GenSubtotal = data.StatInfo[ShiftStatInfo.Biogas2GenSubtotalColName];
 
+			// 2.2 Energy production of current shift
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName))
+				energyProduction1 = data.StatInfo[ShiftStatInfo.EnergyProduction1ColName];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName))
+				energyProduction2 = data.StatInfo[ShiftStatInfo.EnergyProduction2ColName];
+
+			// 2.3 subtotal runtime of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime1ColName))
 				subtotalRuntime1 = data.StatInfo[ShiftStatInfo.SubtotalRuntime1ColName];
-
+						
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime2ColName))
 				subtotalRuntime2 = data.StatInfo[ShiftStatInfo.SubtotalRuntime2ColName];
 
+			// 2.4 total runtime
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName))
 				totalRuntime1 = data.StatInfo[ShiftStatInfo.TotalRuntime1ColName];
 
@@ -377,18 +384,21 @@ namespace EBoard
 				totalRuntime2 = data.StatInfo[ShiftStatInfo.TotalRuntime2ColName];
 
 			// Update labels on GUI
-
+			// 2.4
 			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
 
+			// 2.1
 			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() + UnitM3 : "";
 			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal.ToString() + UnitM3 : "";
 			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0.0) + (biogas2GenSubtotal ?? 0.0)).ToString() + UnitM3;
 
+			// 2.2
 			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() + UnitKWh : "";
 			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() + UnitKWh : "";
 			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0.0) + (energyProduction2 ?? 0.0)).ToString() + UnitKWh;
 
+			// 2.3
 			labelRuntime1.Text = subtotalRuntime1.HasValue ? subtotalRuntime1.ToString() : "";
 			labelRuntime2.Text = subtotalRuntime2.HasValue ? subtotalRuntime2.ToString() : "";
 			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0.0) + (subtotalRuntime2 ?? 0.0)).ToString();
