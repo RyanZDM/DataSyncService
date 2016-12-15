@@ -65,9 +65,9 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(1062, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(970, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(52, 25);
+			this.menuStrip1.Size = new System.Drawing.Size(144, 25);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -75,6 +75,8 @@
 			// 
 			this.operationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem});
+			this.operationToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.Insert;
+			this.operationToolStripMenuItem.MergeIndex = 1;
 			this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
 			this.operationToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
 			this.operationToolStripMenuItem.Text = "操作";
@@ -133,7 +135,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
 			this.splitContainer1.Size = new System.Drawing.Size(1113, 624);
-			this.splitContainer1.SplitterDistance = 271;
+			this.splitContainer1.SplitterDistance = 179;
 			this.splitContainer1.TabIndex = 2;
 			// 
 			// treeView1
@@ -141,8 +143,10 @@
 			this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView1.Location = new System.Drawing.Point(0, 0);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(271, 624);
+			this.treeView1.Size = new System.Drawing.Size(179, 624);
 			this.treeView1.TabIndex = 0;
+			this.treeView1.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeSelect);
+			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
 			// 
 			// splitContainer2
 			// 
@@ -154,7 +158,7 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.splitContainer3);
-			this.splitContainer2.Size = new System.Drawing.Size(838, 624);
+			this.splitContainer2.Size = new System.Drawing.Size(930, 624);
 			this.splitContainer2.SplitterDistance = 145;
 			this.splitContainer2.TabIndex = 0;
 			// 
@@ -171,8 +175,8 @@
 			// splitContainer3.Panel2
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.dataGridViewWorkerReport);
-			this.splitContainer3.Size = new System.Drawing.Size(838, 475);
-			this.splitContainer3.SplitterDistance = 406;
+			this.splitContainer3.Size = new System.Drawing.Size(930, 475);
+			this.splitContainer3.SplitterDistance = 450;
 			this.splitContainer3.TabIndex = 0;
 			// 
 			// dataGridViewReportDet
@@ -184,7 +188,7 @@
 			this.dataGridViewReportDet.Location = new System.Drawing.Point(0, 0);
 			this.dataGridViewReportDet.Name = "dataGridViewReportDet";
 			this.dataGridViewReportDet.RowTemplate.Height = 23;
-			this.dataGridViewReportDet.Size = new System.Drawing.Size(406, 475);
+			this.dataGridViewReportDet.Size = new System.Drawing.Size(450, 475);
 			this.dataGridViewReportDet.TabIndex = 0;
 			// 
 			// dataGridViewWorkerReport
@@ -194,7 +198,7 @@
 			this.dataGridViewWorkerReport.Location = new System.Drawing.Point(0, 0);
 			this.dataGridViewWorkerReport.Name = "dataGridViewWorkerReport";
 			this.dataGridViewWorkerReport.RowTemplate.Height = 23;
-			this.dataGridViewWorkerReport.Size = new System.Drawing.Size(428, 475);
+			this.dataGridViewWorkerReport.Size = new System.Drawing.Size(476, 475);
 			this.dataGridViewWorkerReport.TabIndex = 0;
 			// 
 			// ReportMgrForm

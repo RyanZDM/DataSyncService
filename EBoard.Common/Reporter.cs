@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -180,6 +181,43 @@ namespace EBoard.Common
 			adapter.Fill(ds);
 
 			return ds;
+		}
+
+		/// <summary>
+		/// Gets list of all monthly report
+		/// </summary>
+		/// <returns></returns>
+		public SortedDictionary<int, SortedDictionary<int, string>> GetMonthltReportList()
+		{
+			var sql = "Select YearMonth, ReportId From MonthReportMstr Where Status='A'";
+			var cmd = new SqlCommand(sql, connection);
+			var reportList = new SortedDictionary<int, SortedDictionary<int, string>>();
+			using (var reader = cmd.ExecuteReader())
+			{
+				while (reader.Read())
+				{
+					var yearMonth = reader.GetString(0);
+					var year = int.Parse(yearMonth.Substring(0, 4));
+					var month = int.Parse(yearMonth.Substring(4));
+					var reportId = reader.GetGuid(1).ToString();
+
+					if (!reportList.ContainsKey(year))
+					{
+						reportList.Add(year, null);
+					}
+
+					if (reportList[year] == null)
+					{
+						reportList[year] = new SortedDictionary<int, string>();
+					}
+					
+					reportList[year][month] = reportId;
+				}
+
+				reader.Close();
+			}
+
+			return reportList;
 		}
 	}
 	
