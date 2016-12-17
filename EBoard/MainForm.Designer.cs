@@ -31,10 +31,10 @@ namespace EBoard
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea19 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea20 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.label3 = new System.Windows.Forms.Label();
 			this.labelTotalRuntime2 = new System.Windows.Forms.Label();
@@ -80,11 +80,23 @@ namespace EBoard
 			this.labelBiogasMonth = new System.Windows.Forms.Label();
 			this.tableLayoutPanel03 = new System.Windows.Forms.TableLayoutPanel();
 			this.panel04_1 = new System.Windows.Forms.Panel();
-			this.label19 = new System.Windows.Forms.Label();
+			this.tableLayoutPanelChart1_Left = new System.Windows.Forms.TableLayoutPanel();
+			this.panelChartDesc1 = new EBoard.Common.RoundPanel(this.components);
+			this.tableLayoutPanelChart1_Desc = new System.Windows.Forms.TableLayoutPanel();
+			this.panelDesc1_1 = new System.Windows.Forms.Panel();
+			this.tableLayoutPanelChart1_Desc1 = new System.Windows.Forms.TableLayoutPanel();
+			this.label33 = new System.Windows.Forms.Label();
+			this.label34 = new System.Windows.Forms.Label();
+			this.label35 = new System.Windows.Forms.Label();
+			this.label36 = new System.Windows.Forms.Label();
+			this.panelDesc1_2 = new EBoard.Common.RoundPanel(this.components);
+			this.tableLayoutPanelChart1_Desc2 = new System.Windows.Forms.TableLayoutPanel();
+			this.label30 = new System.Windows.Forms.Label();
+			this.label31 = new System.Windows.Forms.Label();
+			this.label32 = new System.Windows.Forms.Label();
+			this.panel2 = new System.Windows.Forms.Panel();
 			this.label2 = new System.Windows.Forms.Label();
-			this.panel04_2 = new System.Windows.Forms.Panel();
-			this.label44 = new System.Windows.Forms.Label();
-			this.label45 = new System.Windows.Forms.Label();
+			this.label19 = new System.Windows.Forms.Label();
 			this.panel04_32 = new System.Windows.Forms.Panel();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.labelEnergyNightIndicator = new System.Windows.Forms.Label();
@@ -102,33 +114,25 @@ namespace EBoard
 			this.label20 = new System.Windows.Forms.Label();
 			this.labelLine = new System.Windows.Forms.Label();
 			this.panel03_12 = new System.Windows.Forms.Panel();
-			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.panelChartDesc1 = new EBoard.Common.RoundPanel(this.components);
-			this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-			this.panelDesc1_1 = new System.Windows.Forms.Panel();
-			this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-			this.label33 = new System.Windows.Forms.Label();
-			this.label34 = new System.Windows.Forms.Label();
-			this.label35 = new System.Windows.Forms.Label();
-			this.label36 = new System.Windows.Forms.Label();
-			this.panelDesc1_2 = new EBoard.Common.RoundPanel(this.components);
-			this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-			this.label30 = new System.Windows.Forms.Label();
-			this.label31 = new System.Windows.Forms.Label();
-			this.label32 = new System.Windows.Forms.Label();
+			this.tableLayoutPanelChart2_Left = new System.Windows.Forms.TableLayoutPanel();
 			this.roundPanel1 = new EBoard.Common.RoundPanel(this.components);
-			this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanelChart2_Desc = new System.Windows.Forms.TableLayoutPanel();
 			this.panelChartDesc2 = new System.Windows.Forms.Panel();
-			this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanelChart2_Desc1 = new System.Windows.Forms.TableLayoutPanel();
 			this.label37 = new System.Windows.Forms.Label();
 			this.label38 = new System.Windows.Forms.Label();
 			this.label39 = new System.Windows.Forms.Label();
 			this.label40 = new System.Windows.Forms.Label();
 			this.roundPanel2 = new EBoard.Common.RoundPanel(this.components);
-			this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+			this.tableLayoutPanelChart2_Desc2 = new System.Windows.Forms.TableLayoutPanel();
 			this.label41 = new System.Windows.Forms.Label();
 			this.label42 = new System.Windows.Forms.Label();
 			this.label43 = new System.Windows.Forms.Label();
+			this.panel3 = new System.Windows.Forms.Panel();
+			this.label44 = new System.Windows.Forms.Label();
+			this.label45 = new System.Windows.Forms.Label();
+			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.panel_Chart2_Left_2 = new System.Windows.Forms.Panel();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth1)).BeginInit();
 			this.panel02.SuspendLayout();
@@ -138,22 +142,26 @@ namespace EBoard
 			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth2)).BeginInit();
 			this.tableLayoutPanel03.SuspendLayout();
 			this.panel04_1.SuspendLayout();
-			this.panel04_2.SuspendLayout();
+			this.tableLayoutPanelChart1_Left.SuspendLayout();
+			this.panelChartDesc1.SuspendLayout();
+			this.tableLayoutPanelChart1_Desc.SuspendLayout();
+			this.panelDesc1_1.SuspendLayout();
+			this.tableLayoutPanelChart1_Desc1.SuspendLayout();
+			this.panelDesc1_2.SuspendLayout();
+			this.tableLayoutPanelChart1_Desc2.SuspendLayout();
+			this.panel2.SuspendLayout();
 			this.panel04_32.SuspendLayout();
 			this.panel1.SuspendLayout();
 			this.panel03_12.SuspendLayout();
-			this.panelChartDesc1.SuspendLayout();
-			this.tableLayoutPanel3.SuspendLayout();
-			this.panelDesc1_1.SuspendLayout();
-			this.tableLayoutPanel5.SuspendLayout();
-			this.panelDesc1_2.SuspendLayout();
-			this.tableLayoutPanel4.SuspendLayout();
+			this.tableLayoutPanelChart2_Left.SuspendLayout();
 			this.roundPanel1.SuspendLayout();
-			this.tableLayoutPanel6.SuspendLayout();
+			this.tableLayoutPanelChart2_Desc.SuspendLayout();
 			this.panelChartDesc2.SuspendLayout();
-			this.tableLayoutPanel7.SuspendLayout();
+			this.tableLayoutPanelChart2_Desc1.SuspendLayout();
 			this.roundPanel2.SuspendLayout();
-			this.tableLayoutPanel8.SuspendLayout();
+			this.tableLayoutPanelChart2_Desc2.SuspendLayout();
+			this.panel3.SuspendLayout();
+			this.panel_Chart2_Left_2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -170,7 +178,7 @@ namespace EBoard
 			this.tableLayoutPanel1.Controls.Add(this.label4, 2, 0);
 			this.tableLayoutPanel1.Controls.Add(this.labelTotalRuntime1, 1, 0);
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 149);
-			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
 			this.tableLayoutPanel1.RowCount = 1;
 			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -234,18 +242,18 @@ namespace EBoard
 			// chartCurrMonth1
 			// 
 			this.chartCurrMonth1.BackColor = System.Drawing.Color.Transparent;
-			chartArea1.BackColor = System.Drawing.Color.Transparent;
-			chartArea1.Name = "ChartArea1";
-			this.chartCurrMonth1.ChartAreas.Add(chartArea1);
+			chartArea19.BackColor = System.Drawing.Color.Transparent;
+			chartArea19.Name = "ChartArea1";
+			this.chartCurrMonth1.ChartAreas.Add(chartArea19);
 			this.chartCurrMonth1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chartCurrMonth1.Location = new System.Drawing.Point(0, 0);
 			this.chartCurrMonth1.Margin = new System.Windows.Forms.Padding(2);
 			this.chartCurrMonth1.Name = "chartCurrMonth1";
-			series1.ChartArea = "ChartArea1";
-			series1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
-			series1.CustomProperties = "PointWidth=0.1";
-			series1.Name = "Series1";
-			this.chartCurrMonth1.Series.Add(series1);
+			series19.ChartArea = "ChartArea1";
+			series19.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
+			series19.CustomProperties = "PointWidth=0.1";
+			series19.Name = "Series1";
+			this.chartCurrMonth1.Series.Add(series19);
 			this.chartCurrMonth1.Size = new System.Drawing.Size(1355, 273);
 			this.chartCurrMonth1.TabIndex = 0;
 			this.chartCurrMonth1.Text = "chart1";
@@ -353,7 +361,7 @@ namespace EBoard
 			this.tableLayoutPanel2.Controls.Add(this.labelWorker, 1, 1);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
 			this.tableLayoutPanel2.RowCount = 7;
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -377,7 +385,7 @@ namespace EBoard
 			this.label24.Name = "label24";
 			this.label24.Size = new System.Drawing.Size(358, 49);
 			this.label24.TabIndex = 12;
-			this.label24.Text = "当前班次生产数据";
+			this.label24.Text = "当前班次生产数据    ";
 			this.label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// label8
@@ -668,7 +676,7 @@ namespace EBoard
 			this.panel01.Controls.Add(this.tableLayoutPanel1);
 			this.panel01.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel01.Location = new System.Drawing.Point(0, 0);
-			this.panel01.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panel01.Margin = new System.Windows.Forms.Padding(4);
 			this.panel01.Name = "panel01";
 			this.panel01.Size = new System.Drawing.Size(1584, 214);
 			this.panel01.TabIndex = 7;
@@ -692,7 +700,7 @@ namespace EBoard
 			this.tableLayoutPanelCurrentTime.Controls.Add(this.labelCurrWeekDay, 0, 1);
 			this.tableLayoutPanelCurrentTime.Dock = System.Windows.Forms.DockStyle.Right;
 			this.tableLayoutPanelCurrentTime.Location = new System.Drawing.Point(1182, 0);
-			this.tableLayoutPanelCurrentTime.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanelCurrentTime.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanelCurrentTime.Name = "tableLayoutPanelCurrentTime";
 			this.tableLayoutPanelCurrentTime.RowCount = 3;
 			this.tableLayoutPanelCurrentTime.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
@@ -736,16 +744,16 @@ namespace EBoard
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.chartCurrMonth2.BackColor = System.Drawing.Color.Transparent;
-			chartArea2.BackColor = System.Drawing.Color.Transparent;
-			chartArea2.Name = "ChartArea1";
-			this.chartCurrMonth2.ChartAreas.Add(chartArea2);
+			chartArea20.BackColor = System.Drawing.Color.Transparent;
+			chartArea20.Name = "ChartArea1";
+			this.chartCurrMonth2.ChartAreas.Add(chartArea20);
 			this.chartCurrMonth2.Location = new System.Drawing.Point(2, 2);
 			this.chartCurrMonth2.Margin = new System.Windows.Forms.Padding(2);
 			this.chartCurrMonth2.Name = "chartCurrMonth2";
-			series2.ChartArea = "ChartArea1";
-			series2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
-			series2.Name = "Series1";
-			this.chartCurrMonth2.Series.Add(series2);
+			series20.ChartArea = "ChartArea1";
+			series20.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
+			series20.Name = "Series1";
+			this.chartCurrMonth2.Series.Add(series20);
 			this.chartCurrMonth2.Size = new System.Drawing.Size(849, 271);
 			this.chartCurrMonth2.TabIndex = 0;
 			this.chartCurrMonth2.Text = "chart2";
@@ -771,12 +779,12 @@ namespace EBoard
 			this.tableLayoutPanel03.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 221F));
 			this.tableLayoutPanel03.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel03.Controls.Add(this.panel04_1, 0, 0);
-			this.tableLayoutPanel03.Controls.Add(this.panel04_2, 0, 2);
 			this.tableLayoutPanel03.Controls.Add(this.panel04_32, 1, 2);
 			this.tableLayoutPanel03.Controls.Add(this.labelLine, 0, 1);
 			this.tableLayoutPanel03.Controls.Add(this.panel03_12, 1, 0);
+			this.tableLayoutPanel03.Controls.Add(this.tableLayoutPanelChart2_Left, 0, 2);
 			this.tableLayoutPanel03.Location = new System.Drawing.Point(0, 489);
-			this.tableLayoutPanel03.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.tableLayoutPanel03.Margin = new System.Windows.Forms.Padding(4);
 			this.tableLayoutPanel03.Name = "tableLayoutPanel03";
 			this.tableLayoutPanel03.RowCount = 3;
 			this.tableLayoutPanel03.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -787,79 +795,246 @@ namespace EBoard
 			// 
 			// panel04_1
 			// 
-			this.panel04_1.Controls.Add(this.panelChartDesc1);
-			this.panel04_1.Controls.Add(this.label19);
-			this.panel04_1.Controls.Add(this.label2);
+			this.panel04_1.Controls.Add(this.tableLayoutPanelChart1_Left);
 			this.panel04_1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel04_1.Location = new System.Drawing.Point(4, 4);
-			this.panel04_1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panel04_1.Margin = new System.Windows.Forms.Padding(4);
 			this.panel04_1.Name = "panel04_1";
 			this.panel04_1.Size = new System.Drawing.Size(213, 273);
 			this.panel04_1.TabIndex = 2;
 			// 
-			// label19
+			// tableLayoutPanelChart1_Left
 			// 
-			this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.tableLayoutPanelChart1_Left.ColumnCount = 1;
+			this.tableLayoutPanelChart1_Left.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart1_Left.Controls.Add(this.panelChartDesc1, 0, 1);
+			this.tableLayoutPanelChart1_Left.Controls.Add(this.panel2, 0, 0);
+			this.tableLayoutPanelChart1_Left.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart1_Left.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart1_Left.Name = "tableLayoutPanelChart1_Left";
+			this.tableLayoutPanelChart1_Left.RowCount = 2;
+			this.tableLayoutPanelChart1_Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart1_Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart1_Left.Size = new System.Drawing.Size(213, 273);
+			this.tableLayoutPanelChart1_Left.TabIndex = 2;
+			// 
+			// panelChartDesc1
+			// 
+			this.panelChartDesc1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+			this.panelChartDesc1.BackColor = System.Drawing.Color.Snow;
+			this.panelChartDesc1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.panelChartDesc1.Controls.Add(this.tableLayoutPanelChart1_Desc);
+			this.panelChartDesc1.Location = new System.Drawing.Point(24, 136);
+			this.panelChartDesc1.Margin = new System.Windows.Forms.Padding(0);
+			this.panelChartDesc1.Name = "panelChartDesc1";
+			this.panelChartDesc1.RoundCorners = EBoard.Common.RoundCornerEnum.All;
+			this.panelChartDesc1.RoundRadius = 15;
+			this.panelChartDesc1.Size = new System.Drawing.Size(165, 137);
+			this.panelChartDesc1.TabIndex = 1;
+			// 
+			// tableLayoutPanelChart1_Desc
+			// 
+			this.tableLayoutPanelChart1_Desc.ColumnCount = 1;
+			this.tableLayoutPanelChart1_Desc.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart1_Desc.Controls.Add(this.panelDesc1_1, 0, 0);
+			this.tableLayoutPanelChart1_Desc.Controls.Add(this.panelDesc1_2, 0, 1);
+			this.tableLayoutPanelChart1_Desc.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart1_Desc.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart1_Desc.Margin = new System.Windows.Forms.Padding(4);
+			this.tableLayoutPanelChart1_Desc.Name = "tableLayoutPanelChart1_Desc";
+			this.tableLayoutPanelChart1_Desc.RowCount = 2;
+			this.tableLayoutPanelChart1_Desc.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart1_Desc.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart1_Desc.Size = new System.Drawing.Size(165, 137);
+			this.tableLayoutPanelChart1_Desc.TabIndex = 0;
+			// 
+			// panelDesc1_1
+			// 
+			this.panelDesc1_1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label19.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label19.Location = new System.Drawing.Point(4, 65);
-			this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label19.Name = "label19";
-			this.label19.Size = new System.Drawing.Size(208, 36);
-			this.label19.TabIndex = 0;
-			this.label19.Text = "统计数据";
-			this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.panelDesc1_1.BackColor = System.Drawing.Color.White;
+			this.panelDesc1_1.Controls.Add(this.tableLayoutPanelChart1_Desc1);
+			this.panelDesc1_1.Location = new System.Drawing.Point(4, 4);
+			this.panelDesc1_1.Margin = new System.Windows.Forms.Padding(4);
+			this.panelDesc1_1.Name = "panelDesc1_1";
+			this.panelDesc1_1.Size = new System.Drawing.Size(157, 60);
+			this.panelDesc1_1.TabIndex = 0;
+			// 
+			// tableLayoutPanelChart1_Desc1
+			// 
+			this.tableLayoutPanelChart1_Desc1.ColumnCount = 1;
+			this.tableLayoutPanelChart1_Desc1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart1_Desc1.Controls.Add(this.label33, 0, 0);
+			this.tableLayoutPanelChart1_Desc1.Controls.Add(this.label34, 0, 1);
+			this.tableLayoutPanelChart1_Desc1.Controls.Add(this.label35, 0, 2);
+			this.tableLayoutPanelChart1_Desc1.Controls.Add(this.label36, 0, 3);
+			this.tableLayoutPanelChart1_Desc1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart1_Desc1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart1_Desc1.Margin = new System.Windows.Forms.Padding(4);
+			this.tableLayoutPanelChart1_Desc1.Name = "tableLayoutPanelChart1_Desc1";
+			this.tableLayoutPanelChart1_Desc1.RowCount = 4;
+			this.tableLayoutPanelChart1_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+			this.tableLayoutPanelChart1_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+			this.tableLayoutPanelChart1_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+			this.tableLayoutPanelChart1_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34F));
+			this.tableLayoutPanelChart1_Desc1.Size = new System.Drawing.Size(157, 60);
+			this.tableLayoutPanelChart1_Desc1.TabIndex = 0;
+			// 
+			// label33
+			// 
+			this.label33.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label33.Location = new System.Drawing.Point(4, 0);
+			this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label33.Name = "label33";
+			this.label33.Size = new System.Drawing.Size(149, 13);
+			this.label33.TabIndex = 0;
+			this.label33.Text = "日期";
+			this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label34
+			// 
+			this.label34.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label34.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label34.Location = new System.Drawing.Point(4, 13);
+			this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label34.Name = "label34";
+			this.label34.Size = new System.Drawing.Size(149, 13);
+			this.label34.TabIndex = 1;
+			this.label34.Text = "沼气量(M³)日";
+			this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label35
+			// 
+			this.label35.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label35.Location = new System.Drawing.Point(4, 26);
+			this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label35.Name = "label35";
+			this.label35.Size = new System.Drawing.Size(149, 13);
+			this.label35.TabIndex = 2;
+			this.label35.Text = "发电量(kWh)日";
+			this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label36
+			// 
+			this.label36.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label36.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label36.Location = new System.Drawing.Point(4, 39);
+			this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label36.Name = "label36";
+			this.label36.Size = new System.Drawing.Size(149, 21);
+			this.label36.TabIndex = 3;
+			this.label36.Text = "当班人 日";
+			this.label36.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// panelDesc1_2
+			// 
+			this.panelDesc1_2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(30)))), ((int)(((byte)(25)))));
+			this.panelDesc1_2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			this.panelDesc1_2.Controls.Add(this.tableLayoutPanelChart1_Desc2);
+			this.panelDesc1_2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panelDesc1_2.Location = new System.Drawing.Point(0, 68);
+			this.panelDesc1_2.Margin = new System.Windows.Forms.Padding(0);
+			this.panelDesc1_2.Name = "panelDesc1_2";
+			this.panelDesc1_2.RoundCorners = EBoard.Common.RoundCornerEnum.All;
+			this.panelDesc1_2.RoundRadius = 0;
+			this.panelDesc1_2.Size = new System.Drawing.Size(165, 69);
+			this.panelDesc1_2.TabIndex = 1;
+			// 
+			// tableLayoutPanelChart1_Desc2
+			// 
+			this.tableLayoutPanelChart1_Desc2.ColumnCount = 1;
+			this.tableLayoutPanelChart1_Desc2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart1_Desc2.Controls.Add(this.label30, 0, 0);
+			this.tableLayoutPanelChart1_Desc2.Controls.Add(this.label31, 0, 1);
+			this.tableLayoutPanelChart1_Desc2.Controls.Add(this.label32, 0, 2);
+			this.tableLayoutPanelChart1_Desc2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart1_Desc2.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart1_Desc2.Margin = new System.Windows.Forms.Padding(4);
+			this.tableLayoutPanelChart1_Desc2.Name = "tableLayoutPanelChart1_Desc2";
+			this.tableLayoutPanelChart1_Desc2.RowCount = 3;
+			this.tableLayoutPanelChart1_Desc2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+			this.tableLayoutPanelChart1_Desc2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+			this.tableLayoutPanelChart1_Desc2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+			this.tableLayoutPanelChart1_Desc2.Size = new System.Drawing.Size(165, 69);
+			this.tableLayoutPanelChart1_Desc2.TabIndex = 0;
+			// 
+			// label30
+			// 
+			this.label30.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label30.ForeColor = System.Drawing.Color.Transparent;
+			this.label30.Location = new System.Drawing.Point(4, 0);
+			this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label30.Name = "label30";
+			this.label30.Size = new System.Drawing.Size(157, 20);
+			this.label30.TabIndex = 0;
+			this.label30.Text = "沼气量(M3)夜";
+			this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label31
+			// 
+			this.label31.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label31.ForeColor = System.Drawing.Color.Transparent;
+			this.label31.Location = new System.Drawing.Point(4, 20);
+			this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label31.Name = "label31";
+			this.label31.Size = new System.Drawing.Size(157, 20);
+			this.label31.TabIndex = 1;
+			this.label31.Text = "发电量(kWh)夜";
+			this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label32
+			// 
+			this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label32.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label32.ForeColor = System.Drawing.Color.Transparent;
+			this.label32.Location = new System.Drawing.Point(4, 40);
+			this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label32.Name = "label32";
+			this.label32.Size = new System.Drawing.Size(157, 29);
+			this.label32.TabIndex = 2;
+			this.label32.Text = "当班人 夜";
+			this.label32.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// panel2
+			// 
+			this.panel2.Controls.Add(this.label2);
+			this.panel2.Controls.Add(this.label19);
+			this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel2.Location = new System.Drawing.Point(3, 3);
+			this.panel2.Name = "panel2";
+			this.panel2.Size = new System.Drawing.Size(207, 130);
+			this.panel2.TabIndex = 2;
 			// 
 			// label2
 			// 
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.label2.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label2.Location = new System.Drawing.Point(4, 29);
+			this.label2.Location = new System.Drawing.Point(1, 37);
 			this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(204, 36);
+			this.label2.Size = new System.Drawing.Size(205, 40);
 			this.label2.TabIndex = 0;
 			this.label2.Text = "月度生产";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// panel04_2
+			// label19
 			// 
-			this.panel04_2.Controls.Add(this.roundPanel1);
-			this.panel04_2.Controls.Add(this.label44);
-			this.panel04_2.Controls.Add(this.label45);
-			this.panel04_2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel04_2.Location = new System.Drawing.Point(4, 290);
-			this.panel04_2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-			this.panel04_2.Name = "panel04_2";
-			this.panel04_2.Size = new System.Drawing.Size(213, 274);
-			this.panel04_2.TabIndex = 1;
-			// 
-			// label44
-			// 
-			this.label44.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.label44.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label44.Location = new System.Drawing.Point(2, 55);
-			this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label44.Name = "label44";
-			this.label44.Size = new System.Drawing.Size(208, 36);
-			this.label44.TabIndex = 2;
-			this.label44.Text = "统计数据";
-			this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label45
-			// 
-			this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.label45.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-			this.label45.Location = new System.Drawing.Point(2, 19);
-			this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label45.Name = "label45";
-			this.label45.Size = new System.Drawing.Size(204, 36);
-			this.label45.TabIndex = 3;
-			this.label45.Text = "月度生产";
-			this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.label19.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label19.Location = new System.Drawing.Point(1, 77);
+			this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label19.Name = "label19";
+			this.label19.Size = new System.Drawing.Size(205, 35);
+			this.label19.TabIndex = 0;
+			this.label19.Text = "统计数据";
+			this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// panel04_32
 			// 
@@ -894,7 +1069,7 @@ namespace EBoard
 			this.panel1.Controls.Add(this.label26);
 			this.panel1.Controls.Add(this.label28);
 			this.panel1.Location = new System.Drawing.Point(872, 100);
-			this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panel1.Margin = new System.Windows.Forms.Padding(4);
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(460, 154);
 			this.panel1.TabIndex = 5;
@@ -904,10 +1079,10 @@ namespace EBoard
 			this.labelEnergyNightIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelEnergyNightIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(37)))), ((int)(((byte)(32)))));
-			this.labelEnergyNightIndicator.Location = new System.Drawing.Point(268, 0);
+			this.labelEnergyNightIndicator.Location = new System.Drawing.Point(268, 10);
 			this.labelEnergyNightIndicator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelEnergyNightIndicator.Name = "labelEnergyNightIndicator";
-			this.labelEnergyNightIndicator.Size = new System.Drawing.Size(19, 92);
+			this.labelEnergyNightIndicator.Size = new System.Drawing.Size(19, 86);
 			this.labelEnergyNightIndicator.TabIndex = 3;
 			// 
 			// label27
@@ -927,10 +1102,10 @@ namespace EBoard
 			this.labelBiogasDayIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelBiogasDayIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
-			this.labelBiogasDayIndicator.Location = new System.Drawing.Point(72, 21);
+			this.labelBiogasDayIndicator.Location = new System.Drawing.Point(72, 10);
 			this.labelBiogasDayIndicator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelBiogasDayIndicator.Name = "labelBiogasDayIndicator";
-			this.labelBiogasDayIndicator.Size = new System.Drawing.Size(19, 71);
+			this.labelBiogasDayIndicator.Size = new System.Drawing.Size(19, 86);
 			this.labelBiogasDayIndicator.TabIndex = 3;
 			// 
 			// label23
@@ -950,7 +1125,7 @@ namespace EBoard
 			this.labelBiogasNightIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelBiogasNightIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(121)))));
-			this.labelBiogasNightIndicator.Location = new System.Drawing.Point(170, 6);
+			this.labelBiogasNightIndicator.Location = new System.Drawing.Point(170, 10);
 			this.labelBiogasNightIndicator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelBiogasNightIndicator.Name = "labelBiogasNightIndicator";
 			this.labelBiogasNightIndicator.Size = new System.Drawing.Size(19, 86);
@@ -961,7 +1136,7 @@ namespace EBoard
 			this.labelEnergyDayIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelEnergyDayIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(30)))), ((int)(((byte)(25)))));
-			this.labelEnergyDayIndicator.Location = new System.Drawing.Point(365, 6);
+			this.labelEnergyDayIndicator.Location = new System.Drawing.Point(365, 10);
 			this.labelEnergyDayIndicator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelEnergyDayIndicator.Name = "labelEnergyDayIndicator";
 			this.labelEnergyDayIndicator.Size = new System.Drawing.Size(19, 86);
@@ -1069,186 +1244,26 @@ namespace EBoard
 			this.panel03_12.Controls.Add(this.chartCurrMonth1);
 			this.panel03_12.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel03_12.Location = new System.Drawing.Point(225, 4);
-			this.panel03_12.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+			this.panel03_12.Margin = new System.Windows.Forms.Padding(4);
 			this.panel03_12.Name = "panel03_12";
 			this.panel03_12.Size = new System.Drawing.Size(1355, 273);
 			this.panel03_12.TabIndex = 6;
 			// 
-			// panelChartDesc1
+			// tableLayoutPanelChart2_Left
 			// 
-			this.panelChartDesc1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.panelChartDesc1.BackColor = System.Drawing.Color.Snow;
-			this.panelChartDesc1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.panelChartDesc1.Controls.Add(this.tableLayoutPanel3);
-			this.panelChartDesc1.Location = new System.Drawing.Point(22, 109);
-			this.panelChartDesc1.Margin = new System.Windows.Forms.Padding(0);
-			this.panelChartDesc1.Name = "panelChartDesc1";
-			this.panelChartDesc1.RoundCorners = EBoard.Common.RoundCornerEnum.All;
-			this.panelChartDesc1.RoundRadius = 15;
-			this.panelChartDesc1.Size = new System.Drawing.Size(165, 155);
-			this.panelChartDesc1.TabIndex = 1;
-			// 
-			// tableLayoutPanel3
-			// 
-			this.tableLayoutPanel3.ColumnCount = 1;
-			this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel3.Controls.Add(this.panelDesc1_1, 0, 0);
-			this.tableLayoutPanel3.Controls.Add(this.panelDesc1_2, 0, 1);
-			this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-			this.tableLayoutPanel3.RowCount = 2;
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.02479F));
-			this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.97521F));
-			this.tableLayoutPanel3.Size = new System.Drawing.Size(165, 155);
-			this.tableLayoutPanel3.TabIndex = 0;
-			// 
-			// panelDesc1_1
-			// 
-			this.panelDesc1_1.BackColor = System.Drawing.Color.White;
-			this.panelDesc1_1.Controls.Add(this.tableLayoutPanel5);
-			this.panelDesc1_1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelDesc1_1.Location = new System.Drawing.Point(4, 4);
-			this.panelDesc1_1.Margin = new System.Windows.Forms.Padding(4);
-			this.panelDesc1_1.Name = "panelDesc1_1";
-			this.panelDesc1_1.Size = new System.Drawing.Size(157, 80);
-			this.panelDesc1_1.TabIndex = 0;
-			// 
-			// tableLayoutPanel5
-			// 
-			this.tableLayoutPanel5.ColumnCount = 1;
-			this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel5.Controls.Add(this.label33, 0, 0);
-			this.tableLayoutPanel5.Controls.Add(this.label34, 0, 1);
-			this.tableLayoutPanel5.Controls.Add(this.label35, 0, 2);
-			this.tableLayoutPanel5.Controls.Add(this.label36, 0, 3);
-			this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-			this.tableLayoutPanel5.RowCount = 4;
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.tableLayoutPanel5.Size = new System.Drawing.Size(157, 80);
-			this.tableLayoutPanel5.TabIndex = 0;
-			// 
-			// label33
-			// 
-			this.label33.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label33.Location = new System.Drawing.Point(4, 0);
-			this.label33.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label33.Name = "label33";
-			this.label33.Size = new System.Drawing.Size(149, 20);
-			this.label33.TabIndex = 0;
-			this.label33.Text = "日期";
-			this.label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label34
-			// 
-			this.label34.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label34.Location = new System.Drawing.Point(4, 20);
-			this.label34.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label34.Name = "label34";
-			this.label34.Size = new System.Drawing.Size(149, 20);
-			this.label34.TabIndex = 1;
-			this.label34.Text = "沼气量(M³)日";
-			this.label34.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label35
-			// 
-			this.label35.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label35.Location = new System.Drawing.Point(4, 40);
-			this.label35.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label35.Name = "label35";
-			this.label35.Size = new System.Drawing.Size(149, 20);
-			this.label35.TabIndex = 2;
-			this.label35.Text = "发电量(kWh)日";
-			this.label35.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label36
-			// 
-			this.label36.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label36.Location = new System.Drawing.Point(4, 60);
-			this.label36.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label36.Name = "label36";
-			this.label36.Size = new System.Drawing.Size(149, 20);
-			this.label36.TabIndex = 3;
-			this.label36.Text = "当班人 日";
-			this.label36.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// panelDesc1_2
-			// 
-			this.panelDesc1_2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(30)))), ((int)(((byte)(25)))));
-			this.panelDesc1_2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.panelDesc1_2.Controls.Add(this.tableLayoutPanel4);
-			this.panelDesc1_2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panelDesc1_2.Location = new System.Drawing.Point(0, 88);
-			this.panelDesc1_2.Margin = new System.Windows.Forms.Padding(0);
-			this.panelDesc1_2.Name = "panelDesc1_2";
-			this.panelDesc1_2.RoundCorners = EBoard.Common.RoundCornerEnum.All;
-			this.panelDesc1_2.RoundRadius = 0;
-			this.panelDesc1_2.Size = new System.Drawing.Size(165, 67);
-			this.panelDesc1_2.TabIndex = 1;
-			// 
-			// tableLayoutPanel4
-			// 
-			this.tableLayoutPanel4.ColumnCount = 1;
-			this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel4.Controls.Add(this.label30, 0, 0);
-			this.tableLayoutPanel4.Controls.Add(this.label31, 0, 1);
-			this.tableLayoutPanel4.Controls.Add(this.label32, 0, 2);
-			this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-			this.tableLayoutPanel4.RowCount = 3;
-			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel4.Size = new System.Drawing.Size(165, 67);
-			this.tableLayoutPanel4.TabIndex = 0;
-			// 
-			// label30
-			// 
-			this.label30.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label30.ForeColor = System.Drawing.Color.Transparent;
-			this.label30.Location = new System.Drawing.Point(4, 0);
-			this.label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label30.Name = "label30";
-			this.label30.Size = new System.Drawing.Size(157, 22);
-			this.label30.TabIndex = 0;
-			this.label30.Text = "沼气量(M3)夜";
-			this.label30.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label31
-			// 
-			this.label31.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label31.ForeColor = System.Drawing.Color.Transparent;
-			this.label31.Location = new System.Drawing.Point(4, 22);
-			this.label31.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label31.Name = "label31";
-			this.label31.Size = new System.Drawing.Size(157, 22);
-			this.label31.TabIndex = 1;
-			this.label31.Text = "发电量(kWh)夜";
-			this.label31.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			// 
-			// label32
-			// 
-			this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label32.ForeColor = System.Drawing.Color.Transparent;
-			this.label32.Location = new System.Drawing.Point(4, 44);
-			this.label32.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-			this.label32.Name = "label32";
-			this.label32.Size = new System.Drawing.Size(157, 23);
-			this.label32.TabIndex = 2;
-			this.label32.Text = "当班人 夜";
-			this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.tableLayoutPanelChart2_Left.ColumnCount = 1;
+			this.tableLayoutPanelChart2_Left.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart2_Left.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.tableLayoutPanelChart2_Left.Controls.Add(this.panel_Chart2_Left_2, 0, 1);
+			this.tableLayoutPanelChart2_Left.Controls.Add(this.panel3, 0, 0);
+			this.tableLayoutPanelChart2_Left.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart2_Left.Location = new System.Drawing.Point(3, 289);
+			this.tableLayoutPanelChart2_Left.Name = "tableLayoutPanelChart2_Left";
+			this.tableLayoutPanelChart2_Left.RowCount = 2;
+			this.tableLayoutPanelChart2_Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart2_Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart2_Left.Size = new System.Drawing.Size(215, 276);
+			this.tableLayoutPanelChart2_Left.TabIndex = 5;
 			// 
 			// roundPanel1
 			// 
@@ -1257,70 +1272,70 @@ namespace EBoard
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.roundPanel1.BackColor = System.Drawing.Color.Snow;
 			this.roundPanel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.roundPanel1.Controls.Add(this.tableLayoutPanel6);
-			this.roundPanel1.Location = new System.Drawing.Point(21, 99);
+			this.roundPanel1.Controls.Add(this.tableLayoutPanelChart2_Desc);
+			this.roundPanel1.Location = new System.Drawing.Point(24, 1);
 			this.roundPanel1.Margin = new System.Windows.Forms.Padding(0);
 			this.roundPanel1.Name = "roundPanel1";
 			this.roundPanel1.RoundCorners = EBoard.Common.RoundCornerEnum.All;
 			this.roundPanel1.RoundRadius = 15;
-			this.roundPanel1.Size = new System.Drawing.Size(165, 156);
+			this.roundPanel1.Size = new System.Drawing.Size(165, 110);
 			this.roundPanel1.TabIndex = 4;
 			// 
-			// tableLayoutPanel6
+			// tableLayoutPanelChart2_Desc
 			// 
-			this.tableLayoutPanel6.ColumnCount = 1;
-			this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel6.Controls.Add(this.panelChartDesc2, 0, 0);
-			this.tableLayoutPanel6.Controls.Add(this.roundPanel2, 0, 1);
-			this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-			this.tableLayoutPanel6.RowCount = 2;
-			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 57.02479F));
-			this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 42.97521F));
-			this.tableLayoutPanel6.Size = new System.Drawing.Size(165, 156);
-			this.tableLayoutPanel6.TabIndex = 0;
+			this.tableLayoutPanelChart2_Desc.ColumnCount = 1;
+			this.tableLayoutPanelChart2_Desc.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart2_Desc.Controls.Add(this.panelChartDesc2, 0, 0);
+			this.tableLayoutPanelChart2_Desc.Controls.Add(this.roundPanel2, 0, 1);
+			this.tableLayoutPanelChart2_Desc.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart2_Desc.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart2_Desc.Margin = new System.Windows.Forms.Padding(4);
+			this.tableLayoutPanelChart2_Desc.Name = "tableLayoutPanelChart2_Desc";
+			this.tableLayoutPanelChart2_Desc.RowCount = 2;
+			this.tableLayoutPanelChart2_Desc.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart2_Desc.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.tableLayoutPanelChart2_Desc.Size = new System.Drawing.Size(165, 110);
+			this.tableLayoutPanelChart2_Desc.TabIndex = 0;
 			// 
 			// panelChartDesc2
 			// 
 			this.panelChartDesc2.BackColor = System.Drawing.Color.White;
-			this.panelChartDesc2.Controls.Add(this.tableLayoutPanel7);
+			this.panelChartDesc2.Controls.Add(this.tableLayoutPanelChart2_Desc1);
 			this.panelChartDesc2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panelChartDesc2.Location = new System.Drawing.Point(4, 4);
 			this.panelChartDesc2.Margin = new System.Windows.Forms.Padding(4);
 			this.panelChartDesc2.Name = "panelChartDesc2";
-			this.panelChartDesc2.Size = new System.Drawing.Size(157, 80);
+			this.panelChartDesc2.Size = new System.Drawing.Size(157, 47);
 			this.panelChartDesc2.TabIndex = 0;
 			// 
-			// tableLayoutPanel7
+			// tableLayoutPanelChart2_Desc1
 			// 
-			this.tableLayoutPanel7.ColumnCount = 1;
-			this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel7.Controls.Add(this.label37, 0, 0);
-			this.tableLayoutPanel7.Controls.Add(this.label38, 0, 1);
-			this.tableLayoutPanel7.Controls.Add(this.label39, 0, 2);
-			this.tableLayoutPanel7.Controls.Add(this.label40, 0, 3);
-			this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-			this.tableLayoutPanel7.RowCount = 4;
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-			this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-			this.tableLayoutPanel7.Size = new System.Drawing.Size(157, 80);
-			this.tableLayoutPanel7.TabIndex = 0;
+			this.tableLayoutPanelChart2_Desc1.ColumnCount = 1;
+			this.tableLayoutPanelChart2_Desc1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart2_Desc1.Controls.Add(this.label37, 0, 0);
+			this.tableLayoutPanelChart2_Desc1.Controls.Add(this.label38, 0, 1);
+			this.tableLayoutPanelChart2_Desc1.Controls.Add(this.label39, 0, 2);
+			this.tableLayoutPanelChart2_Desc1.Controls.Add(this.label40, 0, 3);
+			this.tableLayoutPanelChart2_Desc1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart2_Desc1.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart2_Desc1.Margin = new System.Windows.Forms.Padding(4);
+			this.tableLayoutPanelChart2_Desc1.Name = "tableLayoutPanelChart2_Desc1";
+			this.tableLayoutPanelChart2_Desc1.RowCount = 4;
+			this.tableLayoutPanelChart2_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+			this.tableLayoutPanelChart2_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+			this.tableLayoutPanelChart2_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
+			this.tableLayoutPanelChart2_Desc1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34F));
+			this.tableLayoutPanelChart2_Desc1.Size = new System.Drawing.Size(157, 47);
+			this.tableLayoutPanelChart2_Desc1.TabIndex = 0;
 			// 
 			// label37
 			// 
 			this.label37.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label37.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label37.Location = new System.Drawing.Point(4, 0);
 			this.label37.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label37.Name = "label37";
-			this.label37.Size = new System.Drawing.Size(149, 20);
+			this.label37.Size = new System.Drawing.Size(149, 10);
 			this.label37.TabIndex = 0;
 			this.label37.Text = "日期";
 			this.label37.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1328,10 +1343,11 @@ namespace EBoard
 			// label38
 			// 
 			this.label38.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label38.Location = new System.Drawing.Point(4, 20);
+			this.label38.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label38.Location = new System.Drawing.Point(4, 10);
 			this.label38.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label38.Name = "label38";
-			this.label38.Size = new System.Drawing.Size(149, 20);
+			this.label38.Size = new System.Drawing.Size(149, 10);
 			this.label38.TabIndex = 1;
 			this.label38.Text = "沼气量(M³)日";
 			this.label38.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1339,10 +1355,11 @@ namespace EBoard
 			// label39
 			// 
 			this.label39.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label39.Location = new System.Drawing.Point(4, 40);
+			this.label39.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label39.Location = new System.Drawing.Point(4, 20);
 			this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label39.Name = "label39";
-			this.label39.Size = new System.Drawing.Size(149, 20);
+			this.label39.Size = new System.Drawing.Size(149, 10);
 			this.label39.TabIndex = 2;
 			this.label39.Text = "发电量(kWh)日";
 			this.label39.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1350,54 +1367,56 @@ namespace EBoard
 			// label40
 			// 
 			this.label40.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label40.Location = new System.Drawing.Point(4, 60);
+			this.label40.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label40.Location = new System.Drawing.Point(4, 30);
 			this.label40.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label40.Name = "label40";
-			this.label40.Size = new System.Drawing.Size(149, 20);
+			this.label40.Size = new System.Drawing.Size(149, 17);
 			this.label40.TabIndex = 3;
 			this.label40.Text = "当班人 日";
-			this.label40.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.label40.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// roundPanel2
 			// 
 			this.roundPanel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(30)))), ((int)(((byte)(25)))));
 			this.roundPanel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-			this.roundPanel2.Controls.Add(this.tableLayoutPanel8);
+			this.roundPanel2.Controls.Add(this.tableLayoutPanelChart2_Desc2);
 			this.roundPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.roundPanel2.Location = new System.Drawing.Point(0, 88);
+			this.roundPanel2.Location = new System.Drawing.Point(0, 55);
 			this.roundPanel2.Margin = new System.Windows.Forms.Padding(0);
 			this.roundPanel2.Name = "roundPanel2";
 			this.roundPanel2.RoundCorners = EBoard.Common.RoundCornerEnum.All;
 			this.roundPanel2.RoundRadius = 0;
-			this.roundPanel2.Size = new System.Drawing.Size(165, 68);
+			this.roundPanel2.Size = new System.Drawing.Size(165, 55);
 			this.roundPanel2.TabIndex = 1;
 			// 
-			// tableLayoutPanel8
+			// tableLayoutPanelChart2_Desc2
 			// 
-			this.tableLayoutPanel8.ColumnCount = 1;
-			this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel8.Controls.Add(this.label41, 0, 0);
-			this.tableLayoutPanel8.Controls.Add(this.label42, 0, 1);
-			this.tableLayoutPanel8.Controls.Add(this.label43, 0, 2);
-			this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tableLayoutPanel8.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel8.Margin = new System.Windows.Forms.Padding(4);
-			this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-			this.tableLayoutPanel8.RowCount = 3;
-			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-			this.tableLayoutPanel8.Size = new System.Drawing.Size(165, 68);
-			this.tableLayoutPanel8.TabIndex = 0;
+			this.tableLayoutPanelChart2_Desc2.ColumnCount = 1;
+			this.tableLayoutPanelChart2_Desc2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+			this.tableLayoutPanelChart2_Desc2.Controls.Add(this.label41, 0, 0);
+			this.tableLayoutPanelChart2_Desc2.Controls.Add(this.label42, 0, 1);
+			this.tableLayoutPanelChart2_Desc2.Controls.Add(this.label43, 0, 2);
+			this.tableLayoutPanelChart2_Desc2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tableLayoutPanelChart2_Desc2.Location = new System.Drawing.Point(0, 0);
+			this.tableLayoutPanelChart2_Desc2.Margin = new System.Windows.Forms.Padding(4);
+			this.tableLayoutPanelChart2_Desc2.Name = "tableLayoutPanelChart2_Desc2";
+			this.tableLayoutPanelChart2_Desc2.RowCount = 3;
+			this.tableLayoutPanelChart2_Desc2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+			this.tableLayoutPanelChart2_Desc2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
+			this.tableLayoutPanelChart2_Desc2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
+			this.tableLayoutPanelChart2_Desc2.Size = new System.Drawing.Size(165, 55);
+			this.tableLayoutPanelChart2_Desc2.TabIndex = 0;
 			// 
 			// label41
 			// 
 			this.label41.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label41.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label41.ForeColor = System.Drawing.Color.Transparent;
 			this.label41.Location = new System.Drawing.Point(4, 0);
 			this.label41.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label41.Name = "label41";
-			this.label41.Size = new System.Drawing.Size(157, 22);
+			this.label41.Size = new System.Drawing.Size(157, 16);
 			this.label41.TabIndex = 0;
 			this.label41.Text = "沼气量(M³)夜";
 			this.label41.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1405,11 +1424,12 @@ namespace EBoard
 			// label42
 			// 
 			this.label42.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label42.ForeColor = System.Drawing.Color.Transparent;
-			this.label42.Location = new System.Drawing.Point(4, 22);
+			this.label42.Location = new System.Drawing.Point(4, 16);
 			this.label42.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label42.Name = "label42";
-			this.label42.Size = new System.Drawing.Size(157, 22);
+			this.label42.Size = new System.Drawing.Size(157, 16);
 			this.label42.TabIndex = 1;
 			this.label42.Text = "发电量(kWh)夜";
 			this.label42.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1417,14 +1437,60 @@ namespace EBoard
 			// label43
 			// 
 			this.label43.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.label43.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label43.ForeColor = System.Drawing.Color.Transparent;
-			this.label43.Location = new System.Drawing.Point(4, 44);
+			this.label43.Location = new System.Drawing.Point(4, 32);
 			this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label43.Name = "label43";
-			this.label43.Size = new System.Drawing.Size(157, 24);
+			this.label43.Size = new System.Drawing.Size(157, 23);
 			this.label43.TabIndex = 2;
 			this.label43.Text = "当班人 夜";
-			this.label43.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.label43.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// panel3
+			// 
+			this.panel3.Controls.Add(this.label44);
+			this.panel3.Controls.Add(this.label45);
+			this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel3.Location = new System.Drawing.Point(3, 3);
+			this.panel3.Name = "panel3";
+			this.panel3.Size = new System.Drawing.Size(209, 132);
+			this.panel3.TabIndex = 5;
+			// 
+			// label44
+			// 
+			this.label44.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label44.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label44.Location = new System.Drawing.Point(1, 77);
+			this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label44.Name = "label44";
+			this.label44.Size = new System.Drawing.Size(205, 40);
+			this.label44.TabIndex = 2;
+			this.label44.Text = "统计数据";
+			this.label44.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// label45
+			// 
+			this.label45.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.label45.Font = new System.Drawing.Font("SimHei", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+			this.label45.Location = new System.Drawing.Point(1, 37);
+			this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+			this.label45.Name = "label45";
+			this.label45.Size = new System.Drawing.Size(205, 40);
+			this.label45.TabIndex = 3;
+			this.label45.Text = "月度生产";
+			this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// panel_Chart2_Left_2
+			// 
+			this.panel_Chart2_Left_2.Controls.Add(this.roundPanel1);
+			this.panel_Chart2_Left_2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel_Chart2_Left_2.Location = new System.Drawing.Point(3, 141);
+			this.panel_Chart2_Left_2.Name = "panel_Chart2_Left_2";
+			this.panel_Chart2_Left_2.Size = new System.Drawing.Size(209, 132);
+			this.panel_Chart2_Left_2.TabIndex = 6;
 			// 
 			// MainForm
 			// 
@@ -1455,22 +1521,26 @@ namespace EBoard
 			this.tableLayoutPanel03.ResumeLayout(false);
 			this.tableLayoutPanel03.PerformLayout();
 			this.panel04_1.ResumeLayout(false);
-			this.panel04_2.ResumeLayout(false);
+			this.tableLayoutPanelChart1_Left.ResumeLayout(false);
+			this.panelChartDesc1.ResumeLayout(false);
+			this.tableLayoutPanelChart1_Desc.ResumeLayout(false);
+			this.panelDesc1_1.ResumeLayout(false);
+			this.tableLayoutPanelChart1_Desc1.ResumeLayout(false);
+			this.panelDesc1_2.ResumeLayout(false);
+			this.tableLayoutPanelChart1_Desc2.ResumeLayout(false);
+			this.panel2.ResumeLayout(false);
 			this.panel04_32.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			this.panel03_12.ResumeLayout(false);
-			this.panelChartDesc1.ResumeLayout(false);
-			this.tableLayoutPanel3.ResumeLayout(false);
-			this.panelDesc1_1.ResumeLayout(false);
-			this.tableLayoutPanel5.ResumeLayout(false);
-			this.panelDesc1_2.ResumeLayout(false);
-			this.tableLayoutPanel4.ResumeLayout(false);
+			this.tableLayoutPanelChart2_Left.ResumeLayout(false);
 			this.roundPanel1.ResumeLayout(false);
-			this.tableLayoutPanel6.ResumeLayout(false);
+			this.tableLayoutPanelChart2_Desc.ResumeLayout(false);
 			this.panelChartDesc2.ResumeLayout(false);
-			this.tableLayoutPanel7.ResumeLayout(false);
+			this.tableLayoutPanelChart2_Desc1.ResumeLayout(false);
 			this.roundPanel2.ResumeLayout(false);
-			this.tableLayoutPanel8.ResumeLayout(false);
+			this.tableLayoutPanelChart2_Desc2.ResumeLayout(false);
+			this.panel3.ResumeLayout(false);
+			this.panel_Chart2_Left_2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -1518,7 +1588,6 @@ namespace EBoard
 		private System.Windows.Forms.Label labelTotalRuntime1;
 		private System.Windows.Forms.Label labelCurrWeekDay;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel03;
-		private System.Windows.Forms.Panel panel04_2;
 		private System.Windows.Forms.Panel panel04_1;
 		private System.Windows.Forms.Label label19;
 		private System.Windows.Forms.Label label2;
@@ -1542,34 +1611,39 @@ namespace EBoard
 		private System.Windows.Forms.Label labelWorker;
 		private System.Windows.Forms.Panel panel03_12;
 		private RoundPanel panelChartDesc1;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart1_Desc;
 		private System.Windows.Forms.Panel panelDesc1_1;
 		private EBoard.Common.RoundPanel panelDesc1_2;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart1_Desc2;
 		private System.Windows.Forms.Label label30;
 		private System.Windows.Forms.Label label31;
 		private System.Windows.Forms.Label label32;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart1_Desc1;
 		private System.Windows.Forms.Label label33;
 		private System.Windows.Forms.Label label34;
 		private System.Windows.Forms.Label label35;
 		private System.Windows.Forms.Label label36;
 		private RoundPanel roundPanel1;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart2_Desc;
 		private System.Windows.Forms.Panel panelChartDesc2;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart2_Desc1;
 		private System.Windows.Forms.Label label37;
 		private System.Windows.Forms.Label label38;
 		private System.Windows.Forms.Label label39;
 		private System.Windows.Forms.Label label40;
 		private RoundPanel roundPanel2;
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart2_Desc2;
 		private System.Windows.Forms.Label label41;
 		private System.Windows.Forms.Label label42;
 		private System.Windows.Forms.Label label43;
 		private System.Windows.Forms.Label label44;
 		private System.Windows.Forms.Label label45;
 		private System.Windows.Forms.ToolTip toolTip;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart1_Left;
+		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.TableLayoutPanel tableLayoutPanelChart2_Left;
+		private System.Windows.Forms.Panel panel3;
+		private System.Windows.Forms.Panel panel_Chart2_Left_2;
 	}
 }
 

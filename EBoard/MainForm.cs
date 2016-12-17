@@ -439,17 +439,16 @@ namespace EBoard
 
 			var series1 = chart.Series.Add("沼气量日");
 			series1.XValueMember = "Day";
-			series1.YValueMembers = "BiogasDay";
+			series1.YValueMembers = "DayBiogas";
 			series1.BackHatchStyle = ChartHatchStyle.None;
 			series1.Color = Color.FromArgb(72, 130, 189);
 			series1.BorderColor = Color.Black;
 			series1.LabelBackColor = Color.Transparent;
 			series1.CustomProperties = "PointWidth=0.8";
 
-
 			var series2 = chart.Series.Add("发电量日");
 			series2.XValueMember = "Day";
-			series2.YValueMembers = "EngeryProductionDay";
+			series2.YValueMembers = "DayEngeryProduction";
 			series2.BackHatchStyle = ChartHatchStyle.None;
 			series2.Color = Color.FromArgb(22, 52, 121);
 			series2.BorderColor = Color.Black;
@@ -457,7 +456,7 @@ namespace EBoard
 
 			var series3 = chart.Series.Add("沼气量夜");
 			series3.XValueMember = "Day";
-			series3.YValueMembers = "BiogasNight";
+			series3.YValueMembers = "NightBiogas";
 			series3.BackHatchStyle = ChartHatchStyle.None;
 			series3.Color = Color.FromArgb(147, 37, 32);
 			series3.BorderColor = Color.Black;
@@ -465,7 +464,7 @@ namespace EBoard
 
 			var series4 = chart.Series.Add("发电量夜");
 			series4.XValueMember = "Day";
-			series4.YValueMembers = "EngeryProductionNight";
+			series4.YValueMembers = "NightEngeryProduction";
 			series4.BackHatchStyle = ChartHatchStyle.None;
 			series4.Color = Color.FromArgb(120, 30, 25);
 			series4.BorderColor = Color.Black;
@@ -544,12 +543,12 @@ namespace EBoard
 
 		private Dictionary<int, string> ChartLabelMapping = new Dictionary<int, string>
 		{
-			{1, "BiogasDay" }
-			,{2, "EngeryProductionDay" }
+			{1, "DayBiogas" }
+			,{2, "DayEngeryProduction" }
 			,{3, "DayWorkers1" }
 			,{4, "DayWorkers2" }
-			,{5, "BiogasNight" }
-			,{6, "EngeryProductionNight" }
+			,{5, "NightBiogas" }
+			,{6, "NightEngeryProduction" }
 			,{7, "NightWorkers1" }
 			,{8, "NightWorkers2" }
 		};
