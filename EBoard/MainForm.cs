@@ -450,7 +450,7 @@ namespace EBoard
 			series2.XValueMember = "Day";
 			series2.YValueMembers = "DayEngeryProduction";
 			series2.BackHatchStyle = ChartHatchStyle.None;
-			series2.Color = Color.FromArgb(22, 52, 121);
+			series2.Color = Color.FromArgb(147, 37, 32);
 			series2.BorderColor = Color.Black;
 			series2.CustomProperties = "PointWidth=0.8";
 
@@ -458,7 +458,7 @@ namespace EBoard
 			series3.XValueMember = "Day";
 			series3.YValueMembers = "NightBiogas";
 			series3.BackHatchStyle = ChartHatchStyle.None;
-			series3.Color = Color.FromArgb(147, 37, 32);
+			series3.Color = Color.FromArgb(22, 52, 121);
 			series3.BorderColor = Color.Black;
 			series3.CustomProperties = "PointWidth=0.8";
 

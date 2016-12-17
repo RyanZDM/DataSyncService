@@ -31,10 +31,10 @@ namespace EBoard
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea19 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series19 = new System.Windows.Forms.DataVisualization.Charting.Series();
-			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea20 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-			System.Windows.Forms.DataVisualization.Charting.Series series20 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+			System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+			System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
 			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
 			this.label3 = new System.Windows.Forms.Label();
 			this.labelTotalRuntime2 = new System.Windows.Forms.Label();
@@ -115,6 +115,7 @@ namespace EBoard
 			this.labelLine = new System.Windows.Forms.Label();
 			this.panel03_12 = new System.Windows.Forms.Panel();
 			this.tableLayoutPanelChart2_Left = new System.Windows.Forms.TableLayoutPanel();
+			this.panel_Chart2_Left_2 = new System.Windows.Forms.Panel();
 			this.roundPanel1 = new EBoard.Common.RoundPanel(this.components);
 			this.tableLayoutPanelChart2_Desc = new System.Windows.Forms.TableLayoutPanel();
 			this.panelChartDesc2 = new System.Windows.Forms.Panel();
@@ -132,7 +133,6 @@ namespace EBoard
 			this.label44 = new System.Windows.Forms.Label();
 			this.label45 = new System.Windows.Forms.Label();
 			this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.panel_Chart2_Left_2 = new System.Windows.Forms.Panel();
 			this.tableLayoutPanel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.chartCurrMonth1)).BeginInit();
 			this.panel02.SuspendLayout();
@@ -154,6 +154,7 @@ namespace EBoard
 			this.panel1.SuspendLayout();
 			this.panel03_12.SuspendLayout();
 			this.tableLayoutPanelChart2_Left.SuspendLayout();
+			this.panel_Chart2_Left_2.SuspendLayout();
 			this.roundPanel1.SuspendLayout();
 			this.tableLayoutPanelChart2_Desc.SuspendLayout();
 			this.panelChartDesc2.SuspendLayout();
@@ -161,7 +162,6 @@ namespace EBoard
 			this.roundPanel2.SuspendLayout();
 			this.tableLayoutPanelChart2_Desc2.SuspendLayout();
 			this.panel3.SuspendLayout();
-			this.panel_Chart2_Left_2.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -242,18 +242,18 @@ namespace EBoard
 			// chartCurrMonth1
 			// 
 			this.chartCurrMonth1.BackColor = System.Drawing.Color.Transparent;
-			chartArea19.BackColor = System.Drawing.Color.Transparent;
-			chartArea19.Name = "ChartArea1";
-			this.chartCurrMonth1.ChartAreas.Add(chartArea19);
+			chartArea1.BackColor = System.Drawing.Color.Transparent;
+			chartArea1.Name = "ChartArea1";
+			this.chartCurrMonth1.ChartAreas.Add(chartArea1);
 			this.chartCurrMonth1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.chartCurrMonth1.Location = new System.Drawing.Point(0, 0);
 			this.chartCurrMonth1.Margin = new System.Windows.Forms.Padding(2);
 			this.chartCurrMonth1.Name = "chartCurrMonth1";
-			series19.ChartArea = "ChartArea1";
-			series19.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
-			series19.CustomProperties = "PointWidth=0.1";
-			series19.Name = "Series1";
-			this.chartCurrMonth1.Series.Add(series19);
+			series1.ChartArea = "ChartArea1";
+			series1.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
+			series1.CustomProperties = "PointWidth=0.1";
+			series1.Name = "Series1";
+			this.chartCurrMonth1.Series.Add(series1);
 			this.chartCurrMonth1.Size = new System.Drawing.Size(1355, 273);
 			this.chartCurrMonth1.TabIndex = 0;
 			this.chartCurrMonth1.Text = "chart1";
@@ -744,16 +744,16 @@ namespace EBoard
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.chartCurrMonth2.BackColor = System.Drawing.Color.Transparent;
-			chartArea20.BackColor = System.Drawing.Color.Transparent;
-			chartArea20.Name = "ChartArea1";
-			this.chartCurrMonth2.ChartAreas.Add(chartArea20);
+			chartArea2.BackColor = System.Drawing.Color.Transparent;
+			chartArea2.Name = "ChartArea1";
+			this.chartCurrMonth2.ChartAreas.Add(chartArea2);
 			this.chartCurrMonth2.Location = new System.Drawing.Point(2, 2);
 			this.chartCurrMonth2.Margin = new System.Windows.Forms.Padding(2);
 			this.chartCurrMonth2.Name = "chartCurrMonth2";
-			series20.ChartArea = "ChartArea1";
-			series20.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
-			series20.Name = "Series1";
-			this.chartCurrMonth2.Series.Add(series20);
+			series2.ChartArea = "ChartArea1";
+			series2.Color = System.Drawing.Color.FromArgb(((int)(((byte)(72)))), ((int)(((byte)(130)))), ((int)(((byte)(189)))));
+			series2.Name = "Series1";
+			this.chartCurrMonth2.Series.Add(series2);
 			this.chartCurrMonth2.Size = new System.Drawing.Size(849, 271);
 			this.chartCurrMonth2.TabIndex = 0;
 			this.chartCurrMonth2.Text = "chart2";
@@ -1079,7 +1079,7 @@ namespace EBoard
 			this.labelEnergyNightIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelEnergyNightIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(147)))), ((int)(((byte)(37)))), ((int)(((byte)(32)))));
-			this.labelEnergyNightIndicator.Location = new System.Drawing.Point(268, 10);
+			this.labelEnergyNightIndicator.Location = new System.Drawing.Point(171, 10);
 			this.labelEnergyNightIndicator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelEnergyNightIndicator.Name = "labelEnergyNightIndicator";
 			this.labelEnergyNightIndicator.Size = new System.Drawing.Size(19, 86);
@@ -1089,7 +1089,7 @@ namespace EBoard
 			// 
 			this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label27.Location = new System.Drawing.Point(236, 101);
+			this.label27.Location = new System.Drawing.Point(139, 101);
 			this.label27.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label27.Name = "label27";
 			this.label27.Size = new System.Drawing.Size(81, 22);
@@ -1125,7 +1125,7 @@ namespace EBoard
 			this.labelBiogasNightIndicator.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
 			this.labelBiogasNightIndicator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(22)))), ((int)(((byte)(52)))), ((int)(((byte)(121)))));
-			this.labelBiogasNightIndicator.Location = new System.Drawing.Point(170, 10);
+			this.labelBiogasNightIndicator.Location = new System.Drawing.Point(270, 10);
 			this.labelBiogasNightIndicator.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelBiogasNightIndicator.Name = "labelBiogasNightIndicator";
 			this.labelBiogasNightIndicator.Size = new System.Drawing.Size(19, 86);
@@ -1146,7 +1146,7 @@ namespace EBoard
 			// 
 			this.label25.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label25.Location = new System.Drawing.Point(139, 101);
+			this.label25.Location = new System.Drawing.Point(239, 101);
 			this.label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label25.Name = "label25";
 			this.label25.Size = new System.Drawing.Size(81, 22);
@@ -1194,7 +1194,7 @@ namespace EBoard
 			// 
 			this.label26.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label26.Location = new System.Drawing.Point(139, 127);
+			this.label26.Location = new System.Drawing.Point(239, 127);
 			this.label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label26.Name = "label26";
 			this.label26.Size = new System.Drawing.Size(81, 22);
@@ -1206,7 +1206,7 @@ namespace EBoard
 			// 
 			this.label28.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label28.Location = new System.Drawing.Point(236, 127);
+			this.label28.Location = new System.Drawing.Point(139, 127);
 			this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.label28.Name = "label28";
 			this.label28.Size = new System.Drawing.Size(81, 22);
@@ -1264,6 +1264,15 @@ namespace EBoard
 			this.tableLayoutPanelChart2_Left.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanelChart2_Left.Size = new System.Drawing.Size(215, 276);
 			this.tableLayoutPanelChart2_Left.TabIndex = 5;
+			// 
+			// panel_Chart2_Left_2
+			// 
+			this.panel_Chart2_Left_2.Controls.Add(this.roundPanel1);
+			this.panel_Chart2_Left_2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.panel_Chart2_Left_2.Location = new System.Drawing.Point(3, 141);
+			this.panel_Chart2_Left_2.Name = "panel_Chart2_Left_2";
+			this.panel_Chart2_Left_2.Size = new System.Drawing.Size(209, 132);
+			this.panel_Chart2_Left_2.TabIndex = 6;
 			// 
 			// roundPanel1
 			// 
@@ -1483,15 +1492,6 @@ namespace EBoard
 			this.label45.Text = "月度生产";
 			this.label45.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// panel_Chart2_Left_2
-			// 
-			this.panel_Chart2_Left_2.Controls.Add(this.roundPanel1);
-			this.panel_Chart2_Left_2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.panel_Chart2_Left_2.Location = new System.Drawing.Point(3, 141);
-			this.panel_Chart2_Left_2.Name = "panel_Chart2_Left_2";
-			this.panel_Chart2_Left_2.Size = new System.Drawing.Size(209, 132);
-			this.panel_Chart2_Left_2.TabIndex = 6;
-			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -1533,6 +1533,7 @@ namespace EBoard
 			this.panel1.ResumeLayout(false);
 			this.panel03_12.ResumeLayout(false);
 			this.tableLayoutPanelChart2_Left.ResumeLayout(false);
+			this.panel_Chart2_Left_2.ResumeLayout(false);
 			this.roundPanel1.ResumeLayout(false);
 			this.tableLayoutPanelChart2_Desc.ResumeLayout(false);
 			this.panelChartDesc2.ResumeLayout(false);
@@ -1540,7 +1541,6 @@ namespace EBoard
 			this.roundPanel2.ResumeLayout(false);
 			this.tableLayoutPanelChart2_Desc2.ResumeLayout(false);
 			this.panel3.ResumeLayout(false);
-			this.panel_Chart2_Left_2.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
