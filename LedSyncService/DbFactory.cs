@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Configuration;
 
-namespace EBoard.Common
+namespace LedSyncService
 {
 	public class DbFactory
 	{

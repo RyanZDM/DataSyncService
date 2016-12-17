@@ -3,6 +3,7 @@ DataSyncService/ipch/*
 DataSyncService/[Dd]ebug*/*
 DataSyncService/[Rr]elease*/*
 Publish/*
+bin/*
 
 *.[Vv][Cc].db
 *.[Vv][Cc].opendb
@@ -55,3 +56,4 @@ InstallUtil.InstallLog
 
 Scripts/Output/*
 EBoardSetup/EBoardSetup/Express/*
+Led-Demo/Demo/bin/*

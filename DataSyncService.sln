@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBoard.Common", "EBoard.Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBoard.SysManager", "EBoard.SysManager\EBoard.SysManager.csproj", "{E37BF11D-E455-4F62-ADEB-E1726F108762}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LedSyncService", "LedSyncService\LedSyncService.csproj", "{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -221,6 +223,48 @@ Global
 		{E37BF11D-E455-4F62-ADEB-E1726F108762}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
 		{E37BF11D-E455-4F62-ADEB-E1726F108762}.Unicode Release MinSize|Win32.ActiveCfg = Release|Any CPU
 		{E37BF11D-E455-4F62-ADEB-E1726F108762}.Unicode Release MinSize|Win32.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Debug|Win32.Build.0 = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinDependency|Any CPU.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinDependency|Any CPU.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinDependency|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinDependency|Mixed Platforms.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinDependency|Win32.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinDependency|Win32.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinSize|Any CPU.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinSize|Any CPU.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinSize|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinSize|Win32.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release MinSize|Win32.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release|Win32.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Release|Win32.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Debug|Win32.ActiveCfg = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Debug|Win32.Build.0 = Debug|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinDependency|Any CPU.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinDependency|Any CPU.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinDependency|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinDependency|Mixed Platforms.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinDependency|Win32.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinDependency|Win32.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinSize|Any CPU.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinSize|Any CPU.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinSize|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinSize|Mixed Platforms.Build.0 = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinSize|Win32.ActiveCfg = Release|Any CPU
+		{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}.Unicode Release MinSize|Win32.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
