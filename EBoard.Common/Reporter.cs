@@ -164,6 +164,8 @@ namespace EBoard.Common
 				workbook.Save();
 			}
 
+			// TODO update the mstr table
+
 			return targetFilename;
 		}
 
@@ -179,6 +181,44 @@ namespace EBoard.Common
 			var adapter = new SqlDataAdapter(command);
 			var ds = new DataSet();
 			adapter.Fill(ds);
+
+			return ds;
+		}
+
+		public DataSet GetMonthReportMstr(string reportId)
+		{
+			var sql = string.Format(@"Select * From MonthReportMstr Where ReportId=CAST('{0}' As uniqueidentifier)", reportId);
+			var adapter = new SqlDataAdapter(sql, connection);
+			var ds = new DataSet();
+			adapter.Fill(ds);
+
+			return ds;
+		}
+
+		public DataSet GetMonthReportStatDet(string reportId)
+		{
+			var ds = new DataSet();
+			var sql = string.Format(@"Select ShiftId,DisplayName,Subtotal From MonthReportDet, MonitorItem Where Item=ItemId And MonthReportDet.Status='A' And ReportId=CAST('{0}' As uniqueidentifier) Order By ShiftId, DisplayName", reportId);
+			var adapter = new SqlDataAdapter(sql, connection);
+			adapter.Fill(ds, "StatDet");
+
+			sql = string.Format(@"Select Distinct mrd.ShiftId,BeginTime,ActualBeginTime,EndTime From MonthReportDet mrd, ShiftStatMstr ssm Where mrd.ShiftId=ssm.ShiftId And mrd.Status='A' And ReportId=CAST('{0}' As uniqueidentifier) Order By BeginTime", reportId);
+			adapter = new SqlDataAdapter(sql, connection);
+			adapter.Fill(ds, "Shift");
+
+			return ds;
+		}
+
+		public DataSet GetMonthReportWorkerDet(string reportId)
+		{
+			var ds = new DataSet();
+			var sql = string.Format(@"Select WorkerId,WorkerName,DisplayName,Subtotal From MonthWorkerReportDet mwd, MonitorItem mi Where Item=ItemId And mwd.Status='A' And ReportId=CAST('{0}' As uniqueidentifier) Order By WorkerId,DisplayName", reportId);
+			var adapter = new SqlDataAdapter(sql, connection);
+			adapter.Fill(ds, "StatDet");
+
+			sql = string.Format(@"Select Distinct WorkerId,WorkerName From MonthWorkerReportDet Where Status='A' And ReportId=CAST('{0}' As uniqueidentifier) Order By WorkerId", reportId);
+			adapter = new SqlDataAdapter(sql, connection);
+			adapter.Fill(ds, "Worker");
 
 			return ds;
 		}
