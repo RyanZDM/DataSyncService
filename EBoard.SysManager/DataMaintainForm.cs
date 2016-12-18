@@ -1,19 +1,18 @@
 ﻿using EBoard.Common;
+using NLog;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EBoard.SysManager
 {
 	public partial class DataMaintainForm : FormBase
 	{
+		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private bool isInitialzing = true;
 
 		private bool isRefreshing = false;
@@ -219,6 +218,7 @@ namespace EBoard.SysManager
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "Failed to save data.");
 				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
 				return false;
 			}
@@ -249,7 +249,7 @@ namespace EBoard.SysManager
 				connection.Close();
 				connection.Dispose();
 			}
-			catch (Exception) { }
+			catch (Exception ex) { logger.Error(ex, "Error occurred in Cleanup method."); }
 		}
 
 		public override void RollbackChanges()

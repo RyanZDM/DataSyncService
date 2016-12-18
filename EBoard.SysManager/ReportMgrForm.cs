@@ -1,4 +1,5 @@
 ﻿using EBoard.Common;
+using NLog;
 using System;
 using System.Data;
 using System.Data.SqlClient;
@@ -11,13 +12,11 @@ namespace EBoard.SysManager
 {
 	public partial class ReportMgrForm : FormBase
 	{
+		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private SqlConnection connection;
 
 		private Reporter reporter;
-
-		private bool isInitialzing = true;
-
-		private bool isRefreshing = false;
 
 		public ReportMgrForm()
 		{
@@ -41,29 +40,22 @@ namespace EBoard.SysManager
 		private TreeNode InitTree()
 		{
 			TreeNode nodeToSelect = null;
-			isInitialzing = true;
 			
 			var rootNode = treeView1.Nodes.Add("月报表");
-			try
+
+			var reportList = reporter.GetMonthltReportList();
+			foreach (var year in reportList.Keys)
 			{
-				var reportList = reporter.GetMonthltReportList();
-				foreach (var year in reportList.Keys)
+				var yearNode = rootNode.Nodes.Add(year.ToString(), year.ToString());
+				foreach (var month in reportList[year].Keys)
 				{
-					var yearNode = rootNode.Nodes.Add(year.ToString(), year.ToString());
-					foreach (var month in reportList[year].Keys)
-					{
-						var monthNode = yearNode.Nodes.Add(reportList[year][month], month.ToString());
-						monthNode.Tag = monthNode.Name;		// Report Id
-						if (nodeToSelect == null)
-							nodeToSelect = monthNode;		// Select the first node
-					}
+					var monthNode = yearNode.Nodes.Add(reportList[year][month], month.ToString());
+					monthNode.Tag = monthNode.Name;     // Report Id
+					if (nodeToSelect == null)
+						nodeToSelect = monthNode;       // Select the first node
 				}
 			}
-			finally
-			{
-				isInitialzing = false;
-			}
-			
+
 			return nodeToSelect;
 
 		}
@@ -94,7 +86,10 @@ namespace EBoard.SysManager
 
 			var mstr = reporter.GetMonthReportMstr(reportId);
 			if ((mstr == null) || (mstr.Tables.Count < 1) || (mstr.Tables[0].Rows.Count < 1))
+			{
+				logger.Debug("GetMonthReportMstr did not return data. ReportId={0},table count={1}.", reportId, (mstr == null) ? "null" : mstr.Tables.Count.ToString());
 				return;
+			}
 
 			var srcRow = mstr.Tables[0].Rows[0];
 			dataGridViewMstr.Rows.Add("BeginTime", srcRow["BeginTime"].ToString());
@@ -116,7 +111,10 @@ namespace EBoard.SysManager
 
 			var ds = reporter.GetMonthReportStatDet(reportId);
 			if (ds == null || ds.Tables.Count < 2 || ds.Tables["Shift"].Rows.Count < 1)
+			{
+				logger.Debug("GetMonthReprotStatDet did not return data, ReportId={0}, table count={1}", reportId, ds.Tables.Count);
 				return;
+			}
 
 			var shiftTable = ds.Tables["Shift"];
 			var detailTable = ds.Tables["StatDet"];
@@ -141,7 +139,10 @@ namespace EBoard.SysManager
 
 			var ds = reporter.GetMonthReportWorkerDet(reportId);
 			if (ds == null || ds.Tables.Count < 2 || ds.Tables["Worker"].Rows.Count < 1)
+			{
+				logger.Debug("GetMonthReportWorkerDet did not return data, ReportId={0}, table count={1}", reportId, ds.Tables.Count);
 				return;
+			}
 
 			var workerTable = ds.Tables["Worker"];
 			var detailTable = ds.Tables["StatDet"];
@@ -172,17 +173,7 @@ namespace EBoard.SysManager
 				connection.Close();
 				connection.Dispose();
 			}
-			catch (Exception) { }
-		}
-
-		public override void RollbackChanges()
-		{
-			base.RollbackChanges();
-
-			// todo
-			//(dataGridViewUser.DataSource as DataTable).RejectChanges();
-
-			HasDirtyData = false;
+			catch (Exception ex) { logger.Error(ex, "Error occurred in Cleanup method"); }
 		}
 
 		public override bool Save()
@@ -255,7 +246,8 @@ namespace EBoard.SysManager
 			catch (Exception ex)
 			{
 				buttonCreateFile.Enabled = true;
-				MessageBox.Show("创建报表文件是出错。{0}", ex.ToString());
+				logger.Error(ex, "Error occurred while creating report file.");
+				MessageBox.Show(string.Format("创建报表文件时出错。{0}", ex.ToString()));
 			}
 			
 		}
@@ -284,8 +276,6 @@ namespace EBoard.SysManager
 					return;
 				}
 			}
-
-			MessageBox.Show("没有发现月报文件");
 		}
 	}
 }

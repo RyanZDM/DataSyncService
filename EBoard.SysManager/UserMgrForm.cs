@@ -5,11 +5,14 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using NLog;
 
 namespace EBoard.SysManager
 {
 	public partial class UserMgrForm : FormBase
 	{
+		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
 		private SqlConnection connection;
 
 		private SqlDataAdapter adapter;
@@ -83,7 +86,7 @@ namespace EBoard.SysManager
 				connection.Close();
 				connection.Dispose();
 			}
-			catch (Exception) { }
+			catch (Exception ex) { logger.Error(ex, "Error occurred in Cleanup method."); }
 		}
 
 		public override void RollbackChanges()
@@ -115,6 +118,7 @@ namespace EBoard.SysManager
 			}
 			catch (Exception ex)
 			{
+				logger.Error(ex, "Failed to save data.");
 				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
 				return false;
 			}

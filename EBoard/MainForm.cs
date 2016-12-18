@@ -137,6 +137,8 @@ namespace EBoard
 			{
 				if (!int.TryParse(param.Value, out refreshInterval))
 					logger.Error("Failed to convert value string '{0}' of RefreshDataInterval to integer, use the default value {1}", param.Value, DefaultRefreshInterval);
+
+				logger.Trace("RefreshDataInterval={0}", refreshInterval);
 			}
 			refreshDataTimer = new System.Threading.Timer(RefreshDataTimerCallback, null, 0, Timeout.Infinite);
 		}

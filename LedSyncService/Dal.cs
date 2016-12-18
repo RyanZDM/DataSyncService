@@ -1,4 +1,4 @@
-﻿//using NLog;
+﻿using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,13 +9,54 @@ namespace LedSyncService
 {
 	public class Dal
 	{
-		//private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
 
 		private SqlConnection connection;
 
 		public Dal(SqlConnection conn)
 		{
 			connection = conn;
+		}
+
+		public StatData GetStatData()
+		{
+			var data = new StatData();
+
+			var shiftId = GetCurrentShiftId();
+
+			var sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('EnergyProduction1', 'EnergyProduction2')", shiftId);
+			var cmd = new SqlCommand(sql, connection);
+			using (var reader = cmd.ExecuteReader())
+			{
+				if (!reader.Read())
+				{
+					logger.Error("No result return for the sql [{0}]", sql);
+					return null;
+				}
+				
+				data.TotalEnergyGenerated = float.Parse(reader.GetValue(1).ToString());		// The data type get from database might be double, cannot directly convert it to float unless (float)(double)reader.GetValue(1)
+				data.CurrentEnergyGenerated = data.TotalEnergyGenerated - float.Parse(reader.GetValue(0).ToString());
+
+				reader.Close();
+			}
+
+			sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('Biogas2GenSubtotal','Biogas2TorchSubtotal')", shiftId);
+			cmd = new SqlCommand(sql, connection);
+			using (var reader = cmd.ExecuteReader())
+			{
+				if (!reader.Read())
+				{
+					logger.Error("No result return for the sql [{0}]", sql);
+					return null;
+				}
+
+				data.TotalBiogasUsed = float.Parse(reader.GetValue(1).ToString());
+				data.CurrentBiogasUsed = data.TotalBiogasUsed - float.Parse(reader.GetValue(0).ToString());
+
+				reader.Close();
+			}
+
+			return data;
 		}
 
 		/// <summary>
@@ -37,6 +78,22 @@ namespace LedSyncService
 			}
 
 			return parameters;
+		}
+
+		/// <summary>
+		/// Gets the ID of current shift.
+		/// Will automatically create the current shift is not created in db yet
+		/// </summary>
+		/// <returns></returns>
+		private string GetCurrentShiftId()
+		{
+			var command = new SqlCommand("sp_GetCurrentShiftId", connection);
+			command.CommandType = CommandType.StoredProcedure;
+			var sqlParam = command.Parameters.Add("@ShiftId", SqlDbType.UniqueIdentifier);
+			sqlParam.Direction = ParameterDirection.Output;
+			command.ExecuteNonQuery();
+
+			return sqlParam.Value.ToString();
 		}
 
 		/// <summary>
