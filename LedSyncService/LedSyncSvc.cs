@@ -19,7 +19,9 @@ namespace LedSyncService
 		/// </summary>
 		const int TitleHeight = 32;
 
-		const string FactoryName = "上海浦东环保发展有限公司\r\n黎明沼气发电厂";
+		private string factoryName = "上海浦东环保发展有限公司\r\n黎明沼气发电厂";
+
+		private string infoTemplate = "总发电量:        {0,10} KW\r\n总沼气消耗量:      {1,10} M³\r\n当前工班发电量:    {2,10} KW\r\n当前工班沼气消耗量:\t{3,10} M³";
 
 		private SqlConnection connection;
 
@@ -35,7 +37,7 @@ namespace LedSyncService
 
 		private LedDll.COMMUNICATIONINFO communicationInfo;
 
-		private int intervalForUpdatingLed = 2000;		// 2 seconds
+		private int intervalForUpdatingLed = 2000;      // 2 seconds		
 
 		public void Shutdown()
 		{
@@ -79,6 +81,9 @@ namespace LedSyncService
 						continue;
 
 					if (!CreatePrograms())
+						continue;
+
+					if (!UpdateTitle())
 						continue;
 
 					UpdateLedInfo();
@@ -131,8 +136,36 @@ namespace LedSyncService
 			// Update the retry interval
 			if (intervalParam != null)
 			{
-				logger.Trace("Found the settings of interval for updating LED in database. {0}", intervalForUpdatingLed);
 				intervalForUpdatingLed = int.Parse(intervalParam.Value);
+				logger.Info("Found the setting of interval for updating LED in database. {0}", intervalForUpdatingLed);				
+			}
+			else
+			{
+				logger.Debug("Not found the setting for IntervalForUpdatingLed in database.");
+			}
+
+			var titleParam = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
+														&& string.Equals(p.Name, "LedTitle", StringComparison.OrdinalIgnoreCase));
+			if (titleParam != null)
+			{
+				factoryName = titleParam.Value;
+				logger.Info("Found the setting of LedTitle in database. {0}", factoryName);
+			}
+			else
+			{
+				logger.Debug("Not found the setting for LedTitle in database.");
+			}
+
+			var infoParam = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
+														&& string.Equals(p.Name, "LedInfoTemplate", StringComparison.OrdinalIgnoreCase));
+			if (infoParam != null)
+			{
+				infoTemplate = infoParam.Value;
+				logger.Info("Found the setting of LED info template in database. {0}", infoTemplate);
+			}
+			else
+			{
+				logger.Debug("Not found the setting for LedInfoTemplate in database.");
 			}
 
 			var param = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
@@ -187,22 +220,28 @@ namespace LedSyncService
 				{
 					logger.Error("Failed to create program handle, parameters: width:{0},height:{1},color:2");
 					return false;
-				}
-
-				logger.Trace("Program handle [{0}] created.", hProgram);
+				}				
 			}
 
-			var result = LedDll.LV_AddProgram(hProgram, 1, 0, 1);	//添加一个节目，显示厂名
+			programsCreated = true;
+			logger.Debug("Program handle [{0}] created.", hProgram);			
+			
+			return programsCreated;
+		}
+
+		private bool UpdateTitle()
+		{
+			var result = LedDll.LV_AddProgram(hProgram, 1, 0, 1);   //添加一个节目，显示厂名
 			if (result != 0)
 			{
 				var errMsg = LedDll.LS_GetError(result);
-				logger.Error("Failed to add one program. {0}", errMsg);
+				logger.Error("Failed to add a program. {0}", errMsg);
 				return false;
 			}
 
-			logger.Trace("Added first program.");
+			logger.Debug("Added first program.");
 
-			var AreaRect = new LedDll.AREARECT();	//区域坐标属性结构体变量
+			var AreaRect = new LedDll.AREARECT();   //区域坐标属性结构体变量
 			AreaRect.left = 0;
 			AreaRect.top = 0;
 			AreaRect.width = LedWidth;
@@ -216,10 +255,10 @@ namespace LedSyncService
 				return false;
 			}
 
-			logger.Trace("One ImageTextArea was added to program 1.");
+			logger.Debug("One ImageTextArea was added to program 1.");
 
 			var fontProp = new LedDll.FONTPROP();//文字属性
-			fontProp.FontName = "黑体";		// 宋体
+			fontProp.FontName = "黑体";       // 宋体
 			fontProp.FontSize = 16;
 			fontProp.FontColor = LedDll.COLOR_RED;
 			fontProp.FontBold = 0;
@@ -229,7 +268,7 @@ namespace LedSyncService
 			playProp.DelayTime = 3;
 			playProp.Speed = 4;
 
-			result = LedDll.LV_AddMultiLineTextToImageTextArea(hProgram, 1, 1, LedDll.ADDTYPE_STRING, FactoryName, ref fontProp, ref playProp, 0, 0);//通过字符串添加一个多行文本到图文区
+			result = LedDll.LV_AddMultiLineTextToImageTextArea(hProgram, 1, 1, LedDll.ADDTYPE_STRING, factoryName, ref fontProp, ref playProp, 0, 0);//通过字符串添加一个多行文本到图文区
 			result = LedDll.LV_Send(ref communicationInfo, hProgram);
 			if (result != 0)
 			{
@@ -238,10 +277,9 @@ namespace LedSyncService
 				return false;
 			}
 
-			programsCreated = true;
-			logger.Info("Program for showing title created.");
-			
-			return programsCreated;
+			logger.Info("ImageTextArea created for showing title.");
+
+			return true;
 		}
 
 		private bool UpdateLedInfo()
@@ -274,13 +312,13 @@ namespace LedSyncService
 				return false;
 			}
 
-			var info = string.Format("总发电量:\t\t{0,10} KW\r\n总沼气消耗量:\t\t{1,10} M³\r\n当前工班发电量:\t\t{2,10} KW\r\n当前工班沼气消耗量:\t{3,10} M³"
+			var info = string.Format(infoTemplate
 									, statData.TotalEnergyGenerated
 									, statData.TotalBiogasUsed
 									, statData.CurrentEnergyGenerated
 									, statData.CurrentBiogasUsed);
 
-			logger.Trace("Will add the message [{0}] to Area 2 of LED.", info);
+			logger.Debug("Will add the message [{0}] to Area 2 of LED.", info);
 
 			var result = LedDll.LV_AddMultiLineTextToImageTextArea(hProgram, 1, 2, LedDll.ADDTYPE_STRING, info, ref fontProp, ref playProp, 0, 0);//通过字符串添加一个多行文本到图文区
 			result = LedDll.LV_Send(ref communicationInfo, hProgram);
@@ -291,7 +329,7 @@ namespace LedSyncService
 				return false;
 			}
 
-			logger.Trace("Successfully added the mesasge to ImageTextArea 2.");
+			logger.Debug("Successfully added the mesasge to ImageTextArea 2.");
 			return true;
 		}
 	}
