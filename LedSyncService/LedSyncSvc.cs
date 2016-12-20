@@ -67,7 +67,7 @@ namespace LedSyncService
 		private void DoWork()
 		{
 			keepWorking = true;
-			while (keepWorking)		// It will be set to false outside
+			while (keepWorking)     // It will be set to false outside
 			{
 				try
 				{
@@ -128,7 +128,7 @@ namespace LedSyncService
 		{
 			if (ledInitialized)
 				return ledInitialized;
-						
+
 			var dal = new Dal(connection);
 			var parameters = dal.GetGeneralParameters();
 			var intervalParam = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
@@ -137,7 +137,7 @@ namespace LedSyncService
 			if (intervalParam != null)
 			{
 				intervalForUpdatingLed = int.Parse(intervalParam.Value);
-				logger.Info("Found the setting of interval for updating LED in database. {0}", intervalForUpdatingLed);				
+				logger.Info("Found the setting of interval for updating LED in database. {0}", intervalForUpdatingLed);
 			}
 			else
 			{
@@ -186,25 +186,26 @@ namespace LedSyncService
 			ledIP = param.Value;
 			logger.Info("The IP of LED is: {0}.", param.Value);
 
-			communicationInfo = new LedDll.COMMUNICATIONINFO();//定义一通讯参数结构体变量用于对设定的LED通讯，具体对此结构体元素赋值说明见COMMUNICATIONINFO结构体定义部份注示
-															   //ZeroMemory(&CommunicationInfo,sizeof(COMMUNICATIONINFO));
+			//定义一通讯参数结构体变量用于对设定的LED通讯，具体对此结构体元素赋值说明见COMMUNICATIONINFO结构体定义部份注示
+			communicationInfo = new LedDll.COMMUNICATIONINFO();
+			//ZeroMemory(&CommunicationInfo,sizeof(COMMUNICATIONINFO));
 			//TCP通讯********************************************************************************
-			communicationInfo.SendType = 0;                                             //设为固定IP通讯模式，即TCP通讯
-			communicationInfo.IpStr = ledIP;                                            //给IpStr赋值LED控制卡的IP
-			communicationInfo.LedNumber = 1;											//LED屏号为1，注意socket通讯和232通讯不识别屏号，默认赋1就行了，485必需根据屏的实际屏号进行赋值
+			communicationInfo.SendType = 0;		//设为固定IP通讯模式，即TCP通讯
+			communicationInfo.IpStr = ledIP;	//给IpStr赋值LED控制卡的IP
+			communicationInfo.LedNumber = 1;	//LED屏号为1，注意socket通讯和232通讯不识别屏号，默认赋1就行了，485必需根据屏的实际屏号进行赋值
 
-			var result = LedDll.LV_SetBasicInfo(ref communicationInfo, 2, 64, 32);		//设置屏参，屏的颜色为2即为双基色，64为屏宽点数，32为屏高点数，具体函数参数说明见函数声明注示
-			if (result != 0)															//如果失败则可以调用LV_GetError获取中文错误信息
+			var result = LedDll.LV_SetBasicInfo(ref communicationInfo, 2, 64, 32);      //设置屏参，屏的颜色为2即为双基色，64为屏宽点数，32为屏高点数，具体函数参数说明见函数声明注示
+			if (result != 0)                                                            //如果失败则可以调用LV_GetError获取中文错误信息
 			{
 				var errMsg = LedDll.LS_GetError(result);
 				logger.Error("Failed to initialize LED, call LV_SetBasiceInfo failed. SendType=0,IpStr={0},LedNumber=1. {1}", ledIP, errMsg);
 				return false;
 			}
-						
+
 			ledInitialized = true;
 
 			logger.Info("LED was initialized successfully.");
-			
+
 			return ledInitialized;
 		}
 
@@ -215,17 +216,18 @@ namespace LedSyncService
 
 			if (hProgram == 0)
 			{
-				hProgram = LedDll.LV_CreateProgram(LedWidth, LedHeight, 2);//根据传的参数创建节目句柄，屏宽点数，屏高点数，2是屏的颜色，注意此处屏宽高及颜色参数必需与设置屏参的屏宽高及颜色一致，否则发送时会提示错误
+				//根据传的参数创建节目句柄，屏宽点数，屏高点数，2是屏的颜色，注意此处屏宽高及颜色参数必需与设置屏参的屏宽高及颜色一致，否则发送时会提示错误
+				hProgram = LedDll.LV_CreateProgram(LedWidth, LedHeight, 2);
 				if (hProgram == 0)
 				{
 					logger.Error("Failed to create program handle, parameters: width:{0},height:{1},color:2");
 					return false;
-				}				
+				}
 			}
 
 			programsCreated = true;
-			logger.Debug("Program handle [{0}] created.", hProgram);			
-			
+			logger.Debug("Program handle [{0}] created.", hProgram);
+
 			return programsCreated;
 		}
 
@@ -302,7 +304,7 @@ namespace LedSyncService
 			playProp.InStyle = 0;
 			playProp.DelayTime = 3;
 			playProp.Speed = 4;
-			
+
 			// Get real data from database
 			var dal = new Dal(connection);
 			var statData = dal.GetStatData();

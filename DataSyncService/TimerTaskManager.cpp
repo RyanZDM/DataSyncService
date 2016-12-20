@@ -119,6 +119,10 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 	tm localTime;
 	localtime_s(&localTime, &now);
 
+	// The last day of each month may be different. eg. 2.28, 3.31, 4.30
+	INT lastDayOfMonth = CTimerTaskManager::GetLastDayOfMonth(localTime.tm_mon);
+	nFixedDay = min(nFixedDay, lastDayOfMonth);
+
 	// Check if the fixed time has passed today first
 	tmFixedTime.tm_year = localTime.tm_year;
 	tmFixedTime.tm_mon = localTime.tm_mon;
@@ -147,8 +151,8 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 		}
 		else
 		{
-			// The last day of each month may be different. eg. 2.28, 3.31, 4.30
-			tmFixedTime.tm_mday = min(nFixedDay, localTime.tm_mday);	// TODO get last day of month
+			// Today
+			tmFixedTime.tm_mday = nFixedDay;
 		}
 
 		target = mktime(&tmFixedTime);
@@ -157,15 +161,14 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 	return (DWORD)difftime(target, now);
 }
 
-INT GetLastDayOfMonth(INT month)
+// The year is the actual value - 1900
+INT CTimerTaskManager::InernalGetLastDayOfMonth(INT year, INT month)
 {
-	time_t now = time(nullptr);
 	tm targetTime;
-	localtime_s(&targetTime, &now);
 
-	// Goto next month
+	// Goto the first day of next month
 	month++;	// Month start from 0
-	targetTime.tm_year = (month < 12) ? targetTime.tm_year : (targetTime.tm_year + 1);
+	targetTime.tm_year = (month < 12) ? year : (year + 1);
 	targetTime.tm_mon = (month < 12) ? month : 0;
 	targetTime.tm_mday = 1;
 	targetTime.tm_hour = 0;
@@ -173,7 +176,24 @@ INT GetLastDayOfMonth(INT month)
 	targetTime.tm_sec = 0;
 
 	// Subtract by one hour so we get back to the last day of current month
-	
-	//time_t target = mktime(&tmFixedTime);
-	return 0;
+	time_t nextMonth = mktime(&targetTime);
+	time_t currentMonth = nextMonth - 3600;	// subtract one hour
+	tm lastDayOfCurrentMonth;
+	localtime_s(&lastDayOfCurrentMonth, &currentMonth);
+
+	return lastDayOfCurrentMonth.tm_mday;
+}
+
+INT CTimerTaskManager::GetLastDayOfMonth(INT month)
+{
+	time_t now = time(nullptr);
+	tm targetTime;
+	localtime_s(&targetTime, &now);
+
+	return InernalGetLastDayOfMonth(targetTime.tm_yday, month);
+}
+
+INT CTimerTaskManager::GetLastDayOfMonth(INT year, INT month)
+{
+	return InernalGetLastDayOfMonth(year - 1900, month);
 }
