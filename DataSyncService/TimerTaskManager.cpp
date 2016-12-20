@@ -127,9 +127,7 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 	DOUBLE seconds = difftime(target, now);
 
 	BOOL timePassedToday = (seconds < 0);
-	BOOL dayPassedToday = nFixedDay < localTime.tm_mday;
-
-	if (nFixedDay <= 0)	// Run at fixed time today or tomorrow if the specified time has passed
+	if (nFixedDay <= 0)	// Fixed time every day. Run at fixed time today or tomorrow if the specified time has passed
 	{
 		if (timePassedToday)
 		{
@@ -137,8 +135,9 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 			target += 24 * 60 * 60;
 		}
 	}
-	else				// Run at fixed time at fixed sday of a month
+	else				// Run at fixed time and fixed day of every month
 	{
+		BOOL dayPassedToday = nFixedDay < localTime.tm_mday;
 		if (dayPassedToday || (timePassedToday && (nFixedDay == localTime.tm_mday)))
 		{
 			// Delay to next month if time or day passed
@@ -160,5 +159,21 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 
 INT GetLastDayOfMonth(INT month)
 {
+	time_t now = time(nullptr);
+	tm targetTime;
+	localtime_s(&targetTime, &now);
+
+	// Goto next month
+	month++;	// Month start from 0
+	targetTime.tm_year = (month < 12) ? targetTime.tm_year : (targetTime.tm_year + 1);
+	targetTime.tm_mon = (month < 12) ? month : 0;
+	targetTime.tm_mday = 1;
+	targetTime.tm_hour = 0;
+	targetTime.tm_min = 0;
+	targetTime.tm_sec = 0;
+
+	// Subtract by one hour so we get back to the last day of current month
+	
+	//time_t target = mktime(&tmFixedTime);
 	return 0;
 }
