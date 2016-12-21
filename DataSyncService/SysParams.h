@@ -26,8 +26,6 @@ public:
 	INT RefreshSysParams(BOOL bLog = FALSE);
 	INT RefreshSysParams(CDBUtil &db, BOOL bLog = FALSE);
 	void KeepDbConnection(BOOL flag) { m_bKeepDbConnection = flag; }
-	tm & GetStartTimeOfShift1() { return m_tStartTimeOfShift1; }
-	tm & GetStartTimeOfShift2() { return m_tStartTimeOfShift2; }
 
 	CSysParams();
 	virtual ~CSysParams();
@@ -35,6 +33,7 @@ public:
 	LPCWSTR	GetRemoteMachine() { return m_wszRemoteMachine.c_str(); }
 	LPCWSTR GetOPCServerProgID() { return m_wszOPCServerProgID.c_str(); }
 	long GetQueryInterval() { return m_lQryInterval; }
+	INT GetDayForCreatingMonthReport() { return m_nDayForCreatingMonthReport; }
 	BOOL IsLogEnabled() { return m_bEnableLog; }
 	BOOL IsKeepDbConnection() { return m_bKeepDbConnection; }
 
@@ -50,8 +49,7 @@ private:
 	wstring	m_wszOPCServerProgID;
 	wstring	m_wszRemoteMachine;
 	BOOL	m_bKeepDbConnection;
-	tm		m_tStartTimeOfShift1;
-	tm		m_tStartTimeOfShift2;
+	INT		m_nDayForCreatingMonthReport;
 };
 
 #endif // !defined(AFX_SYSPARAMS_H__640CAA53_1956_4B69_9D2A_B65090686F16__INCLUDED_)

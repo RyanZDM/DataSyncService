@@ -142,27 +142,11 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 				}
 			}
 
-			std::basic_string<TCHAR> szValue;
-			if (db.GetSingleStringValue(szValue, DEFAULT_SHIFT_START_1, _T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='ShiftStartTime1'")) > 0)
+			m_nDayForCreatingMonthReport = (INT)(db.GetSingleLongValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='CreateMonthReportTime'"), DEFAULT_DAY_FOR_CREATING_MONTH_REPORT);
+			if (bLog)
 			{
-				LPCTSTR pTemp = szValue.c_str();
-				CTimerTaskManager::ParseTimeString(pTemp, m_tStartTimeOfShift1);
-				if (bLog)
-				{
-					szMsg += _T("\n\tShiftStartTime1: ");
-					szMsg += pTemp;
-				}
-			}
-
-			if (db.GetSingleStringValue(szValue, DEFAULT_SHIFT_START_1, _T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='ShiftStartTime2'")) > 0)
-			{
-				LPCTSTR pTemp = szValue.c_str();
-				CTimerTaskManager::ParseTimeString(pTemp, m_tStartTimeOfShift2);
-				if (bLog)
-				{
-					szMsg += _T("\n\tShiftStartTime2: ");
-					szMsg += pTemp;
-				}
+				szMsg += _T("\n\DayForCreatingMonthReport: ");
+				szMsg += _itot_s(m_nDayForCreatingMonthReport, buf, sizeof(buf)/sizeof(buf[0]), 10);
 			}
 
 			m_bKeepDbConnection = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='KeepDbConnection'"), m_bKeepDbConnection);
