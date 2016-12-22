@@ -142,13 +142,6 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 				}
 			}
 
-			m_nDayForCreatingMonthReport = (INT)(db.GetSingleLongValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='CreateMonthReportTime'"), DEFAULT_DAY_FOR_CREATING_MONTH_REPORT);
-			if (bLog)
-			{
-				szMsg += _T("\n\DayForCreatingMonthReport: ");
-				szMsg += _itot_s(m_nDayForCreatingMonthReport, buf, sizeof(buf)/sizeof(buf[0]), 10);
-			}
-
 			m_bKeepDbConnection = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='KeepDbConnection'"), m_bKeepDbConnection);
 			if (bLog)
 			{

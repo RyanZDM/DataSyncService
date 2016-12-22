@@ -33,7 +33,6 @@ public:
 	LPCWSTR	GetRemoteMachine() { return m_wszRemoteMachine.c_str(); }
 	LPCWSTR GetOPCServerProgID() { return m_wszOPCServerProgID.c_str(); }
 	long GetQueryInterval() { return m_lQryInterval; }
-	INT GetDayForCreatingMonthReport() { return m_nDayForCreatingMonthReport; }
 	BOOL IsLogEnabled() { return m_bEnableLog; }
 	BOOL IsKeepDbConnection() { return m_bKeepDbConnection; }
 
@@ -49,7 +48,6 @@ private:
 	wstring	m_wszOPCServerProgID;
 	wstring	m_wszRemoteMachine;
 	BOOL	m_bKeepDbConnection;
-	INT		m_nDayForCreatingMonthReport;
 };
 
 #endif // !defined(AFX_SYSPARAMS_H__640CAA53_1956_4B69_9D2A_B65090686F16__INCLUDED_)

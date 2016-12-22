@@ -709,6 +709,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 	IOPCSyncIO *pISync = NULL;
 	OPCITEMSTATE *pValues = NULL;
 	HRESULT *pErrors = NULL;
+	TCHAR buf[500];
 	try
 	{
 		if (S_OK != (m_hLastHResult = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
@@ -717,6 +718,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 				throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
 		
+		TString szFailedItems;
 		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
 		{
 			COPCItemDef *pItem = (COPCItemDef*)*vi;
@@ -730,7 +732,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			{
 				if (!IsQualityGood(pValues[0]))
 				{
-					// TODO log the debug level info
+					g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() The quality of item [%s] is not good [%d], ignore it."), W2CT(pItem->m_pOPCItemDef->szItemID), pValues[0].wQuality);
 					// TODO: notfiy on UI?
 					continue;
 				}
@@ -755,9 +757,16 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			}
 			else
 			{
-				g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read(), hr=%x, error=%x"), m_hLastHResult, pErrors ? pErrors[0] : 0);
-			}
+				_stprintf_s(buf, sizeof(buf)/sizeof(buf[0]), _T("%s, hr = %x, error = %x;"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
+				if (szFailedItems.size() == 0)
+				{
+					szFailedItems.append(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read().\r\n"));
+				}
 
+				szFailedItems.append(buf);
+				//g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() for Item=%s, hr=%x, error=%x"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
+			}
+			
 			if (pValues)
 			{
 				CoTaskMemFree(pValues);
@@ -771,6 +780,11 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			}
 
 			CHECK_CONNECT(m_hLastHResult)
+		}
+
+		if (pvList->size() > 0)
+		{
+			g_Logger.VForceLog(szFailedItems.c_str());
 		}
 
 		return nCount;

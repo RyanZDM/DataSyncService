@@ -202,8 +202,8 @@ unsigned __stdcall OPCDataSyncThread(void*)
 							bDbConnectionBroke = TRUE;
 						}
 
-						g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] %d item(s) to be read, but only %d item(s) read successfully.\n%s")
-							, dwThreadID, nItemCnt, nRet, db.GetLastErrormsg());
+						g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] %d item(s) to be read, but only %d item(s) read successfully.")
+							, dwThreadID, nItemCnt, nRet);
 					}
 				}	// end if (pGroup)				
 			}
@@ -280,8 +280,6 @@ unsigned __stdcall OPCDataSyncThread(void*)
 **************************************************************************/
 INT SetupTimelyTasks()
 {
-	// TODO: timerly create monthly report and create Excel
-
 	vector<CTimerTask*> vTasks;
 	CTimerTaskManager::GetTimerTasks(vTasks);
 
@@ -437,4 +435,3 @@ void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime, INT nFixedDay)
 		RunTask(pcszCommand);
 	}	// end while (TRUE == g_bKeepWork)
 }
-
