@@ -26,7 +26,7 @@ CSysParams		g_SysParams;
 // *** Methods Declaration ***********************************************/
 unsigned __stdcall TimerTaskThread(void* pParameter);
 void RunTask(LPCTSTR pcszCommand);
-void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval);
+void RunTaskTimely(LPCTSTR pcszCommand, DWORD dwInterval);
 void RunTaskAtFixedTime(LPCTSTR pcszCommand, tm &tmFixedTime, INT nFixedDay);
 INT Init(CDBUtil &db, COPCClient &OPCClient);
 // ***********************************************************************/
@@ -351,7 +351,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 				return 0;
 			}
 
-			// Run timerly, delay n seconds first
+			// Run timely, delay n seconds first
 			if (pTask->GetDelay() > 0)
 			{
 				// To make sure the thread can exit immediately when the application is about to exit
@@ -360,7 +360,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 					return 0;
 				}
 			}
-			RunTaskTimerly(pTask->m_szRun.c_str(), pTask->GetInterval() * 1000);
+			RunTaskTimely(pTask->m_szRun.c_str(), pTask->GetInterval() * 1000);
 		}
 
 		return 0;
@@ -401,7 +401,7 @@ void RunTask(LPCTSTR pcszCommand)
 	}
 }
 
-void RunTaskTimerly(LPCTSTR pcszCommand, DWORD dwInterval)
+void RunTaskTimely(LPCTSTR pcszCommand, DWORD dwInterval)
 {
 	while (TRUE == g_bKeepWork)
 	{
