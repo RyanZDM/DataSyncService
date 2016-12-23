@@ -100,6 +100,8 @@ namespace LedSyncService
 					Thread.Sleep(intervalForUpdatingLed);
 				}
 			}
+
+			logger.Info("Exit DoWork.");
 		}
 
 		private void Cleanup()
