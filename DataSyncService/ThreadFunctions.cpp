@@ -119,7 +119,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 		msg.append(p->pItemID).append(_T("//")).append(p->pAddress).append(_T(","));
 		delete p;
 	}
-	g_Logger.VForceLog(_T("[%d] item(s) found in database, [%d] item(s) were added successfully.\n%s"), nItemCount, nAddedItems, msg.c_str());
+	g_Logger.VForceLog(_T("[%d] monitor item(s) found in database, [%d] item(s) were added successfully.\n%s"), nItemCount, nAddedItems, msg.c_str());
 
 	return nAddedItems;
 }
@@ -383,13 +383,49 @@ void RunTask(LPCTSTR pcszCommand)
 	DWORD dwThreadID = GetCurrentThreadId();
 	try
 	{
-		time_t begin = time(nullptr);
-		INT nRet = _tsystem(pcszCommand);
-		if (nRet != 0)
-			throw nRet;
+		if (!pcszCommand || _tcslen(pcszCommand) == 0)
+		{
+			g_Logger.VLog(_T("RunTask failed because the argument is null or empty."));
+			return;
+		}
 
+		TCHAR szCommand[1000] = { _T('\0') };		
+		if (_tcschr(pcszCommand, _T('/')) || _tcschr(pcszCommand, _T('\\')))
+		{
+			// Do not combine the absoulute path to command since found the char '\'
+			_tcscpy_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), pcszCommand);
+		}
+		else
+		{
+			// Combine the absolution path
+			TCHAR path[MAX_PATH];
+			if (!GetModuleFileName(NULL, path, sizeof(path) / sizeof(path[0])))
+			{
+				_tcscpy_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), pcszCommand);
+			}
+			else
+			{
+				// TODO get the path, need to remove the ext
+				// Remove file name part
+				for (INT pos = _tcslen(path) - 1; pos > 0; pos--)
+				{
+					if (path[pos] == _T('\\') || path[pos] == _T('/'))
+					{
+						path[pos] = _T('\0');
+						break;
+					}
+				}
+
+				_stprintf_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), _T("%s\\%s"), path, pcszCommand);
+				// TODO check if the file exist or not
+			}
+		}
+
+		time_t begin = time(nullptr);		
+		INT nRet = _tsystem(szCommand);
 		time_t end = time(nullptr);
-		g_Logger.VLog(_T("Ran timer task in %d seconds, command = [%s]"), difftime(end, begin), pcszCommand);
+
+		g_Logger.VLog(_T("Ran timer task in %d seconds, command = [%s], return=%d."), (INT)difftime(end, begin), szCommand, nRet);
 	}
 	catch (INT nCode)		// Throw int only when the connection is broken
 	{

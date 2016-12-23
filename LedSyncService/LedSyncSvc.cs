@@ -41,6 +41,7 @@ namespace LedSyncService
 
 		public void Shutdown()
 		{
+			logger.Info("Shutting down computer...");
 			Stop();
 		}
 
@@ -49,12 +50,14 @@ namespace LedSyncService
 			keepWorking = false;
 			Cleanup();
 
-			logger.Info("THe LedSyncService stopped.");
+			logger.Info("The LedSyncService stopped.");
 			return true;
 		}
 
 		public bool Start()
 		{
+			logger.Info("THe LedSyncService starting...");
+
 			Task.Run(() =>
 				{
 					logger.Info("THe LedSyncService started.");
@@ -139,10 +142,6 @@ namespace LedSyncService
 				intervalForUpdatingLed = int.Parse(intervalParam.Value);
 				logger.Info("Found the setting of interval for updating LED in database. {0}", intervalForUpdatingLed);
 			}
-			else
-			{
-				logger.Debug("Not found the setting for IntervalForUpdatingLed in database.");
-			}
 
 			var titleParam = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
 														&& string.Equals(p.Name, "LedTitle", StringComparison.OrdinalIgnoreCase));
@@ -151,10 +150,6 @@ namespace LedSyncService
 				factoryName = titleParam.Value;
 				logger.Info("Found the setting of LedTitle in database. {0}", factoryName);
 			}
-			else
-			{
-				logger.Debug("Not found the setting for LedTitle in database.");
-			}
 
 			var infoParam = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
 														&& string.Equals(p.Name, "LedInfoTemplate", StringComparison.OrdinalIgnoreCase));
@@ -162,10 +157,6 @@ namespace LedSyncService
 			{
 				infoTemplate = infoParam.Value;
 				logger.Info("Found the setting of LED info template in database. {0}", infoTemplate);
-			}
-			else
-			{
-				logger.Debug("Not found the setting for LedInfoTemplate in database.");
 			}
 
 			var param = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
@@ -243,13 +234,13 @@ namespace LedSyncService
 
 			logger.Debug("Added first program.");
 
-			var AreaRect = new LedDll.AREARECT();   //区域坐标属性结构体变量
-			AreaRect.left = 0;
-			AreaRect.top = 0;
-			AreaRect.width = LedWidth;
-			AreaRect.height = TitleHeight;
+			var areaRect = new LedDll.AREARECT();   //区域坐标属性结构体变量
+			areaRect.left = 0;
+			areaRect.top = 0;
+			areaRect.width = LedWidth;
+			areaRect.height = TitleHeight;
 
-			result = LedDll.LV_AddImageTextArea(hProgram, 1, 1, ref AreaRect, 0);
+			result = LedDll.LV_AddImageTextArea(hProgram, 1, 1, ref areaRect, 0);
 			if (result != 0)
 			{
 				var errMsg = LedDll.LS_GetError(result);
@@ -257,7 +248,8 @@ namespace LedSyncService
 				return false;
 			}
 
-			logger.Debug("One ImageTextArea was added to program 1.");
+			logger.Debug("ImageTextArea #1 was added to program 1. L/T/W/H:{0}/{1]/{2}/{3}.", 
+							areaRect.left, areaRect.top, areaRect.width, areaRect.height);
 
 			var fontProp = new LedDll.FONTPROP();//文字属性
 			fontProp.FontName = "黑体";       // 宋体
@@ -286,13 +278,15 @@ namespace LedSyncService
 
 		private bool UpdateLedInfo()
 		{
-			var AreaRect = new LedDll.AREARECT();   //区域坐标属性结构体变量
-			AreaRect.left = 0;
-			AreaRect.top = TitleHeight;
-			AreaRect.width = LedWidth;
-			AreaRect.height = LedHeight - TitleHeight;
+			var areaRect = new LedDll.AREARECT();   //区域坐标属性结构体变量
+			areaRect.left = 0;
+			areaRect.top = TitleHeight;
+			areaRect.width = LedWidth;
+			areaRect.height = LedHeight - TitleHeight;
 
-			LedDll.LV_AddImageTextArea(hProgram, 1, 2, ref AreaRect, 0);
+			LedDll.LV_AddImageTextArea(hProgram, 1, 2, ref areaRect, 0);
+			logger.Debug("ImageTextArea #2 was added to program 1. L/T/W/H:{0}/{1]/{2}/{3}.",
+							areaRect.left, areaRect.top, areaRect.width, areaRect.height);
 
 			var fontProp = new LedDll.FONTPROP();//文字属性
 			fontProp.FontName = "宋体";       // 宋体
@@ -320,7 +314,7 @@ namespace LedSyncService
 									, statData.CurrentEnergyGenerated
 									, statData.CurrentBiogasUsed);
 
-			logger.Debug("Will add the message [{0}] to Area 2 of LED.", info);
+			logger.Debug("Will add the message [{0}] to Area #2.", info);
 
 			var result = LedDll.LV_AddMultiLineTextToImageTextArea(hProgram, 1, 2, LedDll.ADDTYPE_STRING, info, ref fontProp, ref playProp, 0, 0);//通过字符串添加一个多行文本到图文区
 			result = LedDll.LV_Send(ref communicationInfo, hProgram);

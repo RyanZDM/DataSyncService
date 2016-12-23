@@ -530,6 +530,7 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 	OPCITEMRESULT *pResults = NULL;
 
 	ClearMap(m_ItemMappings, TRUE);
+	TString szErrMsg;
 	for (INT i = 0; i < nCount; i++)
 	{
 		LPITEMINFO pItemInfo = vList[i];
@@ -562,6 +563,15 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 			lstrcpynW(pItemId, T2W(pItemInfo->pItemID), dwLen + 1);
 			m_ItemMappings.insert({ pAddr, pItemId });
 		}
+		else
+		{
+			szErrMsg.append(W2T(pItem->szItemID)).append(_T(","));
+		}
+	}
+
+	if (szErrMsg.size() > 0)
+	{
+		g_Logger.VForceLog(_T("Failed to add monitor item(s): %s"), szErrMsg.c_str());
 	}
 
 	return nCount;
@@ -758,11 +768,6 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			else
 			{
 				_stprintf_s(buf, sizeof(buf)/sizeof(buf[0]), _T("%s, hr = %x, error = %x;"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
-				if (szFailedItems.size() == 0)
-				{
-					szFailedItems.append(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read().\r\n"));
-				}
-
 				szFailedItems.append(buf);
 				//g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() for Item=%s, hr=%x, error=%x"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
 			}
@@ -784,7 +789,8 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 
 		if (pvList->size() > 0)
 		{
-			g_Logger.VForceLog(szFailedItems.c_str());
+			// TODO Suppres the log output if keep get the same error
+			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), szFailedItems.c_str());
 		}
 
 		return nCount;
