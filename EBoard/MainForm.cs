@@ -336,10 +336,10 @@ namespace EBoard
 				generator2Running = null;
 
 			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator1RunningColName))
-				generator1Running = ((int)data.MonitorItems[ShiftStatInfo.Generator1RunningColName]) != 0;
+				generator1Running = data.MonitorItems[ShiftStatInfo.Generator1RunningColName] != 0;
 
 			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator2RunningColName))
-				generator2Running = ((int)data.MonitorItems[ShiftStatInfo.Generator2RunningColName]) != 0;
+				generator2Running = data.MonitorItems[ShiftStatInfo.Generator2RunningColName] != 0;
 
 			/// 1. instantaneous values
 			// 1.1 Biogas
@@ -359,31 +359,31 @@ namespace EBoard
 			/// 2. accumulated values
 			// 2.1 Subtotal biogas of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2TorchSubtotalColName))
-				biogas2TorchSubtotal = (int)data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
+				biogas2TorchSubtotal = data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2GenSubtotalColName))
-				biogas2GenSubtotal = (int)data.StatInfo[ShiftStatInfo.Biogas2GenSubtotalColName];
+				biogas2GenSubtotal = data.StatInfo[ShiftStatInfo.Biogas2GenSubtotalColName];
 
 			// 2.2 Energy production of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName))
-				energyProduction1 = (int)data.StatInfo[ShiftStatInfo.EnergyProduction1ColName];
+				energyProduction1 = data.StatInfo[ShiftStatInfo.EnergyProduction1ColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName))
-				energyProduction2 = (int)(double)data.StatInfo[ShiftStatInfo.EnergyProduction2ColName];
+				energyProduction2 = data.StatInfo[ShiftStatInfo.EnergyProduction2ColName];
 
 			// 2.3 subtotal runtime of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime1ColName))
-				subtotalRuntime1 = (int)data.StatInfo[ShiftStatInfo.SubtotalRuntime1ColName];
+				subtotalRuntime1 = data.StatInfo[ShiftStatInfo.SubtotalRuntime1ColName];
 						
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime2ColName))
-				subtotalRuntime2 = (int)data.StatInfo[ShiftStatInfo.SubtotalRuntime2ColName];
+				subtotalRuntime2 = data.StatInfo[ShiftStatInfo.SubtotalRuntime2ColName];
 
 			// 2.4 total runtime
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName))
-				totalRuntime1 = (int)data.StatInfo[ShiftStatInfo.TotalRuntime1ColName];
+				totalRuntime1 = data.StatInfo[ShiftStatInfo.TotalRuntime1ColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime2ColName))
-				totalRuntime2 = (int)data.StatInfo[ShiftStatInfo.TotalRuntime2ColName];
+				totalRuntime2 = data.StatInfo[ShiftStatInfo.TotalRuntime2ColName];
 
 			// Update labels on GUI
 			// 2.4
@@ -393,17 +393,17 @@ namespace EBoard
 			// 2.1
 			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() + UnitM3 : "";
 			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal.ToString() + UnitM3 : "";
-			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0.0) + (biogas2GenSubtotal ?? 0.0)).ToString() + UnitM3;
+			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0) + (biogas2GenSubtotal ?? 0)).ToString() + UnitM3;
 
 			// 2.2
 			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() + UnitKWh : "";
 			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() + UnitKWh : "";
-			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0.0) + (energyProduction2 ?? 0.0)).ToString() + UnitKWh;
+			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0)).ToString() + UnitKWh;
 
 			// 2.3
 			labelRuntime1.Text = subtotalRuntime1.HasValue ? subtotalRuntime1.ToString() : "";
 			labelRuntime2.Text = subtotalRuntime2.HasValue ? subtotalRuntime2.ToString() : "";
-			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0.0) + (subtotalRuntime2 ?? 0.0)).ToString();
+			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0) + (subtotalRuntime2 ?? 0)).ToString();
 		}
 
 		private void UpdateWorksOnGUI()
@@ -428,7 +428,7 @@ namespace EBoard
 		#region For Chart
 		private void InitChart(Chart chart, int begin, int end)
 		{
-			chart.ChartAreas[0].AxisX.Minimum = begin;
+			chart.ChartAreas[0].AxisX.Minimum = begin - 1;
 			chart.ChartAreas[0].AxisX.Maximum = end;
 			chart.ChartAreas[0].AxisX.Interval = 1;
 			chart.BackColor = Color.Transparent;
@@ -476,17 +476,7 @@ namespace EBoard
 			{
 				chart.ChartAreas[0].AxisX.CustomLabels.RemoveAt(0);
 			}
-
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "日期", 0, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量日", 1, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量日", 2, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 3, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 4, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "沼气量夜", 5, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "发电量夜", 6, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "当班人员", 7, LabelMarkStyle.None);
-			//chart.ChartAreas[0].AxisX.CustomLabels.Add(begin - 1 - 0.5, begin - 0.5, "", 8, LabelMarkStyle.None);
-
+			
 			for (var i = begin; i <= end; i++)
 			{
 				var from = i - 0.5;

@@ -1,11 +1,11 @@
 USE [OPC]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 12/24/2016 5:38:55 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 2016/12/24 23:12:03 ******/
 DROP PROCEDURE [dbo].[sp_GetCurrentMonthDataByDay]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 12/24/2016 5:38:55 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 2016/12/24 23:12:03 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -36,8 +36,7 @@ BEGIN
 		,@lastDay int			-- Today
 		,@day int
 		,@dayWorkers nvarchar(100)
-
-	DECLARE @shiftId uniqueidentifier
+		,@shiftId uniqueidentifier
 	
 	SELECT @now = GETDATE()
 	SELECT @todayInt = DATEPART(day, @now)
@@ -50,11 +49,11 @@ BEGIN
 	(
 		[Day] int,
 		DayWorkers nvarchar(100),
-		DayBiogas float,
-		DayEngeryProduction float,
+		DayBiogas int,
+		DayEngeryProduction int,
 		NightWorkers nvarchar(100),
-		NightBiogas float,
-		NightEngeryProduction float
+		NightBiogas int,
+		NightEngeryProduction int
 	);
 
 	SELECT @day = 1
@@ -72,14 +71,14 @@ BEGIN
 			VALUES(@day, ISNULL(@dayWorkers,'') )
 
 		UPDATE @CurrentMonthRpt SET DayBiogas=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0.0)) - SUM(ISNULL(det.SubTotalBegin,0.0))), 0.0) FROM ShiftStatDet det, ShiftStatMstr mstr
+			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0.0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
 				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status='A'
 						AND (det.Item='Biogas2GenSubtotal' OR det.Item='Biogas2TorchSubtotal')
 						AND mstr.BeginTime>=@begin AND mstr.BeginTime<@noon)			
 			WHERE  [Day]=@day
 		
 		UPDATE @CurrentMonthRpt SET DayEngeryProduction=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0.0)) - SUM(ISNULL(det.SubTotalBegin,0.0))), 0.0) FROM ShiftStatDet det, ShiftStatMstr mstr
+			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
 				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status='A'
 						AND (det.Item='EnergyProduction1' OR det.Item='EnergyProduction2')
 						AND mstr.BeginTime>=@begin AND mstr.BeginTime<@noon)
@@ -90,14 +89,14 @@ BEGIN
 		SELECT @shiftId = (SELECT TOP 1 ShiftId FROM ShiftStatMstr WHERE BeginTime>=@noon AND BeginTime<@end)
 
 		UPDATE @CurrentMonthRpt SET NightWorkers=dbo.GetWorkerNameByShift(@shiftId), NightBiogas=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0.0)) - SUM(ISNULL(det.SubTotalBegin,0.0))), 0.0) FROM ShiftStatDet det, ShiftStatMstr mstr
+			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
 				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status='A'
 						AND (det.Item='Biogas2GenSubtotal' OR det.Item='Biogas2TorchSubtotal')
 						AND mstr.BeginTime>=@noon AND mstr.BeginTime<@end)
 			WHERE  [Day]=@day
 
 		UPDATE @CurrentMonthRpt SET NightEngeryProduction=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0.0)) - SUM(ISNULL(det.SubTotalBegin,0.0))), 0.0) FROM ShiftStatDet det, ShiftStatMstr mstr
+			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
 				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status='A'
 						AND (det.Item='EnergyProduction1' OR det.Item='EnergyProduction2')
 						AND mstr.BeginTime>=@noon AND mstr.BeginTime<@end)
@@ -114,13 +113,12 @@ BEGIN
 		SELECT @day = @day + 1
 	END
 	
-	SELECT [Day], DayWorkers, CAST(DayBiogas AS int) AS DayBiogas, CAST(DayEngeryProduction AS int) AS DayEngeryProduction
-			, NightWorkers, CAST(NightBiogas AS int) AS NightBiogas, CAST(NightEngeryProduction AS int) AS NightEngeryProduction
-		FROM @CurrentMonthRpt
+	SELECT [Day], DayWorkers, DayBiogas, DayEngeryProduction, NightWorkers, NightBiogas, NightEngeryProduction FROM @CurrentMonthRpt
 
-	SELECT CAST((ISNULL(SUM(DayBiogas),0) + ISNULL(SUM(NightBiogas),0)) AS int) AS Biogas, CAST((ISNULL(SUM(DayEngeryProduction),0) + ISNULL(SUM(NightEngeryProduction),0)) AS int) AS EngeryProduction FROM @CurrentMonthRpt
+	SELECT (ISNULL(SUM(DayBiogas),0) + ISNULL(SUM(NightBiogas),0)) AS Biogas, (ISNULL(SUM(DayEngeryProduction),0) + ISNULL(SUM(NightEngeryProduction),0)) AS EngeryProduction FROM @CurrentMonthRpt
 END
 
 
 GO
+
 

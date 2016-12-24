@@ -34,8 +34,8 @@ namespace LedSyncService
 					return null;
 				}
 
-				data.TotalEnergyGenerated = float.Parse(reader.GetValue(1).ToString());     // The data type get from database might be double, cannot directly convert it to float unless (float)(double)reader.GetValue(1)
-				data.CurrentEnergyGenerated = data.TotalEnergyGenerated - float.Parse(reader.GetValue(0).ToString());
+				data.TotalEnergyGenerated = (int)(reader.GetValue(1));
+				data.CurrentEnergyGenerated = data.TotalEnergyGenerated - (int)(reader.GetValue(0));
 
 				reader.Close();
 			}
@@ -50,8 +50,8 @@ namespace LedSyncService
 					return null;
 				}
 
-				data.TotalBiogasUsed = float.Parse(reader.GetValue(1).ToString());
-				data.CurrentBiogasUsed = data.TotalBiogasUsed - float.Parse(reader.GetValue(0).ToString());
+				data.TotalBiogasUsed = (int)(reader.GetValue(1));
+				data.CurrentBiogasUsed = data.TotalBiogasUsed - (int)(reader.GetValue(0));
 
 				reader.Close();
 			}

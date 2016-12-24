@@ -771,8 +771,6 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 				_stprintf_s(buf, sizeof(buf)/sizeof(buf[0]), _T("%s, hr = %x, error = %x;"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
 				szFailedItems.append(buf);
 
-				// temp
-				//g_Logger.ForceLog(szFailedItems.c_str());
 				//g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() for Item=%s, hr=%x, error=%x"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
 			}
 			

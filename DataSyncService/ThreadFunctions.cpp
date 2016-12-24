@@ -405,7 +405,6 @@ void RunTask(LPCTSTR pcszCommand)
 			}
 			else
 			{
-				// TODO get the path, need to remove the ext
 				// Remove file name part
 				for (INT pos = _tcslen(path) - 1; pos > 0; pos--)
 				{
@@ -417,11 +416,18 @@ void RunTask(LPCTSTR pcszCommand)
 				}
 
 				_stprintf_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), _T("%s\\%s"), path, pcszCommand);
-				// TODO check if the file exist or not
+
+				// Check if the file exist or not
+
+				if (_taccess(szCommand, 0) == -1)
+				{
+					g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szCommand);
+					// Do not exit in case it is in the path
+				}
 			}
 		}
 
-		time_t begin = time(nullptr);		
+		time_t begin = time(nullptr);
 		INT nRet = _tsystem(szCommand);
 		time_t end = time(nullptr);
 

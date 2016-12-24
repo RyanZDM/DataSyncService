@@ -144,7 +144,7 @@ namespace EBoard.Common
 			UpdateProperties(mstrTable.Rows[0], data);
 
 			// Get data from ShiftStatDet table
-			sql = string.Format(@"SELECT Item, CAST((IsNull(det.SubTotalLast,0) - IsNull(det.SubTotalBegin,0)) As int) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
+			sql = string.Format(@"SELECT Item, (IsNull(det.SubTotalLast,0) - IsNull(det.SubTotalBegin,0)) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
 			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatDet");
 
 			var detTable = ds.Tables["ShiftStatDet"];
@@ -157,12 +157,12 @@ namespace EBoard.Common
 				}
 				catch (Exception ex)
 				{
-					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ShiftStatDet. {2}", row["SubTotal"], row["Item"], ex);
+					logger.Error("Cannot convert the value [{0}] of [{1}] to int type from table ShiftStatDet. {2}", row["SubTotal"], row["Item"], ex);
 				}
 			});
 
 			// Get total run time of generator from ShiftStatDet table, no need to subtract
-			sql = string.Format(@"SELECT Item,CAST(IsNull(det.SubTotalLast,0.0) As int) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier) And Item In ('{1}','{2}')", shiftId, ShiftStatInfo.SubtotalRuntime1ColName, ShiftStatInfo.SubtotalRuntime2ColName);
+			sql = string.Format(@"SELECT Item,IsNull(det.SubTotalLast,0) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier) And Item In ('{1}','{2}')", shiftId, ShiftStatInfo.SubtotalRuntime1ColName, ShiftStatInfo.SubtotalRuntime2ColName);
 			new SqlDataAdapter(sql, connection).Fill(ds, "TotalRunTime");
 			var totalRuntimeTable = ds.Tables["TotalRunTime"];
 			totalRuntimeTable.AsEnumerable().ToList().ForEach(row =>
@@ -173,7 +173,7 @@ namespace EBoard.Common
 				}
 				catch (Exception ex)
 				{
-					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ShiftStatDet. {2}", row["SubTotalLast"], row["Item"], ex);
+					logger.Error("Cannot convert the value [{0}] of [{1}] to int type from table ShiftStatDet. {2}", row["SubTotalLast"], row["Item"], ex);
 				}
 			});
 
@@ -187,7 +187,7 @@ namespace EBoard.Common
 				}
 				catch (Exception ex)
 				{
-					logger.Error("Cannot convert the value [{0}] of [{1}] to double type from table ItemLatestStatus. {2}", row["Val"], row["ItemId"], ex);
+					logger.Error("Cannot convert the value [{0}] of [{1}] to int type from table ItemLatestStatus. {2}", row["Val"], row["ItemId"], ex);
 				}
 			});
 
