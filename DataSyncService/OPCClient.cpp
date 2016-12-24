@@ -179,7 +179,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	}
 }
 
-COPCClient::COPCClient()
+COPCClient::COPCClient(INT nMinGoodQuality) : m_nMinGoodQuality(nMinGoodQuality)
 {
 	m_bConnected = FALSE;
 	m_pConnectionPointContainer = NULL;
@@ -702,7 +702,7 @@ void COPCClient::RemoveCallback()
 
 BOOL COPCClient::IsQualityGood(OPCITEMSTATE &value)
 {
-	return (value.wQuality == OPC_Good_Quality);
+	return (value.wQuality >= m_nMinGoodQuality);
 }
 
 INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL bUpdateDB, OPCITEMSTATE *pState)
@@ -746,6 +746,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 					// TODO: notfiy on UI?
 					continue;
 				}
+
 				// TODO: May need to convert the readed value by pItem->pInConverter
 
 				if (bUpdateDB)
@@ -769,6 +770,9 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			{
 				_stprintf_s(buf, sizeof(buf)/sizeof(buf[0]), _T("%s, hr = %x, error = %x;"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
 				szFailedItems.append(buf);
+
+				// temp
+				//g_Logger.ForceLog(szFailedItems.c_str());
 				//g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() for Item=%s, hr=%x, error=%x"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
 			}
 			
@@ -787,7 +791,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			CHECK_CONNECT(m_hLastHResult)
 		}
 
-		if (pvList->size() > 0)
+		if (szFailedItems.size() > 0)
 		{
 			// TODO Suppres the log output if keep get the same error
 			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), szFailedItems.c_str());

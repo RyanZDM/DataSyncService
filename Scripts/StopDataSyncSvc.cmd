@@ -1,0 +1,3 @@
+@Echo off
+Echo Stopping DataSyncService...
+net stop DataSyncService

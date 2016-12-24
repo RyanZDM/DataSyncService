@@ -17,4 +17,4 @@
 #define DEFAULT_KEEP_DB_CONNECT			TRUE
 #define DEFAULT_ITEMS_EACHTIME			100
 
-#define OPC_Good_Quality				192
+#define OPC_Min_Good_Quality				32

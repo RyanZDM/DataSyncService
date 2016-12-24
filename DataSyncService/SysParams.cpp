@@ -23,6 +23,7 @@ CSysParams::CSysParams()
 	m_lQryInterval = DEFAULT_QRY_INTERVAL;
 	m_bEnableLog = DEFAULT_LOG_FLAG;
 	m_bKeepDbConnection = DEFAULT_KEEP_DB_CONNECT;
+	m_nMinGoodQuality = OPC_Min_Good_Quality;
 
 	InitMutex();
 }
@@ -140,6 +141,13 @@ INT CSysParams::RefreshSysParams(CDBUtil &db, BOOL bLog)
 					szMsg += _T("\n\tRemote Machine: ");
 					szMsg += W2T(pTemp);
 				}
+			}
+
+			m_nMinGoodQuality = (INT)db.GetSingleLongValue(_T("SELECT CAST(Value As int) From GeneralParams Where Category='System' AND Name='MinOPCGoodQuality'"), m_nMinGoodQuality);
+			if (bLog)
+			{
+				_stprintf_s(buf, sizeof(buf) / sizeof(buf[0]), _T("\n\tMin value for OPC good quality: %d."), m_lQryInterval);
+				szMsg += buf;
 			}
 
 			m_bKeepDbConnection = db.GetSingleBoolValue(_T("SELECT Rtrim(Ltrim(Value)) FROM GeneralParams WHERE Category='System' AND Name='KeepDbConnection'"), m_bKeepDbConnection);

@@ -19,6 +19,7 @@
 #include "opccomn.h"
 #include "opcerror.h"
 #include "datasink20.h"
+#include "Constants.h"
 
 using namespace std;
 
@@ -200,11 +201,12 @@ public:
 	vector<LPWSTR> & CurrentOPCServerList() { return m_vOPCServerList; }
 	inline BOOL IsQualityGood(OPCITEMSTATE &value);
 
-	COPCClient();
+	COPCClient(INT nMinGoodQuality = OPC_Min_Good_Quality);
 	virtual ~COPCClient();
 	void Clear();
 
 private:
+	INT m_nMinGoodQuality;
 	void RemoveCallback();
 	DWORD AddCallback();
 

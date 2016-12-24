@@ -42,8 +42,8 @@ namespace EBoard.Common
 
 		public DateTime EndTime { get; set; }
 
-		public IDictionary<string, double> MonitorItems { get; set; }
+		public IDictionary<string, int> MonitorItems { get; set; }
 
-		public IDictionary<string, double> StatInfo { get; set; }
+		public IDictionary<string, int> StatInfo { get; set; }
 	}
 }

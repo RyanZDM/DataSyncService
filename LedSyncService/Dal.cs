@@ -22,46 +22,39 @@ namespace LedSyncService
 		{
 			var data = new StatData();
 
-			// temp
-			var random = new Random(DateTime.Now.Second);
-			data.CurrentBiogasUsed = random.Next();
-			data.TotalBiogasUsed = data.CurrentBiogasUsed * 2;
-			data.CurrentEnergyGenerated = random.Next();
-			data.TotalEnergyGenerated = data.CurrentEnergyGenerated * 2;
+			var shiftId = GetCurrentShiftId();
 
-			//var shiftId = GetCurrentShiftId();
+			var sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('EnergyProduction1', 'EnergyProduction2')", shiftId);
+			var cmd = new SqlCommand(sql, connection);
+			using (var reader = cmd.ExecuteReader())
+			{
+				if (!reader.Read())
+				{
+					logger.Error("No result return for the sql [{0}]", sql);
+					return null;
+				}
 
-			//var sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('EnergyProduction1', 'EnergyProduction2')", shiftId);
-			//var cmd = new SqlCommand(sql, connection);
-			//using (var reader = cmd.ExecuteReader())
-			//{
-			//	if (!reader.Read())
-			//	{
-			//		logger.Error("No result return for the sql [{0}]", sql);
-			//		return null;
-			//	}
-				
-			//	data.TotalEnergyGenerated = float.Parse(reader.GetValue(1).ToString());		// The data type get from database might be double, cannot directly convert it to float unless (float)(double)reader.GetValue(1)
-			//	data.CurrentEnergyGenerated = data.TotalEnergyGenerated - float.Parse(reader.GetValue(0).ToString());
+				data.TotalEnergyGenerated = float.Parse(reader.GetValue(1).ToString());     // The data type get from database might be double, cannot directly convert it to float unless (float)(double)reader.GetValue(1)
+				data.CurrentEnergyGenerated = data.TotalEnergyGenerated - float.Parse(reader.GetValue(0).ToString());
 
-			//	reader.Close();
-			//}
+				reader.Close();
+			}
 
-			//sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('Biogas2GenSubtotal','Biogas2TorchSubtotal')", shiftId);
-			//cmd = new SqlCommand(sql, connection);
-			//using (var reader = cmd.ExecuteReader())
-			//{
-			//	if (!reader.Read())
-			//	{
-			//		logger.Error("No result return for the sql [{0}]", sql);
-			//		return null;
-			//	}
+			sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('Biogas2GenSubtotal','Biogas2TorchSubtotal')", shiftId);
+			cmd = new SqlCommand(sql, connection);
+			using (var reader = cmd.ExecuteReader())
+			{
+				if (!reader.Read())
+				{
+					logger.Error("No result return for the sql [{0}]", sql);
+					return null;
+				}
 
-			//	data.TotalBiogasUsed = float.Parse(reader.GetValue(1).ToString());
-			//	data.CurrentBiogasUsed = data.TotalBiogasUsed - float.Parse(reader.GetValue(0).ToString());
+				data.TotalBiogasUsed = float.Parse(reader.GetValue(1).ToString());
+				data.CurrentBiogasUsed = data.TotalBiogasUsed - float.Parse(reader.GetValue(0).ToString());
 
-			//	reader.Close();
-			//}
+				reader.Close();
+			}
 
 			return data;
 		}

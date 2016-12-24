@@ -1,0 +1,3 @@
+@Echo off
+Echo Sarting DataSyncService...
+net start DataSyncService

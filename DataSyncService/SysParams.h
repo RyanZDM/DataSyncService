@@ -19,6 +19,7 @@ class CSysParams
 {
 public:		
 	INT GetItemList(vector<LPITEMINFO>& vList);
+	INT GetMinGoodQuality() { return m_nMinGoodQuality; }
 	BOOL EnableLog(BOOL bFlag);
 	BOOL SetRemoteMachine(LPWSTR pName);
 	BOOL SetQueryInterval(long interval);
@@ -48,6 +49,7 @@ private:
 	wstring	m_wszOPCServerProgID;
 	wstring	m_wszRemoteMachine;
 	BOOL	m_bKeepDbConnection;
+	INT		m_nMinGoodQuality;
 };
 
 #endif // !defined(AFX_SYSPARAMS_H__640CAA53_1956_4B69_9D2A_B65090686F16__INCLUDED_)

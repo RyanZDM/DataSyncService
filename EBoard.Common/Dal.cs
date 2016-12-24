@@ -107,7 +107,7 @@ namespace EBoard.Common
 		public ShiftStatInfo GetShiftStatInfo(DateTime? lastUpdate = null)
 		{
 			var ds = new DataSet();
-			var sql = @"Select a.ItemId, a.Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId";
+			var sql = @"Select a.ItemId, CAST(a.Val As int) as Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId";
 			var adapter = new SqlDataAdapter(sql, connection);
 			adapter.Fill(ds, "ItemLatestStatus");
 
@@ -144,16 +144,16 @@ namespace EBoard.Common
 			UpdateProperties(mstrTable.Rows[0], data);
 
 			// Get data from ShiftStatDet table
-			sql = string.Format(@"SELECT Item,IsNull(det.SubTotalLast,0.0) - IsNull(det.SubTotalBegin,0.0) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
+			sql = string.Format(@"SELECT Item, CAST((IsNull(det.SubTotalLast,0) - IsNull(det.SubTotalBegin,0)) As int) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
 			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatDet");
 
 			var detTable = ds.Tables["ShiftStatDet"];
-			data.StatInfo = new Dictionary<string, double>();
+			data.StatInfo = new Dictionary<string, int>();
 			detTable.AsEnumerable().ToList().ForEach(row =>
 			{
 				try
 				{
-					data.StatInfo[row["Item"].ToString().ToLower()] = (double)row["SubTotal"];
+					data.StatInfo[row["Item"].ToString().ToLower()] = (int)row["SubTotal"];
 				}
 				catch (Exception ex)
 				{
@@ -162,14 +162,14 @@ namespace EBoard.Common
 			});
 
 			// Get total run time of generator from ShiftStatDet table, no need to subtract
-			sql = string.Format(@"SELECT Item,IsNull(det.SubTotalLast,0.0) as SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier) And Item In ('{1}','{2}')", shiftId, ShiftStatInfo.SubtotalRuntime1ColName, ShiftStatInfo.SubtotalRuntime2ColName);
+			sql = string.Format(@"SELECT Item,CAST(IsNull(det.SubTotalLast,0.0) As int) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier) And Item In ('{1}','{2}')", shiftId, ShiftStatInfo.SubtotalRuntime1ColName, ShiftStatInfo.SubtotalRuntime2ColName);
 			new SqlDataAdapter(sql, connection).Fill(ds, "TotalRunTime");
 			var totalRuntimeTable = ds.Tables["TotalRunTime"];
 			totalRuntimeTable.AsEnumerable().ToList().ForEach(row =>
 			{
 				try
 				{
-					data.StatInfo[row["Item"].ToString().ToLower().Substring(3)] = (double)row["SubTotalLast"];
+					data.StatInfo[row["Item"].ToString().ToLower().Substring(3)] = (int)row["SubTotalLast"];
 				}
 				catch (Exception ex)
 				{
@@ -178,12 +178,12 @@ namespace EBoard.Common
 			});
 
 			// Get data from ItemLatestStatus table
-			data.MonitorItems = new Dictionary<string, double>();
+			data.MonitorItems = new Dictionary<string, int>();
 			latestTable.AsEnumerable().ToList().ForEach(row =>
 			{
 				try
 				{
-					data.MonitorItems[row["ItemId"].ToString().ToLower()] = (double)row["Val"];
+					data.MonitorItems[row["ItemId"].ToString().ToLower()] = (int)row["Val"];
 				}
 				catch (Exception ex)
 				{

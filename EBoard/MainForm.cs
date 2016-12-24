@@ -319,7 +319,7 @@ namespace EBoard
 				return;
 			}
 
-			double? 
+			int? 
 					//biogas2Torch = null,
 					//biogas2Gen = null,
 					biogas2TorchSubtotal = null,
@@ -359,31 +359,31 @@ namespace EBoard
 			/// 2. accumulated values
 			// 2.1 Subtotal biogas of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2TorchSubtotalColName))
-				biogas2TorchSubtotal = data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
+				biogas2TorchSubtotal = (int)data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2GenSubtotalColName))
-				biogas2GenSubtotal = data.StatInfo[ShiftStatInfo.Biogas2GenSubtotalColName];
+				biogas2GenSubtotal = (int)data.StatInfo[ShiftStatInfo.Biogas2GenSubtotalColName];
 
 			// 2.2 Energy production of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction1ColName))
-				energyProduction1 = data.StatInfo[ShiftStatInfo.EnergyProduction1ColName];
+				energyProduction1 = (int)data.StatInfo[ShiftStatInfo.EnergyProduction1ColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName))
-				energyProduction2 = data.StatInfo[ShiftStatInfo.EnergyProduction2ColName];
+				energyProduction2 = (int)(double)data.StatInfo[ShiftStatInfo.EnergyProduction2ColName];
 
 			// 2.3 subtotal runtime of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime1ColName))
-				subtotalRuntime1 = data.StatInfo[ShiftStatInfo.SubtotalRuntime1ColName];
+				subtotalRuntime1 = (int)data.StatInfo[ShiftStatInfo.SubtotalRuntime1ColName];
 						
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime2ColName))
-				subtotalRuntime2 = data.StatInfo[ShiftStatInfo.SubtotalRuntime2ColName];
+				subtotalRuntime2 = (int)data.StatInfo[ShiftStatInfo.SubtotalRuntime2ColName];
 
 			// 2.4 total runtime
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName))
-				totalRuntime1 = data.StatInfo[ShiftStatInfo.TotalRuntime1ColName];
+				totalRuntime1 = (int)data.StatInfo[ShiftStatInfo.TotalRuntime1ColName];
 
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime2ColName))
-				totalRuntime2 = data.StatInfo[ShiftStatInfo.TotalRuntime2ColName];
+				totalRuntime2 = (int)data.StatInfo[ShiftStatInfo.TotalRuntime2ColName];
 
 			// Update labels on GUI
 			// 2.4
@@ -563,8 +563,8 @@ namespace EBoard
 				if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
 				{
 					var sumRow = ds.Tables[1].Rows[0];
-					labelBiogasMonth.Text = sumRow["Biogas"].ToString() + UnitM3;
-					labelEnergyProductionMonth.Text = sumRow["EngeryProduction"].ToString() + UnitKWh;
+					labelBiogasMonth.Text = ((int)sumRow["Biogas"]).ToString() + UnitM3;
+					labelEnergyProductionMonth.Text = ((int)sumRow["EngeryProduction"]).ToString() + UnitKWh;
 				}
 
 				// Refresh the chart label
@@ -608,7 +608,7 @@ namespace EBoard
 						}
 						else
 						{
-							label.Text = row[ChartLabelMapping[label.RowIndex]].ToString();
+							label.Text = ((int)row[ChartLabelMapping[label.RowIndex]]).ToString();
 						}
 					}
 				}
