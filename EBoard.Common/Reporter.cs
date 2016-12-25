@@ -32,7 +32,7 @@ namespace EBoard.Common
 			connection = conn;
 		}
 
-		public void CreateReportFile(int year, int month)
+		public string CreateReportFile(int year, int month)
 		{
 			using (var command = new SqlCommand(string.Format(@"Select ReportId,IsFileCreated From MonthReportMstr Where Status='A' And YearMonth='{0}{1:D2}'", year, month), connection))
 			{
@@ -54,12 +54,12 @@ namespace EBoard.Common
 					var reportId = reader.GetGuid(0).ToString();
 					reader.Close();
 
-					CreateReportExcel(reportId, year, month);
+					return CreateReportExcel(reportId, year, month);
 				}
 			}
 		}
 		
-		public void CreateReportFile(string reportId)
+		public string CreateReportFile(string reportId)
 		{
 			// Do not consider the Status since provided the report id
 			using (var command = new SqlCommand(string.Format(@"Select IsFileCreated,YearMonth From MonthReportMstr Where ReportId=CAST('{0}' AS uniqueidentifier)", reportId), connection))
@@ -82,7 +82,7 @@ namespace EBoard.Common
 					var month = int.Parse(yearMonth.Substring(4));
 					reader.Close();
 
-					CreateReportExcel(reportId, year, month);
+					return CreateReportExcel(reportId, year, month);
 				}
 			}
 		}
