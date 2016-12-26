@@ -9,6 +9,9 @@
 #include <stdio.h>
 #include <wchar.h>
 
+#include <iostream>
+#include <sstream> 
+
 #if _MSC_VER>1200 
 	#pragma comment(lib, "comsuppW.lib")
 #else
@@ -1224,4 +1227,62 @@ char CStrUtil::Str2Char(const char *pcszHex /*char[1/2]*/, INT nLen/*1 or 2*/, I
 	char data[3] = {0};
 	strncpy_s(data, 3, pcszHex, nLen);
 	return (char)strtol(data, NULL, base);
+}
+
+/************************************************************************/
+/* Description: Extract the program from a command string				*/
+/* Assuem a program is either enclosed by double quotation marks OR		*/
+/* divided by space char with its arguments								*/
+/* Return: 0 if argument is invalid, -1 if buffer size is not enough	*/
+/*         >0 The length of path to program								*/
+/************************************************************************/
+INT CStrUtil::GetProgramFromCommandString(LPCTSTR pcszCmdStr, LPTSTR szBuf, DWORD dwLen)
+{
+	if (!pcszCmdStr || (_tcslen(pcszCmdStr) < 1) || !szBuf)
+		return 0;
+
+	if (dwLen < 1)
+		return -1;
+
+	// Assume the path to program does not constain the space since did not find the double quotation mark
+	if (pcszCmdStr[0] != _T('"'))
+	{
+		basic_string<TCHAR> str;
+		basic_istringstream<TCHAR> is(pcszCmdStr);
+		if (is.good())
+		{
+			is >> str;
+			if (str.size() >= dwLen)
+				return -1;
+
+			_tcscpy_s(szBuf, dwLen, str.c_str());
+
+			return str.size();
+		}
+	}
+
+	// Assume the program are enclosed by double quotation marks
+	LPCTSTR pStart = pcszCmdStr + 1;
+	LPCTSTR pEnd = _tcschr(pStart, _T('"'));
+	if (pEnd)
+	{
+		INT nLen = (pEnd - pStart);
+		if (nLen >= dwLen)
+			return -1;
+
+		_tcsncpy_s(szBuf, dwLen, pStart, nLen);
+
+		return nLen;
+	}
+	else
+	{
+		// Not found the right double quotation mark, assume the whole string is program
+		INT nLen = _tcslen(pStart);
+		if (nLen >= dwLen)
+			return -1;
+
+		_tcscpy_s(szBuf, dwLen, pStart);
+
+		return nLen;
+	}
 }

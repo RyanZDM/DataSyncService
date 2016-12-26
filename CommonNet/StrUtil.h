@@ -100,6 +100,7 @@ public:
 	static INT Str2Vector(std::vector<wstring> &vRet, LPCWSTR lpszSource, LPCWSTR lpszSeparator, BOOL bCaseSensitive = FALSE);					// Split a string according to specified separator and fill it into a vector
 	static string & Vector2Str(string & str, const std::vector<string> &vList, LPCSTR lpszSeparator);											// Combine all string in vector to a single string
 	static wstring & Vector2Str(wstring & str, const std::vector<wstring> &vList, LPCWSTR lpszSeparator);
+	static INT GetProgramFromCommandString(LPCTSTR pcszCmdStr, LPTSTR szBuf, DWORD dwLen);														// Extract the program from a command string
 	
 	CStrUtil();
 	virtual ~CStrUtil();

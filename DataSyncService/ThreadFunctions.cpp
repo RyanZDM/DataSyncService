@@ -389,15 +389,25 @@ void RunTask(LPCTSTR pcszCommand)
 			return;
 		}
 
-		TCHAR szCommand[1000] = { _T('\0') };		
-		if (_tcschr(pcszCommand, _T('/')) || _tcschr(pcszCommand, _T('\\')))
+		TCHAR szProgram[MAX_PATH];
+		CStrUtil::GetProgramFromCommandString(pcszCommand, szProgram, MAX_PATH);
+
+		TCHAR szCommand[1000] = { _T('\0') };
+		if (pcszCommand[0] == _T('"')
+			|| (_tcschr(szProgram, _T('\\')) || _tcschr(szProgram, _T('/'))))
 		{
-			// Do not combine the absoulute path to command since found the char '\'
+			// Do not combine the absoulute path to command if found double quotation marks
+			// Do not combine the absoulute path to command if found the char '\'
 			_tcscpy_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), pcszCommand);
+			if (_taccess(szProgram, 0) == -1)
+			{
+				g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szProgram);
+				// Do not exit in case it is in the system path
+			}
 		}
 		else
 		{
-			// Combine the absolution path
+			// Need to bombine the absolution path
 			TCHAR path[MAX_PATH];
 			if (!GetModuleFileName(NULL, path, sizeof(path) / sizeof(path[0])))
 			{
@@ -416,12 +426,10 @@ void RunTask(LPCTSTR pcszCommand)
 				}
 
 				_stprintf_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), _T("%s\\%s"), path, pcszCommand);
-
-				// Check if the file exist or not
-
-				if (_taccess(szCommand, 0) == -1)
+				CStrUtil::GetProgramFromCommandString(szCommand, szProgram, MAX_PATH);
+				if (_taccess(szProgram, 0) == -1)
 				{
-					g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szCommand);
+					g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szProgram);
 					// Do not exit in case it is in the system path
 				}
 			}
