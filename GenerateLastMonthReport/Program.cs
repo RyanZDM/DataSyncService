@@ -83,7 +83,7 @@ namespace GenerateLastMonthReport
 			try
 			{
 				var connection = DbFactory.GetConnection();
-				var reporter = new Reporter(connection);				
+				var reporter = new Reporter(connection);
 				var excelFilePath = reporter.CreateReportFile(year, month);
 
 				var sql =
@@ -150,7 +150,7 @@ namespace GenerateLastMonthReport
 
 				if (isFileCreated)
 					return 1;
-								
+
 				if (notCreateExcel)
 					return 1;
 

@@ -422,7 +422,7 @@ void RunTask(LPCTSTR pcszCommand)
 				if (_taccess(szCommand, 0) == -1)
 				{
 					g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szCommand);
-					// Do not exit in case it is in the path
+					// Do not exit in case it is in the system path
 				}
 			}
 		}
