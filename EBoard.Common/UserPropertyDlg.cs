@@ -62,7 +62,7 @@ namespace EBoard.Common
 					user = dal.GetUser(LoginId);
 					dal.GetUserRoles(user);
 
-					Text = string.Format("{0} 属性", loginId);
+					Text = $"{loginId} 属性";
 					labelLoginId.Text = LoginId;
 
 					textBoxUserName.DataBindings.Add("Text", user, "Name");
@@ -88,7 +88,7 @@ namespace EBoard.Common
 			}
 		}
 
-		private void buttonSave_Click(object sender, System.EventArgs e)
+		private void buttonSave_Click(object sender, EventArgs e)
 		{
 			user.Status = checkBoxDisable.Checked ? "X" : "A";
 
@@ -119,7 +119,7 @@ namespace EBoard.Common
 			buttonSave.Enabled = false;
 		}
 
-		private void textBox_TextChanged(object sender, System.EventArgs e)
+		private void textBox_TextChanged(object sender, EventArgs e)
 		{
 			if (isInitializing)
 				return;
@@ -127,7 +127,7 @@ namespace EBoard.Common
 			DataChanged = true;
 		}
 
-		private void checkBoxDisable_CheckedChanged(object sender, System.EventArgs e)
+		private void checkBoxDisable_CheckedChanged(object sender, EventArgs e)
 		{
 			if (isInitializing)
 				return;
@@ -209,11 +209,11 @@ namespace EBoard.Common
 
 		private void UserPropertyDlg_Load(object sender, EventArgs e)
 		{
-			textBoxPassword.TextChanged += new System.EventHandler(textBox_TextChanged);
-			textBoxIDCard.TextChanged += new System.EventHandler(textBox_TextChanged);
-			textBoxUserName.TextChanged += new System.EventHandler(textBox_TextChanged);
-			textBoxPassowrdConfirm.TextChanged += new System.EventHandler(textBox_TextChanged);
-			checkBoxDisable.CheckedChanged += new System.EventHandler(checkBoxDisable_CheckedChanged);
+			textBoxPassword.TextChanged += new EventHandler(textBox_TextChanged);
+			textBoxIDCard.TextChanged += new EventHandler(textBox_TextChanged);
+			textBoxUserName.TextChanged += new EventHandler(textBox_TextChanged);
+			textBoxPassowrdConfirm.TextChanged += new EventHandler(textBox_TextChanged);
+			checkBoxDisable.CheckedChanged += new EventHandler(checkBoxDisable_CheckedChanged);
 		}
 	}
 }

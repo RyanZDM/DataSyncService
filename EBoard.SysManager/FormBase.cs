@@ -1,12 +1,11 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace EBoard.SysManager
 {
 	public partial class FormBase : Form
 	{
-		private bool hasDirtyData = false;
+		private bool hasDirtyData;
 
 		protected bool HasDirtyData
 		{

@@ -10,7 +10,7 @@ namespace LedSyncService
 {
 	public class LedSyncSvc
 	{
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		const int LedWidth = 160;
 		const int LedHeight = 80;

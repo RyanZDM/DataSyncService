@@ -2,20 +2,26 @@ using System;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace EBoard.Common
 {
-	// TODO: seems many workbook instance is kept in memory
+	/// <summary>
+	/// Need to call Dispose() after used this class to avoid the memory leak
+	/// </summary>
 	public class ExcelApp : IDisposable
 	{
-		private static object Nothing = Missing.Value;
+		private static readonly object Nothing = Missing.Value;
 
 		private Excel.Application app;
+
+		private Excel.Workbooks workbooks;
 
 		public ExcelApp()
 		{
 			app = new Excel.Application { Visible = false };
+			workbooks = app.Workbooks;
 		}
 
 
@@ -25,7 +31,7 @@ namespace EBoard.Common
 		/// <param name="fileName"></param>  
 		public Excel.Workbook CreateExcel(string fileName)
 		{
-			var workbook = app.Workbooks.Add(Nothing);
+			var workbook = workbooks.Add(Nothing);
 			workbook.SaveAs(fileName, Nothing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Excel.XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing);
 			return workbook;
 		}
@@ -42,7 +48,7 @@ namespace EBoard.Common
 		/// <param name="filename">file name</param>  
 		public Excel.Workbook OpenExcel(string filename)
 		{
-			return app.Workbooks.Open(filename, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing);
+			return workbooks.Open(filename, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, Nothing);
 		}
 
 		public Excel.Worksheet CreateWorksheet(Excel.Workbook workbook, string sheetName)
@@ -121,28 +127,24 @@ namespace EBoard.Common
 
 		public void Close()
 		{
-			if (app != null)
-			{
-				foreach (dynamic workbook in app.Workbooks)
-				{
-					workbook.Close(false, Type.Missing, Type.Missing);
-				}
-			}
-
 			Cleanup();
 		}
 
 		private void Cleanup()
 		{
-			if (app != null)
+			if (workbooks != null)
 			{
-				app.Quit();
-				app = null;
+				foreach (dynamic workbook in workbooks)
+				{
+					workbook.Close(false, Type.Missing, Type.Missing);
+				}
 			}
+			
+			app?.Quit();
 		}
 
 		#region IDisposable Support
-		private bool disposedValue = false; // To detect redundant calls
+		private bool disposedValue; // To detect redundant calls
 
 		protected virtual void Dispose(bool disposing)
 		{
@@ -152,9 +154,21 @@ namespace EBoard.Common
 				{
 					Cleanup();
 				}
+				
+				if (workbooks != null)
+				{
+					Marshal.FinalReleaseComObject(workbooks);
+					workbooks = null;
+				}
 
-				// TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-				// TODO: set large fields to null.
+				if (app != null)
+				{
+					Marshal.FinalReleaseComObject(app);
+					app = null;
+				}
+
+				GC.Collect();
+				GC.WaitForPendingFinalizers();
 
 				disposedValue = true;
 			}

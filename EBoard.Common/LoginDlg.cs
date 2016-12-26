@@ -1,6 +1,5 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 using System.Windows.Forms;
@@ -80,7 +79,7 @@ namespace EBoard.Common
 					var user = dal.GetUser(loginId);
 					if (user == null)
 					{
-						MessageBox.Show(string.Format("用户[{0}]不存在。", loginId));
+						MessageBox.Show($"用户[{loginId}]不存在。");
 						return;
 					}
 
@@ -109,7 +108,7 @@ namespace EBoard.Common
 				catch (Exception ex)
 				{
 					Logger.Error(ex, "Failed to get user info.");
-					MessageBox.Show(string.Format("登录时遇到错误，请重试.{0}", ex));
+					MessageBox.Show($"登录时遇到错误，请重试.{ex}");
 					return;
 				}
 			}
@@ -123,8 +122,6 @@ namespace EBoard.Common
 			DialogResult = DialogResult.OK;
 			OpenNextForm();
 			Close();
-
-			return;
 		}
 
 		#region Form operation		
@@ -214,9 +211,6 @@ namespace EBoard.Common
 					labelFlashCard.Show();
 					listViewUserInfo.Hide();
 					break;
-
-				default:
-					break;
 			}
 		}
 
@@ -284,7 +278,7 @@ namespace EBoard.Common
 					labelFlashCard.Hide();
 					while (listViewUserInfo.Items.Count > 0) { listViewUserInfo.Items.RemoveAt(0); }
 					listViewUserInfo.Show();
-					listViewUserInfo.Items.AddRange(new ListViewItem[] {
+					listViewUserInfo.Items.AddRange(new[] {
 						new ListViewItem(new string[] { "登录ID", user.LoginId }),
 						new ListViewItem(new string[] { "姓名", user.Name }),
 						new ListViewItem(new string[] { "状态", statusValid ? "正常" : "异常" })
@@ -302,7 +296,6 @@ namespace EBoard.Common
 			{
 				Logger.Error(ex, "Failed to get user by ID card.");
 				MessageBox.Show("无法获取ID Card信息.");
-				return;
 			}
 
 		}

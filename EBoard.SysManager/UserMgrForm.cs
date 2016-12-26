@@ -11,7 +11,7 @@ namespace EBoard.SysManager
 {
 	public partial class UserMgrForm : FormBase
 	{
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		private SqlConnection connection;
 
@@ -119,7 +119,7 @@ namespace EBoard.SysManager
 			catch (Exception ex)
 			{
 				logger.Error(ex, "Failed to save data.");
-				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
+				MessageBox.Show($"无法保存数据。{ex.ToString()}");
 				return false;
 			}
 		}
@@ -233,7 +233,7 @@ namespace EBoard.SysManager
 			}
 
 			var val = row.Cells["IsProtected"].Value;
-			var isProtected = (val.GetType() != typeof(DBNull)) ? (bool)val : false;
+			var isProtected = (val.GetType() != typeof(DBNull)) && (bool)val;
 
 			var dlg = new UserPropertyDlg(connection) { LoginId = loginId, IsUserProtected = isProtected };
 			dlg.ShowDialog();

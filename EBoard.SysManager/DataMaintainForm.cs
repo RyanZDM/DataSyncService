@@ -11,15 +11,15 @@ namespace EBoard.SysManager
 {
 	public partial class DataMaintainForm : FormBase
 	{
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		private bool isInitialzing = true;
 
-		private bool isRefreshing = false;
+		private bool isRefreshing;
 
 		private SqlConnection connection;
 
-		private Dictionary<string, Control> nodeMappings = new Dictionary<string, Control>();
+		private readonly Dictionary<string, Control> nodeMappings = new Dictionary<string, Control>();
 
 		public DataMaintainForm()
 		{
@@ -34,7 +34,7 @@ namespace EBoard.SysManager
 
 		private TreeNode InitDataGridView()
 		{
-			TreeNode nodeToSelect = null;
+			TreeNode nodeToSelect;
 			isInitialzing = true;
 			try
 			{
@@ -43,7 +43,7 @@ namespace EBoard.SysManager
 
 				// For monitor items
 				var dataTypeTable = new DataTable();
-				dataTypeTable.Columns.AddRange(new DataColumn[]
+				dataTypeTable.Columns.AddRange(new[]
 												{
 													new DataColumn("Data", typeof(int)),
 													new DataColumn("Display", typeof(string))
@@ -219,7 +219,7 @@ namespace EBoard.SysManager
 			catch (Exception ex)
 			{
 				logger.Error(ex, "Failed to save data.");
-				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
+				MessageBox.Show($"无法保存数据。{ex.ToString()}");
 				return false;
 			}
 		}
@@ -356,7 +356,7 @@ namespace EBoard.SysManager
 		private void comboBoxCategory_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			var category = comboBoxCategory.Text;
-			var filter = comboBoxCategory.Text == "" ? "" : string.Format("Category = '{0}'", category);
+			var filter = comboBoxCategory.Text == "" ? "" : $"Category = '{category}'";
 
 			(dataGridViewGeneralParams.DataSource as DataView).RowFilter = filter;
 		}

@@ -9,7 +9,7 @@ namespace EBoard.Common
 {
 	public class Dal
 	{
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		private SqlConnection connection;
 
@@ -45,7 +45,8 @@ namespace EBoard.Common
 			if (string.IsNullOrWhiteSpace(shiftId))
 				shiftId = GetCurrentShiftId();
 
-			var sql = string.Format(@"Select LoginId,LoginName,LoginTime From WorkersInShift Where ShiftId=CAST('{0}' as uniqueidentifier)", shiftId);
+			var sql =
+				$@"Select LoginId,LoginName,LoginTime From WorkersInShift Where ShiftId=CAST('{shiftId}' as uniqueidentifier)";
 			using (var command = new SqlCommand(sql, connection))
 			{
 				using (var reader = command.ExecuteReader())
@@ -76,7 +77,9 @@ namespace EBoard.Common
 		/// <returns></returns>
 		public bool AddWorkerInShift(string shiftId, User worker)
 		{
-			var sql = string.Format(@"Insert Into WorkersInShift (ShiftId,LoginId,LoginName,LoginTime) Values(CAST('{0}' As uniqueidentifier),'{1}','{2}',GetDate())", shiftId, worker.LoginId, worker.Name);
+			var sql =
+				$@"Insert Into WorkersInShift (ShiftId,LoginId,LoginName,LoginTime) Values(CAST('{shiftId}' As uniqueidentifier),'{worker
+					.LoginId}','{worker.Name}',GetDate())";
 			using (var command = new SqlCommand(sql, connection))
 			{
 				return (command.ExecuteNonQuery() > 0);
@@ -92,7 +95,8 @@ namespace EBoard.Common
 		/// <returns></returns>
 		public bool UpdateWorkerInShift(string shiftId, string oldLoginId, User newWorker)
 		{
-			var sql = string.Format(@"Update WorkersInShift Set LoginId='{0}',LoginName='{1}',LoginTime=GetDate() Where ShiftId=CAST('{2}' AS uniqueidentifier) And LoginId='{3}'", newWorker.LoginId, newWorker.Name, shiftId, oldLoginId);
+			var sql =
+				$@"Update WorkersInShift Set LoginId='{newWorker.LoginId}',LoginName='{newWorker.Name}',LoginTime=GetDate() Where ShiftId=CAST('{shiftId}' AS uniqueidentifier) And LoginId='{oldLoginId}'";
 			using (var command = new SqlCommand(sql, connection))
 			{
 				return (command.ExecuteNonQuery() > 0);
@@ -121,7 +125,8 @@ namespace EBoard.Common
 			// Get data from ShiftStatMstr table
 			var shiftId = GetCurrentShiftId();
 
-			sql = string.Format(@"Select CAST(ShiftId AS nvarchar(50)) ShiftId,BeginTime,ActualBeginTime,LastUpdateTime,EndTime,Status From ShiftStatMstr Where ShiftId=CAST('{0}' as uniqueidentifier)", shiftId);
+			sql =
+				$@"Select CAST(ShiftId AS nvarchar(50)) ShiftId,BeginTime,ActualBeginTime,LastUpdateTime,EndTime,Status From ShiftStatMstr Where ShiftId=CAST('{shiftId}' as uniqueidentifier)";
 			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatMstr");
 
 			var mstrTable = ds.Tables["ShiftStatMstr"];
@@ -144,7 +149,8 @@ namespace EBoard.Common
 			UpdateProperties(mstrTable.Rows[0], data);
 
 			// Get data from ShiftStatDet table
-			sql = string.Format(@"SELECT Item, (IsNull(det.SubTotalLast,0) - IsNull(det.SubTotalBegin,0)) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier)", shiftId);
+			sql =
+				$@"SELECT Item, (IsNull(det.SubTotalLast,0) - IsNull(det.SubTotalBegin,0)) as SubTotal FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{shiftId}' AS uniqueidentifier)";
 			new SqlDataAdapter(sql, connection).Fill(ds, "ShiftStatDet");
 
 			var detTable = ds.Tables["ShiftStatDet"];
@@ -162,7 +168,9 @@ namespace EBoard.Common
 			});
 
 			// Get total run time of generator from ShiftStatDet table, no need to subtract
-			sql = string.Format(@"SELECT Item,IsNull(det.SubTotalLast,0) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{0}' AS uniqueidentifier) And Item In ('{1}','{2}')", shiftId, ShiftStatInfo.SubtotalRuntime1ColName, ShiftStatInfo.SubtotalRuntime2ColName);
+			sql =
+				$@"SELECT Item,IsNull(det.SubTotalLast,0) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{shiftId}' AS uniqueidentifier) And Item In ('{ShiftStatInfo
+					.SubtotalRuntime1ColName}','{ShiftStatInfo.SubtotalRuntime2ColName}')";
 			new SqlDataAdapter(sql, connection).Fill(ds, "TotalRunTime");
 			var totalRuntimeTable = ds.Tables["TotalRunTime"];
 			totalRuntimeTable.AsEnumerable().ToList().ForEach(row =>
@@ -223,7 +231,7 @@ namespace EBoard.Common
 		/// <returns></returns>
 		public User GetUser(string loginId)
 		{
-			return InternalGetUser(string.Format("LoginId ='{0}'", loginId));
+			return InternalGetUser($"LoginId ='{loginId}'");
 		}
 
 		/// <summary>
@@ -267,7 +275,7 @@ namespace EBoard.Common
 		/// <returns></returns>
 		public User GetUserByIdCard(string idCard)
 		{
-			return InternalGetUser(string.Format("IDCard='{0}'", idCard));
+			return InternalGetUser($"IDCard='{idCard}'");
 		}
 
 		private User InternalGetUser(string condition)
@@ -275,7 +283,7 @@ namespace EBoard.Common
 			var sql = @"SELECT UserId,LoginId,Name,Password,IDCard,Status,IsProtected FROM [User]";
 			if (!string.IsNullOrWhiteSpace(condition))
 			{
-				sql += string.Format(" WHERE {0}", condition);
+				sql += $" WHERE {condition}";
 			}
 
 			var ds = new DataSet();
@@ -309,8 +317,8 @@ namespace EBoard.Common
 		public int GetUserCountByName(string name, bool caseInSensitive = true)
 		{
 			var sql = caseInSensitive ?
-				string.Format(@"SELECT COUNT(UserID) FROM [User] WHERE Upper(Name)='{0}'", name.ToUpper()) :
-				string.Format(@"SELECT COUNT(UserID) FROM [User] WHERE Name='{0}'", name);
+				$@"SELECT COUNT(UserID) FROM [User] WHERE Upper(Name)='{name.ToUpper()}'"
+				: $@"SELECT COUNT(UserID) FROM [User] WHERE Name='{name}'";
 
 			using (var cmd = connection.CreateCommand())
 			{
@@ -322,7 +330,7 @@ namespace EBoard.Common
 
 		public int GetUserCountByLoginId(string loginId)
 		{
-			var sql = string.Format(@"SELECT COUNT(UserID) FROM [User] WHERE LoginId='{0}'", loginId);
+			var sql = $@"SELECT COUNT(UserID) FROM [User] WHERE LoginId='{loginId}'";
 
 			using (var cmd = connection.CreateCommand())
 			{
@@ -346,8 +354,8 @@ namespace EBoard.Common
 				throw new DuplicateNameException("The LoginId is duplicated.");
 
 			var newId = Guid.NewGuid().ToString();
-			var sql = string.Format("INSERT INTO [User] (UserId,LoginId,Name,IDCard,Status) VALUES(CONVERT(uniqueidentifier,'{0}'),'{1}','{2}','{3}','A')",
-							newId, user.LoginId, user.Name, user.IDCard ?? "");
+			var sql =
+				$"INSERT INTO [User] (UserId,LoginId,Name,IDCard,Status) VALUES(CONVERT(uniqueidentifier,'{newId}'),'{user.LoginId}','{user.Name}','{user.IDCard ?? ""}','A')";
 
 			using (var cmd = connection.CreateCommand())
 			{
@@ -371,11 +379,11 @@ namespace EBoard.Common
 			{
 				using (var cmd = connection.CreateCommand())
 				{
-					var sql = string.Format("DELETE FROM UserInRole WHERE UserId=CONVERT(uniqueidentifier,'{0}')", user.UserId);
+					var sql = $"DELETE FROM UserInRole WHERE UserId=CONVERT(uniqueidentifier,'{user.UserId}')";
 					cmd.CommandText = sql;
 					cmd.ExecuteNonQuery();
 
-					sql = string.Format("DELETE FROM [User] WHERE UserId=CONVERT(uniqueidentifier,'{0}')", user.UserId);
+					sql = $"DELETE FROM [User] WHERE UserId=CONVERT(uniqueidentifier,'{user.UserId}')";
 					cmd.CommandText = sql;
 					var ret = (cmd.ExecuteNonQuery() == 0);
 
@@ -394,7 +402,7 @@ namespace EBoard.Common
 		public User UpdateUser(User user)
 		{
 			// User dataset for updating User since dataset is able to check if the data is changed or not
-			var sql = string.Format(@"SELECT * FROM [User] WHERE UserId=CONVERT(uniqueidentifier,'{0}')", user.UserId);
+			var sql = $@"SELECT * FROM [User] WHERE UserId=CONVERT(uniqueidentifier,'{user.UserId}')";
 			var ds = new DataSet();
 			var adapter = new SqlDataAdapter();
 			adapter.SelectCommand = new SqlCommand(sql, connection);
@@ -459,13 +467,13 @@ namespace EBoard.Common
 			if (string.IsNullOrWhiteSpace(roleId) || string.IsNullOrWhiteSpace(userId))
 				throw new ArgumentNullException();
 
-			var sql = string.Format("Select Count(*) From UserInRole Where RoleId='{0}' And UserId='{1}'", roleId, userId);
+			var sql = $"Select Count(*) From UserInRole Where RoleId='{roleId}' And UserId='{userId}'";
 			var cmd = new SqlCommand(sql, connection);
 			var count = (int)cmd.ExecuteScalar();
 			if (count > 0)
-				throw new Exception(string.Format("用户已经属于该角色-'{0}'", roleId));
+				throw new Exception($"用户已经属于该角色-'{roleId}'");
 
-			sql = string.Format("Insert Into UserInRole (RoleId,UserId) Values ('{0}','{1}')", roleId, userId);
+			sql = $"Insert Into UserInRole (RoleId,UserId) Values ('{roleId}','{userId}')";
 			cmd.CommandText = sql;
 			return (cmd.ExecuteNonQuery() > 0);
 		}
@@ -475,8 +483,8 @@ namespace EBoard.Common
 			if (string.IsNullOrWhiteSpace(roleId) || string.IsNullOrWhiteSpace(userId))
 				throw new ArgumentNullException();
 
-			var sql = (roleId == "*") ? string.Format("Delete From UserInRole Where UserId=CAST('{0}' AS uniqueidentifier)", userId)
-										: string.Format("Delete From UserInRole Where RoleId='{0}' And UserId=CAST('{1}' AS uniqueidentifier)", roleId, userId);
+			var sql = (roleId == "*") ? $"Delete From UserInRole Where UserId=CAST('{userId}' AS uniqueidentifier)"
+				: $"Delete From UserInRole Where RoleId='{roleId}' And UserId=CAST('{userId}' AS uniqueidentifier)";
 			var cmd = new SqlCommand(sql, connection);
 			return (cmd.ExecuteNonQuery() > 0);
 		}
@@ -494,13 +502,15 @@ namespace EBoard.Common
 			{
 				var realUser = GetUser(user.LoginId);
 				if (realUser == null)
-					throw new UserNotFoundException(string.Format("Cannot found the user with login ID '{0}'.", user.LoginId));
+					throw new UserNotFoundException($"Cannot found the user with login ID '{user.LoginId}'.");
 
 				user.UserId = realUser.UserId;
 			}
 
 			user.Roles = new List<Role>();
-			var sql = string.Format(@"Select Role.RoleId,Name From UserInRole, Role Where UserInRole.RoleId=Role.RoleId And Status='A' And UserId=CAST('{0}' As uniqueidentifier)", user.UserId);
+			var sql =
+				$@"Select Role.RoleId,Name From UserInRole, Role Where UserInRole.RoleId=Role.RoleId And Status='A' And UserId=CAST('{user
+					.UserId}' As uniqueidentifier)";
 			var adapter = new SqlDataAdapter(sql, connection);
 			var ds = new DataSet();
 			adapter.Fill(ds);
@@ -534,7 +544,9 @@ namespace EBoard.Common
 				throw new ArgumentNullException();
 
 			role.Users = new List<User>();
-			var sql = string.Format(@"Select [User].* From UserInRole,[User],Role Where UserInRole.UserId=[User].UserId And UserInRole.RoleId=[Role].RoleId And [Role].Status='A' And Role.RoleId=CAST('{0}' As uniqueidentifier)", role.RoleId);
+			var sql =
+				$@"Select [User].* From UserInRole,[User],Role Where UserInRole.UserId=[User].UserId And UserInRole.RoleId=[Role].RoleId And [Role].Status='A' And Role.RoleId=CAST('{role
+					.RoleId}' As uniqueidentifier)";
 			var adapter = new SqlDataAdapter(sql, connection);
 			var ds = new DataSet();
 			adapter.Fill(ds);
@@ -590,7 +602,7 @@ namespace EBoard.Common
 
 				var val = row[prop.Name];
 				{
-					if (val.GetType() == typeof(DBNull))
+					if (val is DBNull)
 					{
 						var propType = prop.PropertyType;
 						val = propType.IsValueType ? Activator.CreateInstance(propType) : null;
@@ -605,7 +617,7 @@ namespace EBoard.Common
 		}
 	}
 
-	public class OPCCommunicationBrokeException : Exception
+	public class OpcCommunicationBrokeException : Exception
 	{
 	}
 

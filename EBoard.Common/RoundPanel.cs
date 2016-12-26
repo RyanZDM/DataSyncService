@@ -134,7 +134,7 @@ namespace EBoard.Common
 		protected override void OnResize(EventArgs eventargs)
 		{
 			base.OnResize(eventargs);
-			base.Refresh();
+			Refresh();
 		}
 	}
 

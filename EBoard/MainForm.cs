@@ -15,7 +15,7 @@ namespace EBoard
 	public partial class MainForm : Form
 	{
 		#region Variables and properties
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		private const string UnitM3 = @" M³";
 		private const string UnitKWh = " kWh";
@@ -46,12 +46,12 @@ namespace EBoard
 
 				if (InvokeRequired)
 				{
-					BeginInvoke((MethodInvoker)(() => Text = string.Format("最后更新于：{0}", (lastUpdateTime.HasValue) ? lastUpdateTime.Value.ToLongTimeString() : "")));
-					return;
+					BeginInvoke((MethodInvoker)(() => Text =
+						$"最后更新于：{((lastUpdateTime.HasValue) ? lastUpdateTime.Value.ToLongTimeString() : "")}"));
 				}
 				else
 				{
-					Text = string.Format("最后更新于：{0}", (lastUpdateTime.HasValue) ? lastUpdateTime.Value.ToLongTimeString() : "");
+					Text = $"最后更新于：{((lastUpdateTime.HasValue) ? lastUpdateTime.Value.ToLongTimeString() : "")}";
 				}
 			}
 		}
@@ -107,7 +107,7 @@ namespace EBoard
 			catch (Exception ex)
 			{
 				logger.Error(ex, "Error occurred while initializing.");
-				MessageBox.Show(string.Format("程序初始化出错. {0}", ex));
+				MessageBox.Show($"程序初始化出错. {ex}");
 			}
 		}
 
@@ -279,13 +279,13 @@ namespace EBoard
 				RefreshCharts(ds, alwaysRefresh);
 				SetCommunicateState(CommunicationState.Ready);
 			}
-			catch (OPCCommunicationBrokeException)
+			catch (OpcCommunicationBrokeException)
 			{
 				SetCommunicateState(CommunicationState.CommunicationBroke);
 			}
 			catch (Exception ex)
 			{
-				logger.Error("Error occurred while getting data. {0}", ex.ToString());
+				logger.Error(ex, "Error occurred while getting data.");
 				SetCommunicateState(CommunicationState.ErrorOccurred);
 			}
 			finally
@@ -299,14 +299,14 @@ namespace EBoard
 			switch (state)
 			{
 				case CommunicationState.Ready:
-					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.green;
+					panelIndicator.BackgroundImage = Properties.Resources.green;
 					break;
 				case CommunicationState.Querying:
-					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.yellow;
+					panelIndicator.BackgroundImage = Properties.Resources.yellow;
 					break;
 				case CommunicationState.CommunicationBroke:
 				case CommunicationState.ErrorOccurred:
-					panelIndicator.BackgroundImage = global::EBoard.Properties.Resources.red;
+					panelIndicator.BackgroundImage = Properties.Resources.red;
 					break;
 			}
 		}
@@ -416,12 +416,13 @@ namespace EBoard
 
 			if (CurrentWorkers.Count > 0)
 			{
-				labelWorker.Text = string.Format("姓名：{0}    工号：{1}", CurrentWorkers.Values[0].Name, CurrentWorkers.Values[0].LoginId);
+				labelWorker.Text = $"姓名：{CurrentWorkers.Values[0].Name}    工号：{CurrentWorkers.Values[0].LoginId}";
 			}
 
 			if (CurrentWorkers.Count > 1)
 			{
-				labelWorker.Text = string.Format("{0}        姓名：{1}    工号：{2}", labelWorker.Text, CurrentWorkers.Values[1].Name, CurrentWorkers.Values[1].LoginId);
+				labelWorker.Text =
+					$"{labelWorker.Text}        姓名：{CurrentWorkers.Values[1].Name}    工号：{CurrentWorkers.Values[1].LoginId}";
 			}
 		}
 
@@ -563,7 +564,7 @@ namespace EBoard
 				var end = axis.Maximum;
 				var today = DateTime.Now.Day;
 
-				chart.DataSource = ds.Tables[0].Select(string.Format("Day>={0} And Day<={1}", begin, end));
+				chart.DataSource = ds.Tables[0].Select($"Day>={begin} And Day<={end}");
 
 				for (var i = begin; i <= end; i++)
 				{
@@ -592,7 +593,7 @@ namespace EBoard
 							if (string.IsNullOrWhiteSpace(workers))
 								continue;
 
-							var workerList = workers.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+							var workerList = workers.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 							if (workerList.Length >= workerIndex)
 								label.Text = workerList[workerIndex - 1];
 						}

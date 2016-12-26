@@ -6,13 +6,13 @@ using NLog;
 
 namespace GenerateLastMonthReport
 {
-	class Program
+	internal class Program
 	{
-		private static readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-		static bool notCreateExcel = false;
+		private static bool notCreateExcel;
 
-		static bool createExcelOnly = false;
+		private static bool createExcelOnly;
 
 		/// <summary>
 		/// Create report for a special month, and/or create Excel for it
@@ -23,7 +23,7 @@ namespace GenerateLastMonthReport
 		/// Arguments:
 		///		- /year /month /NotCreateExcel /CreateExcelOnly
 		/// </remarks>
-		static int Main(string[] args)
+		public static int Main(string[] args)
 		{
 			if ((args.Length == 1) && args[0].Equals("/help", StringComparison.OrdinalIgnoreCase))
 			{
@@ -50,15 +50,13 @@ namespace GenerateLastMonthReport
 					case "/createexcelonly":
 						createExcelOnly = true;
 						break;
-					default:
-						break;
 				}
 			}
 
 			// The year and month must be specified both
 			if (!(year.HasValue & month.HasValue))
 			{
-				logger.Error("Must specify the year and month both, or do not specif them at all.");
+				Logger.Error("Must specify the year and month both, or do not specif them at all.");
 				return -1;
 			}
 
@@ -81,17 +79,18 @@ namespace GenerateLastMonthReport
 
 		private static int CreateExcel(int year, int month)
 		{
-			var yearMonth = string.Format("{0}{1:d2}", year, month);
+			var yearMonth = $"{year}{month:d2}";
 			try
 			{
 				var connection = DbFactory.GetConnection();
 				var reporter = new Reporter(connection);				
 				var excelFilePath = reporter.CreateReportFile(year, month);
 
-				var sql = string.Format(@"Update MonthReportMstr Set IsFileCreated=1,FilePath='{0}',FileCreateTime=GetDate() Where YearMonth='{1}'", excelFilePath, yearMonth);
+				var sql =
+					$@"Update MonthReportMstr Set IsFileCreated=1,FilePath='{excelFilePath}',FileCreateTime=GetDate() Where YearMonth='{yearMonth}'";
 				if (new SqlCommand(sql, connection).ExecuteNonQuery() < 1)
 				{
-					logger.Error("Failed to create Excel for monthly report '{0}'", yearMonth);
+					Logger.Error("Failed to create Excel for monthly report '{0}'", yearMonth);
 					return 0;
 				}
 
@@ -99,22 +98,22 @@ namespace GenerateLastMonthReport
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex, "ailed to create Excel for monthly report '{0}'", yearMonth);
+				Logger.Error(ex, "ailed to create Excel for monthly report '{0}'", yearMonth);
 				return -1;
 			}
 		}
 
 		private static void ShowHelp()
 		{
-			Console.Out.WriteLine(string.Format("Usage: /year /month /NotCreateExcel /CreateExcelOnly\r\nyear/month: Indicate the year and month of the report to create.\r\n/NotCreateExcel: Not create Excel while creating monthly report.\r\nCreateExcelOnly: Create Excel for a existed monthly report."));
+			Console.Out.WriteLine("Usage: /year /month /NotCreateExcel /CreateExcelOnly\r\nyear/month: Indicate the year and month of the report to create.\r\n/NotCreateExcel: Not create Excel while creating monthly report.\r\nCreateExcelOnly: Create Excel for a existed monthly report.");
 		}
 
 		private static int CreateMonthlyReport(int year, int month)
 		{
-			var yearMonth = string.Format("{0}{1:d2}", year, month);
+			var yearMonth = $"{year}{month:d2}";
 			try
 			{
-				logger.Info("Will create the monthly report for {0}.", yearMonth);
+				Logger.Info("Will create the monthly report for {0}.", yearMonth);
 
 				var connection = DbFactory.GetConnection();
 				var cmd = new SqlCommand("sp_CreateMonthlyReport", connection)
@@ -122,7 +121,7 @@ namespace GenerateLastMonthReport
 					CommandType = CommandType.StoredProcedure
 				};
 
-				var yearMonthParam = cmd.Parameters.AddWithValue("@YearMonth", yearMonth);
+				cmd.Parameters.AddWithValue("@YearMonth", yearMonth);
 
 				var reportIdParam = cmd.Parameters.Add(new SqlParameter
 				{
@@ -143,11 +142,11 @@ namespace GenerateLastMonthReport
 				var reportId = reportIdParam.Value.ToString();
 				var result = (int)returnParam.Value;
 
-				logger.Info("Create the monthly report for {0}, result={1}, ReportId='{2}'", yearMonth, result, reportId);
+				Logger.Info("Create the monthly report for {0}, result={1}, ReportId='{2}'", yearMonth, result, reportId);
 
-				var sql = string.Format(@"Select IsFIleCreated From MonthReportMstr Where ReportId=Convert('{0} As uniqueidentifier)", reportId);
+				var sql = $@"Select IsFIleCreated From MonthReportMstr Where ReportId=Convert('{reportId} As uniqueidentifier)";
 				var isFileCreated = (bool)(new SqlCommand(sql, connection).ExecuteScalar());
-				logger.Info("Excel file of monthly report for {0} {1}.", yearMonth, isFileCreated ? "is created" : "is not created yet");
+				Logger.Info("Excel file of monthly report for {0} {1}.", yearMonth, isFileCreated ? "is created" : "is not created yet");
 
 				if (isFileCreated)
 					return 1;
@@ -157,20 +156,13 @@ namespace GenerateLastMonthReport
 
 				// Create Excel file
 				var reporter = new Reporter(connection);
-				var excelFilePath = reporter.CreateReportFile(reportId);
-
-				sql = string.Format(@"Update MonthReportMstr Set IsFileCreated=1,FilePath='{0}',FileCreateTime=GetDate() Where ReportId=Convert('{1} As uniqueidentifier)", excelFilePath, reportId);
-				if (new SqlCommand(sql, connection).ExecuteNonQuery() < 1)
-				{
-					logger.Error("Failed to update IsFileCreated flag for the monthly report '{0}'", reportId);
-					return 0;
-				}
-
+				reporter.CreateReportFile(reportId);
+				
 				return 1;
 			}
 			catch (Exception ex)
 			{
-				logger.Error(ex, "Error occurred while creating monthly report for {0}", yearMonth);
+				Logger.Error(ex, "Error occurred while creating monthly report for {0}", yearMonth);
 				return -1;
 			}
 		}

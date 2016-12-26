@@ -12,7 +12,7 @@ namespace EBoard.SysManager
 {
 	public partial class ReportMgrForm : FormBase
 	{
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		private SqlConnection connection;
 
@@ -124,7 +124,7 @@ namespace EBoard.SysManager
 				var rowIndex = dataGridViewReportDet.Rows.Add("班次开始时间", row["BeginTime"].ToString());
 				dataGridViewReportDet.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Gray;
 
-				detailTable.DefaultView.RowFilter = string.Format("ShiftId='{0}'", row["ShiftId"].ToString());
+				detailTable.DefaultView.RowFilter = $"ShiftId='{row["ShiftId"].ToString()}'";
 				foreach (DataRow detRow in detailTable.Rows)
 				{
 					var index = dataGridViewReportDet.Rows.Add(detRow["DisplayName"].ToString(), detRow["Subtotal"].ToString());
@@ -150,10 +150,10 @@ namespace EBoard.SysManager
 			foreach (DataRow row in workerTable.Rows)
 			{
 				var workerId = row["WorkerId"].ToString();
-				var rowIndex = dataGridViewWorkerReport.Rows.Add(string.Format(@"{0}/{1}", workerId, row["WorkerName"].ToString()), "");
+				var rowIndex = dataGridViewWorkerReport.Rows.Add($@"{workerId}/{row["WorkerName"].ToString()}", "");
 				dataGridViewWorkerReport.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Gray;
 
-				detailTable.DefaultView.RowFilter = string.Format("WorkerId='{0}'", workerId);
+				detailTable.DefaultView.RowFilter = $"WorkerId='{workerId}'";
 				foreach (DataRow detRow in detailTable.Rows)
 				{
 					var index = dataGridViewWorkerReport.Rows.Add(detRow["DisplayName"].ToString(), detRow["Subtotal"].ToString());
@@ -189,7 +189,7 @@ namespace EBoard.SysManager
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(string.Format("无法保存数据。{0}", ex.ToString()));
+				MessageBox.Show($"无法保存数据。{ex.ToString()}");
 				return false;
 			}
 		}
@@ -247,7 +247,7 @@ namespace EBoard.SysManager
 			{
 				buttonCreateFile.Enabled = true;
 				logger.Error(ex, "Error occurred while creating report file.");
-				MessageBox.Show(string.Format("创建报表文件时出错。{0}", ex.ToString()));
+				MessageBox.Show($"创建报表文件时出错。{ex.ToString()}");
 			}
 			
 		}
@@ -259,7 +259,7 @@ namespace EBoard.SysManager
 				if (string.Equals("FilePath", row.Cells[0].Value.ToString(), StringComparison.OrdinalIgnoreCase))
 				{
 					var val = row.Cells[1].Value;
-					if (val.GetType() == typeof(DBNull))
+					if (val is DBNull)
 					{
 						MessageBox.Show("没有发现月报文件");
 						return;
@@ -268,7 +268,7 @@ namespace EBoard.SysManager
 					var path = val.ToString();
 					if (!File.Exists(path))
 					{
-						MessageBox.Show(string.Format("月报文件[{0}]并不存在。", path));
+						MessageBox.Show($"月报文件[{path}]并不存在。");
 						return;
 					}
 

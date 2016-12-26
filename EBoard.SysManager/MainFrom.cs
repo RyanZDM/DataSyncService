@@ -1,6 +1,5 @@
 ﻿using EBoard.Common;
 using System;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -30,21 +29,21 @@ namespace EBoard.SysManager
 
 			if (roles.Any(r => string.Equals(r.RoleId, "Administrators", StringComparison.OrdinalIgnoreCase)))
 			{
-				this.dataMgrToolStripMenuItem.Enabled = true;
-				this.userMgrToolStripMenuItem.Enabled = true;
-				this.rptMgrToolStripMenuItem.Enabled = true;
+				dataMgrToolStripMenuItem.Enabled = true;
+				userMgrToolStripMenuItem.Enabled = true;
+				rptMgrToolStripMenuItem.Enabled = true;
 
 				return;
 			}
 
 			if (roles.Any(r => string.Equals(r.RoleId, "DataMaintain", StringComparison.OrdinalIgnoreCase)))
 			{
-				this.dataMgrToolStripMenuItem.Enabled = true;
+				dataMgrToolStripMenuItem.Enabled = true;
 			}
 
 			if (roles.Any(r => string.Equals(r.RoleId, "ReportManage", StringComparison.OrdinalIgnoreCase)))
 			{
-				this.rptMgrToolStripMenuItem.Enabled = true;
+				rptMgrToolStripMenuItem.Enabled = true;
 			}
 
 		}
@@ -52,7 +51,7 @@ namespace EBoard.SysManager
 		public MainFrom()
 		{
 			InitializeComponent();
-			this.FormClosing += MainFrom_FormClosing;	
+			FormClosing += MainFrom_FormClosing;	
 		}
 
 		private void MainFrom_FormClosing(object sender, FormClosingEventArgs e)
@@ -101,7 +100,6 @@ namespace EBoard.SysManager
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			Close();
-			return;
 		}
 		
 		#region Features

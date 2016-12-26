@@ -9,7 +9,7 @@ namespace LedSyncService
 {
 	public class Dal
 	{
-		private readonly Logger logger = NLog.LogManager.GetCurrentClassLogger();
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
 		private SqlConnection connection;
 
@@ -24,7 +24,8 @@ namespace LedSyncService
 
 			var shiftId = GetCurrentShiftId();
 
-			var sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('EnergyProduction1', 'EnergyProduction2')", shiftId);
+			var sql =
+				$@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{shiftId}' As uniqueidentifier) And Item In ('EnergyProduction1', 'EnergyProduction2')";
 			var cmd = new SqlCommand(sql, connection);
 			using (var reader = cmd.ExecuteReader())
 			{
@@ -40,7 +41,8 @@ namespace LedSyncService
 				reader.Close();
 			}
 
-			sql = string.Format(@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{0}' As uniqueidentifier) And Item In ('Biogas2GenSubtotal','Biogas2TorchSubtotal')", shiftId);
+			sql =
+				$@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{shiftId}' As uniqueidentifier) And Item In ('Biogas2GenSubtotal','Biogas2TorchSubtotal')";
 			cmd = new SqlCommand(sql, connection);
 			using (var reader = cmd.ExecuteReader())
 			{
@@ -125,7 +127,7 @@ namespace LedSyncService
 
 				var val = row[prop.Name];
 				{
-					if (val.GetType() == typeof(DBNull))
+					if (val is DBNull)
 					{
 						var propType = prop.PropertyType;
 						val = propType.IsValueType ? Activator.CreateInstance(propType) : null;
