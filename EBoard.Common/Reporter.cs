@@ -178,7 +178,7 @@ namespace EBoard.Common
 			
 			// 5. Update the mstr table
 			var updateSql =
-					$@"Update MonthReportMstr Set IsFileCreated=1,FilePath='{targetFilename}',FileCreateTime=GetDate() Where ReportId=Convert('{reportId} As uniqueidentifier)";
+					$@"Update MonthReportMstr Set IsFileCreated=1,FilePath='{targetFilename}',FileCreateTime=GetDate() Where ReportId=Cast('{reportId}' As uniqueidentifier)";
 			var ret = new Tuple<string, bool>(targetFilename, (new SqlCommand(updateSql, connection).ExecuteNonQuery() > 0));
 			if (!ret.Item2)
 			{

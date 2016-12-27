@@ -34,15 +34,21 @@ namespace GenerateLastMonthReport
 			int? year = null;
 			int? month = null;
 
-			foreach (var arg in args)
+			for (var i = 0; i < args.Length; i++)
 			{
-				switch (arg.Trim().ToLower())
+				switch (args[i].Trim().ToLower())
 				{
 					case "/year":
-						year = int.Parse(arg);
+						if (i + 1 < args.Length)
+						{
+							year = int.Parse(args[i + 1]);
+						}
 						break;
 					case "/month":
-						month = int.Parse(arg);
+						if (i + 1 < args.Length)
+						{
+							month = int.Parse(args[i + 1]);
+						}
 						break;
 					case "/notcreateexcel":
 						notCreateExcel = true;
@@ -54,7 +60,7 @@ namespace GenerateLastMonthReport
 			}
 
 			// The year and month must be specified both
-			if (!(year.HasValue & month.HasValue))
+			if (year.HasValue ^ month.HasValue)
 			{
 				Logger.Error("Must specify the year and month both, or do not specif them at all.");
 				return -1;
@@ -105,7 +111,7 @@ namespace GenerateLastMonthReport
 
 		private static void ShowHelp()
 		{
-			Console.Out.WriteLine("Usage: /year /month /NotCreateExcel /CreateExcelOnly\r\nyear/month: Indicate the year and month of the report to create.\r\n/NotCreateExcel: Not create Excel while creating monthly report.\r\nCreateExcelOnly: Create Excel for a existed monthly report.");
+			Console.Out.WriteLine("Usage: /year <year> /month <month> /NotCreateExcel /CreateExcelOnly\r\n\t- year/month: Indicate the year and month of the report to create.\r\n\t- /NotCreateExcel: Not create Excel while creating monthly report.\r\n\t- /CreateExcelOnly: Create Excel for a existed monthly report.");
 		}
 
 		private static int CreateMonthlyReport(int year, int month)
@@ -144,7 +150,7 @@ namespace GenerateLastMonthReport
 
 				Logger.Info("Create the monthly report for {0}, result={1}, ReportId='{2}'", yearMonth, result, reportId);
 
-				var sql = $@"Select IsFIleCreated From MonthReportMstr Where ReportId=Convert('{reportId} As uniqueidentifier)";
+				var sql = $@"Select IsFIleCreated From MonthReportMstr Where ReportId=Cast('{reportId}' As uniqueidentifier)";
 				var isFileCreated = (bool)(new SqlCommand(sql, connection).ExecuteScalar());
 				Logger.Info("Excel file of monthly report for {0} {1}.", yearMonth, isFileCreated ? "is created" : "is not created yet");
 

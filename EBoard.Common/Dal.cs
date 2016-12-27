@@ -78,8 +78,7 @@ namespace EBoard.Common
 		public bool AddWorkerInShift(string shiftId, User worker)
 		{
 			var sql =
-				$@"Insert Into WorkersInShift (ShiftId,LoginId,LoginName,LoginTime) Values(CAST('{shiftId}' As uniqueidentifier),'{worker
-					.LoginId}','{worker.Name}',GetDate())";
+				$@"Insert Into WorkersInShift (ShiftId,LoginId,LoginName,LoginTime) Values(CAST('{shiftId}' As uniqueidentifier),'{worker.LoginId}','{worker.Name}',GetDate())";
 			using (var command = new SqlCommand(sql, connection))
 			{
 				return (command.ExecuteNonQuery() > 0);
@@ -509,8 +508,7 @@ namespace EBoard.Common
 
 			user.Roles = new List<Role>();
 			var sql =
-				$@"Select Role.RoleId,Name From UserInRole, Role Where UserInRole.RoleId=Role.RoleId And Status='A' And UserId=CAST('{user
-					.UserId}' As uniqueidentifier)";
+				$@"Select Role.RoleId,Name From UserInRole, Role Where UserInRole.RoleId=Role.RoleId And Status='A' And UserId=CAST('{user.UserId}' As uniqueidentifier)";
 			var adapter = new SqlDataAdapter(sql, connection);
 			var ds = new DataSet();
 			adapter.Fill(ds);
@@ -545,8 +543,7 @@ namespace EBoard.Common
 
 			role.Users = new List<User>();
 			var sql =
-				$@"Select [User].* From UserInRole,[User],Role Where UserInRole.UserId=[User].UserId And UserInRole.RoleId=[Role].RoleId And [Role].Status='A' And Role.RoleId=CAST('{role
-					.RoleId}' As uniqueidentifier)";
+				$@"Select [User].* From UserInRole,[User],Role Where UserInRole.UserId=[User].UserId And UserInRole.RoleId=[Role].RoleId And [Role].Status='A' And Role.RoleId=CAST('{role.RoleId}' As uniqueidentifier)";
 			var adapter = new SqlDataAdapter(sql, connection);
 			var ds = new DataSet();
 			adapter.Fill(ds);

@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{250991CB-9153-483F-8BF8-EB71D9970DFB}</ProjectGuid>
     <Keyword>AtlPSProj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -39,9 +40,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(Configuration)PS\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(Configuration)PS\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -52,6 +55,7 @@
       <ModuleDefinitionFile>DataSyncServicePS.def</ModuleDefinitionFile>
       <RegisterOutput>true</RegisterOutput>
       <OutputFile>$(SolutionDir)bin\$(Configuration)\$(TargetName)$(TargetExt) </OutputFile>
+      <ProgramDatabaseFile>$(SolutionDir)bin\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
       <Command>if exist dlldata.c goto :END
@@ -74,6 +78,7 @@ Exit 1
       <OptimizeReferences>true</OptimizeReferences>
       <RegisterOutput>true</RegisterOutput>
       <OutputFile>$(SolutionDir)bin\$(Configuration)\$(TargetName)$(TargetExt) </OutputFile>
+      <ProgramDatabaseFile>$(SolutionDir)bin\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
       <Command>if exist dlldata.c goto :END
