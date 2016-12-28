@@ -36,10 +36,10 @@ namespace EBoard.Common
 				textBoxPwd.Select();
 				return;
 			}
-
-			// TODO: encrypt the password
-			NewEncyptedPassword = textBoxPwd.Text;
-
+			
+			var encryptor = new Encryptor();
+			NewEncyptedPassword = encryptor.Encrypt(textBoxPwd.Text);
+			
 			DialogResult = DialogResult.OK;
 			Close();
 		}

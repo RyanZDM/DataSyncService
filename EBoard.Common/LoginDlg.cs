@@ -71,8 +71,7 @@ namespace EBoard.Common
 			{
 				var loginId = textBoxUserId.Text.Trim();
 				var pwd = textBoxPwd.Text;
-
-				// TODO: encrypt the inputted pwd and compare with the one in db
+				
 				try
 				{
 					var dal = new Dal(connection);
@@ -88,9 +87,9 @@ namespace EBoard.Common
 						MessageBox.Show("用户[{0}]状态异常，不允许登录。", loginId);
 						return;
 					}
-
-					// todo encrypt inputted pwd
-					var encryptedPwd = pwd;
+					
+					var encryptor = new Encryptor();
+					var encryptedPwd = encryptor.Encrypt(pwd);
 					if (encryptedPwd != user.Password)
 					{
 						MessageBox.Show("用户名或密码错误，请重新输入。");
@@ -252,7 +251,7 @@ namespace EBoard.Common
 				return;
 			}
 
-			idCardString += Encoding.ASCII.GetString(new byte[] { (byte)e.KeyValue });
+			idCardString += Encoding.ASCII.GetString(new[] { (byte)e.KeyValue });
 		}
 
 		private void ResetIdCardString()
@@ -279,9 +278,9 @@ namespace EBoard.Common
 					while (listViewUserInfo.Items.Count > 0) { listViewUserInfo.Items.RemoveAt(0); }
 					listViewUserInfo.Show();
 					listViewUserInfo.Items.AddRange(new[] {
-						new ListViewItem(new string[] { "登录ID", user.LoginId }),
-						new ListViewItem(new string[] { "姓名", user.Name }),
-						new ListViewItem(new string[] { "状态", statusValid ? "正常" : "异常" })
+						new ListViewItem(new[] { "登录ID", user.LoginId }),
+						new ListViewItem(new[] { "姓名", user.Name }),
+						new ListViewItem(new[] { "状态", statusValid ? "正常" : "异常" })
 					});
 
 					buttonLogin.Enabled = statusValid;

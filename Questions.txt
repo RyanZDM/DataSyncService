@@ -1,3 +1,6 @@
 1. 要不断地实时写数据到led，需要先擦除数据吗？如何擦除？ - 每次重写所有
 2. LED 字串支持 换行回车吗？\r\n? - 支持
 3. LED支持tab吗？ \t？	- 不支持
+
+THhChnpFTG1PC7Xn5oZL0A==
+/obHD/xjdnERvIhyFzXxDw==

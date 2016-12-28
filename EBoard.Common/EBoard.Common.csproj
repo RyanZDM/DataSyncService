@@ -56,6 +56,7 @@
     </Compile>
     <Compile Include="Dal.cs" />
     <Compile Include="DbFactory.cs" />
+    <Compile Include="Encryptor.cs" />
     <Compile Include="ExcelApp.cs" />
     <Compile Include="GeneralParamter.cs" />
     <Compile Include="LoginDlg.cs">

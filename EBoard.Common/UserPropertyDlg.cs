@@ -100,9 +100,9 @@ namespace EBoard.Common
 					MessageBox.Show("两次输入的密码不一致，请重新输入");
 					return;
 				}
-
-				// TODO encryt password
-				user.Password = textBoxPassword.Text;
+				
+				var encryptor = new Encryptor();
+				user.Password = encryptor.Encrypt(textBoxPassword.Text);
 			}
 
 			var dal = new Dal(connection);
