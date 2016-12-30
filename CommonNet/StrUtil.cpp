@@ -1266,7 +1266,7 @@ INT CStrUtil::GetProgramFromCommandString(LPCTSTR pcszCmdStr, LPTSTR szBuf, DWOR
 	LPCTSTR pEnd = _tcschr(pStart, _T('"'));
 	if (pEnd)
 	{
-		INT nLen = (pEnd - pStart);
+		size_t nLen = (pEnd - pStart);
 		if (nLen >= dwLen)
 			return -1;
 
@@ -1277,7 +1277,7 @@ INT CStrUtil::GetProgramFromCommandString(LPCTSTR pcszCmdStr, LPTSTR szBuf, DWOR
 	else
 	{
 		// Not found the right double quotation mark, assume the whole string is program
-		INT nLen = _tcslen(pStart);
+		size_t nLen = _tcslen(pStart);
 		if (nLen >= dwLen)
 			return -1;
 
