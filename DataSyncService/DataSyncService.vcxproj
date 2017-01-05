@@ -42,13 +42,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../CommonNet;../OPC_HeaderFiles</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Common;../OPC_HeaderFiles;../Common/log4cplus;</IncludePath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../CommonNet;../OPC_HeaderFiles</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);../Common;../OPC_HeaderFiles;../Common/log4cplus;</IncludePath>
     <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -81,6 +81,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RegisterOutput>true</RegisterOutput>
       <OutputFile>$(SolutionDir)bin\$(Configuration)\$(TargetName)$(TargetExt) </OutputFile>
+      <AdditionalLibraryDirectories>d:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories);../Common/log4cplus;</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy *.ini $(SolutionDir)bin\$(Configuration)\ /y</Command>
@@ -118,17 +119,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <RegisterOutput>true</RegisterOutput>
       <OutputFile>$(SolutionDir)bin\$(Configuration)\$(TargetName)$(TargetExt) </OutputFile>
+      <AdditionalLibraryDirectories>d:\Program Files (x86)\Visual Leak Detector\lib\Win32;%(AdditionalLibraryDirectories);../Common/log4cplus;</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy *.ini $(SolutionDir)bin\$(Configuration)\ /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\CommonNet\DBUtil.cpp" />
-    <ClCompile Include="..\CommonNet\LogUtil.cpp" />
-    <ClCompile Include="..\CommonNet\ProfileOperator.cpp" />
-    <ClCompile Include="..\CommonNet\RegistryOperator.cpp" />
-    <ClCompile Include="..\CommonNet\StrUtil.cpp" />
+    <ClCompile Include="..\Common\DBUtil.cpp" />
+    <ClCompile Include="..\Common\LogUtil.cpp" />
+    <ClCompile Include="..\Common\ProfileOperator.cpp" />
+    <ClCompile Include="..\Common\RegistryOperator.cpp" />
+    <ClCompile Include="..\Common\StrUtil.cpp" />
     <ClCompile Include="datasink20.cpp" />
     <ClCompile Include="DataSyncService.cpp" />
     <ClCompile Include="DataSyncService_i.c">
@@ -151,12 +153,13 @@
     <ClCompile Include="TimerTaskManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CommonNet\ContainerUtil.h" />
-    <ClInclude Include="..\CommonNet\DBUtil.h" />
-    <ClInclude Include="..\CommonNet\LogUtil.h" />
-    <ClInclude Include="..\CommonNet\ProfileOperator.h" />
-    <ClInclude Include="..\CommonNet\RegistryOperator.h" />
-    <ClInclude Include="..\CommonNet\StrUtil.h" />
+    <ClInclude Include="..\Common\ContainerUtil.h" />
+    <ClInclude Include="..\Common\DBUtil.h" />
+    <ClInclude Include="..\Common\Logger.h" />
+    <ClInclude Include="..\Common\LogUtil.h" />
+    <ClInclude Include="..\Common\ProfileOperator.h" />
+    <ClInclude Include="..\Common\RegistryOperator.h" />
+    <ClInclude Include="..\Common\StrUtil.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="datasink20.h" />
     <ClInclude Include="DataSyncService_i.h" />
@@ -182,6 +185,10 @@
       <FileType>Text</FileType>
     </None>
     <None Include="DataSyncService.rgs" />
+    <None Include="log4cplus.ini">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Text</FileType>
+    </None>
     <None Include="TimerTasks.ini">
       <DeploymentContent>true</DeploymentContent>
       <FileType>Text</FileType>

@@ -25,9 +25,7 @@ BOOL CMyDB::Connect(BOOL bLogComError)
 {
 	if (IsConnected())
 		return TRUE;	
-
-	SetLogFileName(LOG_FILENAME);
-
+	
 	try
 	{
 		try

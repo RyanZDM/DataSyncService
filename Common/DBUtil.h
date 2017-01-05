@@ -34,10 +34,7 @@
 
 typedef std::basic_string<TCHAR> TString;
 
-#ifndef _DISABLE_LOG_
-#include "LogUtil.h"
-#endif
-
+#include "Logger.h"
 
 //如何连接数据库
 #define CM_USING_CONNECT_STR	1		// 用连接字符串进行连接
@@ -166,27 +163,11 @@ private:
 
 class CDBUtil  
 {
-private:
-#ifndef _DISABLE_LOG_
-	CLogUtil	m_Logger;
-#endif
-
-protected:
-	void Log(LPCTSTR pcszMsg, INT nMessageID = 0)
-	{
-#ifndef _DISABLE_LOG_
-		m_Logger.Log(pcszMsg, nMessageID);
-#else
-		UNREFERENCED_PARAMETER(pcszMsg);
-		UNREFERENCED_PARAMETER(nMessageID);
-#endif
-	}
 	
 public:
 	CDBUtil::CDBUtil(BOOL bStartEventMonitor = FALSE);
 	virtual ~CDBUtil();
 
-public:	
 	INT GetBoolean(BOOL &bVal, _RecordsetPtr pRs, INT nCol);
 	INT GetBoolean(bool &bVal, _RecordsetPtr pRs, INT nCol);
 	INT GetDecimal(DECIMAL &dec, _RecordsetPtr pRs, INT nCol);
@@ -241,10 +222,6 @@ public:
 	
 	_ConnectionPtr m_pConnection;													// 数据库连接指针
 
-#ifndef _DISABLE_LOG_
-	void SetLogFileName(LPCTSTR pFileName) { m_Logger.SetLogFileName(pFileName); }
-#endif
-
 protected:
 	DWORD		m_dwConnectMode;													// 连接方式：1 用连接字符串进行连接 2 通过ServerName + Database来连接	
 	DWORD		m_dwDestDBType;														// 欲连接数据库类型：1 Oracle 2 MS SQL 3 Sybase ASE 4 Sybase ASA 5 Access MDB
@@ -255,6 +232,7 @@ protected:
 	TString		m_szConnStr;														// 数据库连接字符串
 
 private:
+	log4cplus::Logger	m_Logger;
 	void CheckSQLState(LPCTSTR pState);
 	BOOL m_bStartEventMonitor;
 	CConnEvent	*m_pConnectEvent;

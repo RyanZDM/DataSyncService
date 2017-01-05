@@ -18,6 +18,8 @@
 using namespace std;
 using namespace ATL;
 
+#include <Logger.h>
+
 // Global variables
 CLogUtil		g_Logger(LOG_FILENAME);
 HANDLE			g_hExitEvent = NULL;
@@ -26,6 +28,8 @@ BOOL			g_bKeepWork = FALSE;			// Indicate if the monitor thread should running c
 
 BOOL IfEnableConsoleOutput();
 void Cleanup();
+
+log4cplus::Logger logger = Logger::GetLogger(_T("DataSyncService"));
 
 class CDataSyncServiceModule : public ATL::CAtlServiceModuleT< CDataSyncServiceModule, IDS_SERVICENAME >
 {
@@ -215,12 +219,17 @@ public :
 			g_hExitEvent = CreateEvent(NULL, TRUE, FALSE, NULL);	// The event should always be nonsignaled until the main thread exit.			
 			if (NULL == g_hExitEvent)
 			{
+				LOG4CPLUS_ERROR(logger, _T("Failed to create event handle, Error=") << GetLastError << std::endl);
 				g_Logger.VForceLog(_T("Failed to create event handle, Error=%d."), GetLastError());
 			}
 			g_Logger.VForceLog(_T("\n\n*** The service [%s v%s] started *************************\nExecutable File Version:%s\n")
 								, m_szServiceName
 								, m_Version.GetProductVersionString()
 								, m_Version.GetFileVersionString());
+			LOG4CPLUS_INFO_FMT(logger, _T("\n\n*** The service [%s v%s] started *************************\nExecutable File Version:%s\n")
+										, m_szServiceName
+										, m_Version.GetProductVersionString()
+										, m_Version.GetFileVersionString());
 
 			SetupTimelyTasks();
 
@@ -259,6 +268,7 @@ public :
 			// Code begin:	
 			Cleanup();
 			g_Logger.ForceLog(_T("\n*** The service stoped *******************************\n"));
+			LOG4CPLUS_INFO(logger, _T("\n*** The service stoped *******************************\n"));
 			// Code end.
 			// **********************************************************************************************************************/
 
@@ -375,6 +385,16 @@ CDataSyncServiceModule _AtlModule;
 extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, 
 								LPTSTR /*lpCmdLine*/, int nShowCmd)
 {
+	log4cplus::Initializer initializer;
+	log4cplus::PropertyConfigurator::doConfigure(_T("log4cplus.ini"));
+	log4cplus::Logger logger = log4cplus::Logger::getInstance(_T("DataSyncService"));
+
+	log4cplus::Initializer initializer1;
+	log4cplus::PropertyConfigurator::doConfigure(_T("log4cplus.ini"));
+	log4cplus::Logger logger1 = log4cplus::Logger::getInstance(_T("DataSyncService1"));
+
+	LOG4CPLUS_INFO(logger, _T("Test string"));
+
 	return _AtlModule.WinMain(nShowCmd);
 }
 

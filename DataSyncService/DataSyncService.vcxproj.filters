@@ -34,15 +34,6 @@
     <ClCompile Include="DataSyncService_i.c">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonNet\DBUtil.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonNet\LogUtil.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonNet\StrUtil.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="MyDB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,17 +49,26 @@
     <ClCompile Include="datasink20.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CommonNet\RegistryOperator.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CommonNet\ProfileOperator.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="TimerTask.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TimerTaskManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\RegistryOperator.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\DBUtil.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\LogUtil.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ProfileOperator.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\StrUtil.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -83,18 +83,6 @@
     </ClInclude>
     <ClInclude Include="DataSyncService_i.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonNet\ContainerUtil.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonNet\DBUtil.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonNet\LogUtil.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CommonNet\StrUtil.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="MyDB.h">
       <Filter>Header Files</Filter>
@@ -114,17 +102,32 @@
     <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonNet\RegistryOperator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="TimerTask.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CommonNet\ProfileOperator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="TimerTaskManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\RegistryOperator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ContainerUtil.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\DBUtil.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\LogUtil.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ProfileOperator.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\StrUtil.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\Logger.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +146,9 @@
       <Filter>Configuration Files</Filter>
     </None>
     <None Include="DataSyncService.ini">
+      <Filter>Configuration Files</Filter>
+    </None>
+    <None Include="log4cplus.ini">
       <Filter>Configuration Files</Filter>
     </None>
   </ItemGroup>

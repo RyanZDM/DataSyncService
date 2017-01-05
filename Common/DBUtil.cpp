@@ -17,6 +17,11 @@ static char THIS_FILE[]=__FILE__;
 #pragma warning (disable:4800)
 #pragma warning( disable : 4290 )
 
+#define _INFO(msg) if(0==1) LOG4CPLUS_INFO(m_Logger, (msg))
+#define _WARN(msg) if(0==1) LOG4CPLUS_WARN(m_Logger, (msg))
+#define _ERROR(msg) if(0==1) LOG4CPLUS_ERROR(m_Logger, (msg))
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -53,14 +58,10 @@ CDBUtil::CDBUtil(BOOL bStartEventMonitor)
 	m_pConnectEvent		= NULL;
 	m_bExecuting		= FALSE;
 	m_bInTransaction	= FALSE;
+	//m_Logger = Logger::GetLogger(_T("DBUtil"));
 
 #ifdef _CALL_CoInitialize_
     CoInitialize(NULL);
-#endif
-
-#ifndef _DISABLE_LOG_
-	m_Logger.SetLogFileName(_T("DBUtil.log"));
-	m_Logger.SetEnable(TRUE);
 #endif
 
 	//InitData();	
@@ -149,7 +150,7 @@ BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUs
 			if (((LONG)cComErr1.Error()) == 0x800401f0)
 			{
 				// It does means that the CoInitialize must be called first.
-				Log(_T("Create _ConnectionPtr failed because we need to call the method CoInitialize first.\nWe will call method CoInitialize here and try again."));
+				_ERROR(_T("Create _ConnectionPtr failed because we need to call the method CoInitialize first.\nWe will call method CoInitialize here and try again."));
 				CoInitialize(NULL);
 				m_pConnection = _ConnectionPtr("ADODB.Connection");
 			}
@@ -175,7 +176,7 @@ BOOL CDBUtil::ConnectToDB(LPCTSTR pcszConStr, LPCTSTR pcszUserId, LPCTSTR pcszUs
 			if (((LONG)cComErr2.Error()) == 0x800401f0)
 			{
 				// It does means that the CoInitialize must be called first.
-				Log(_T("_ConnectionPtr->Open failed because we need to call the method CoInitialize first.\nWe will call method CoInitialize here and try again."));
+				_ERROR(_T("_ConnectionPtr->Open failed because we need to call the method CoInitialize first.\nWe will call method CoInitialize here and try again."));
 				CoInitialize(NULL);
 				m_pConnection->Open(szConStr, szUserId, szUserPwd, /*adConnectUnspecified*/adModeUnknown);
 			}
@@ -472,7 +473,7 @@ void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
 	}
 
 	if (bLogComError)
-		Log(m_szLastErrorMsg.c_str());
+		_ERROR(m_szLastErrorMsg.c_str());
 }
 
 /**************************************************************************
@@ -1176,7 +1177,7 @@ void CDBUtil::CheckSQLState(LPCTSTR pState)
 		|| !_tcscmp(pState, _T("08007"))	// 在执行事务的过程中连接失败
 		)
 	{
-		m_Logger.VLog(_T("[CDBUtil::CheckSQLState] The connection to database is broken, SQLState=%s"), pState);
+		LOG4CPLUS_ERROR_FMT(m_Logger, _T("[CDBUtil::CheckSQLState] The connection to database is broken, SQLState=%s"), pState);
 	}
 #endif
 
