@@ -61,6 +61,11 @@ namespace EBoard
 		/// </summary>
 		private int daysInMonth;
 
+		/// <summary>
+		/// The current month
+		/// </summary>
+		private int currentMonth = -1;
+
 		private readonly object workersLock = new object();
 		private SortedList<DateTime, User> currentWorkers = new SortedList<DateTime, User>();
 		public SortedList<DateTime, User> CurrentWorkers
@@ -513,6 +518,16 @@ namespace EBoard
 			{
 				InitChart(chartCurrMonth2, 19, lastDay);
 				daysInMonth = lastDay;
+			}
+
+			if (!alwaysRefresh)
+			{
+				// Need to refresh two charts both if month changed
+				if (currentMonth != now.Month)
+				{
+					alwaysRefresh = true;
+					currentMonth = now.Month;
+				}
 			}
 
 			if (alwaysRefresh)

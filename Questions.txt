@@ -1,6 +1,19 @@
-1. 要不断地实时写数据到led，需要先擦除数据吗？如何擦除？ - 每次重写所有
-2. LED 字串支持 换行回车吗？\r\n? - 支持
-3. LED支持tab吗？ \t？	- 不支持
+TODO:
+1. Backup database (triggers, stored procedures), backup all .dll/.exe/.config/.ini
 
-THhChnpFTG1PC7Xn5oZL0A==
-/obHD/xjdnERvIhyFzXxDw==
+2. Change password with encrypted string
+	THhChnpFTG1PC7Xn5oZL0A==
+	/obHD/xjdnERvIhyFzXxDw==
+
+3. Backup data in table, modify tables:
+	MonthReportDet
+	MonthWorkerReportDet
+
+4. Update stored procedures:
+	sp_GetCurrentMonthDataByDay
+	sp_CreateMonthlyWorkerReport	
+	sp_CreateMonthlyShiftRecord
+
+5. Modify GenerateLastMonthReport.exe.config
+
+6. Modify LedSyncService.exe.con.config
