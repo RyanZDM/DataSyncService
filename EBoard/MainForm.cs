@@ -133,7 +133,6 @@ namespace EBoard
 															&& string.Equals(p.Name, "ShiftStartTime2", StringComparison.OrdinalIgnoreCase));
 			secondShiftStart = (shift1Start != null) ? shift2Start.Value : "20:00:00";
 
-
 			shiftLoginTimer = new System.Threading.Timer(LoginTimerCallback, null, GetDueTimeForLoginTimer(), Timeout.Infinite);
 
 			var param = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
@@ -195,13 +194,24 @@ namespace EBoard
 					CurrentWorkers.Clear();
 				}
 
-				Login("请登录当前工班 - 第一名员工");
-				Login("请登录当前工班 - 第二名员工");
+				Login();
 			}
 			finally
 			{
 				shiftLoginTimer.Change(GetDueTimeForLoginTimer(), Timeout.Infinite);
 			}
+		}
+
+		private void Login()
+		{
+			if (InvokeRequired)
+			{
+				BeginInvoke((MethodInvoker)(() => Login()));
+				return;
+			}
+
+			Login("请登录当前工班 - 第一名员工");
+			Login("请登录当前工班 - 第二名员工");
 		}
 
 		private User Login(string title)
@@ -281,7 +291,7 @@ namespace EBoard
 
 				var reporter = new Reporter(conn);
 				var ds = reporter.GetCurrentMonthDataByDay();
-				RefreshCharts(ds, alwaysRefresh);
+				RefreshCharts(shiftStatInfo, ds, alwaysRefresh);
 				SetCommunicateState(CommunicationState.Ready);
 			}
 			catch (OpcCommunicationBrokeException)
@@ -502,18 +512,16 @@ namespace EBoard
 			}
 		}
 
-		private void RefreshCharts(DataSet ds, bool alwaysRefresh = false)
+		private void RefreshCharts(ShiftStatInfo shift, DataSet ds, bool alwaysRefresh = false)
 		{
 			if (InvokeRequired)
 			{
-				BeginInvoke((MethodInvoker)(() => RefreshCharts(ds, alwaysRefresh)));
+				BeginInvoke((MethodInvoker)(() => RefreshCharts(shift, ds, alwaysRefresh)));
 				return;
 			}
-
-			var now = DateTime.Now;
-
+			
 			// If month changed, then last day may changed, call InitChart()
-			var lastDay = DateTime.DaysInMonth(now.Year, now.Month);
+			var lastDay = DateTime.DaysInMonth(shift.BeginTime.Year, shift.BeginTime.Month);
 			if (daysInMonth != lastDay)
 			{
 				InitChart(chartCurrMonth2, 19, lastDay);
@@ -522,11 +530,11 @@ namespace EBoard
 
 			if (!alwaysRefresh)
 			{
-				// Need to refresh two charts both if month changed
-				if (currentMonth != now.Month)
+				// Need to refresh two charts both if month of shift start time changed
+				if (currentMonth != shift.BeginTime.Month)
 				{
 					alwaysRefresh = true;
-					currentMonth = now.Month;
+					currentMonth = shift.BeginTime.Month;
 				}
 			}
 
@@ -538,7 +546,7 @@ namespace EBoard
 			}
 
 			// No need to refresh another series if today is not in that period
-			var currDay = now.Day;
+			var currDay = shift.BeginTime.Day;
 			if (currDay <= chartCurrMonth1.ChartAreas[0].AxisX.Maximum)
 			{
 				RefreshChart(chartCurrMonth1, ds);
