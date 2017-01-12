@@ -8,6 +8,7 @@ TODO:
 3. Backup data in table, modify tables:
 	MonthReportDet
 	MonthWorkerReportDet
+	ShiftStatDet
 
 4. Update stored procedures:
 	sp_GetCurrentMonthDataByDay
