@@ -112,7 +112,7 @@ namespace EBoard.SysManager
 			var ds = reporter.GetMonthReportStatDet(reportId);
 			if (ds == null || ds.Tables.Count < 2 || ds.Tables["Shift"].Rows.Count < 1)
 			{
-				logger.Debug("GetMonthReprotStatDet did not return data, ReportId={0}, table count={1}", reportId, ds.Tables.Count);
+				logger.Debug("GetMonthReprotStatDet did not return data, ReportId={0}, table count={1}", reportId, ds?.Tables.Count);
 				return;
 			}
 
@@ -140,7 +140,7 @@ namespace EBoard.SysManager
 			var ds = reporter.GetMonthReportWorkerDet(reportId);
 			if (ds == null || ds.Tables.Count < 2 || ds.Tables["Worker"].Rows.Count < 1)
 			{
-				logger.Debug("GetMonthReportWorkerDet did not return data, ReportId={0}, table count={1}", reportId, ds.Tables.Count);
+				logger.Debug("GetMonthReportWorkerDet did not return data, ReportId={0}, table count={1}", reportId, ds?.Tables.Count);
 				return;
 			}
 
@@ -189,7 +189,7 @@ namespace EBoard.SysManager
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"无法保存数据。{ex.ToString()}");
+				MessageBox.Show($"无法保存数据。{ex}");
 				return false;
 			}
 		}
@@ -247,7 +247,7 @@ namespace EBoard.SysManager
 			{
 				buttonCreateFile.Enabled = true;
 				logger.Error(ex, "Error occurred while creating report file.");
-				MessageBox.Show($"创建报表文件时出错。{ex.ToString()}");
+				MessageBox.Show($"创建报表文件时出错。{ex}");
 			}
 			
 		}

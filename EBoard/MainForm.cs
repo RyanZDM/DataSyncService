@@ -127,11 +127,11 @@ namespace EBoard
 			var parameters = dal.GetGeneralParameters();
 			var shift1Start = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
 															&& string.Equals(p.Name, "ShiftStartTime1", StringComparison.OrdinalIgnoreCase));
-			firstShiftStart = (shift1Start != null) ? shift1Start.Value : "8:00:00";
+			firstShiftStart = shift1Start?.Value ?? "8:00:00";
 
 			var shift2Start = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
 															&& string.Equals(p.Name, "ShiftStartTime2", StringComparison.OrdinalIgnoreCase));
-			secondShiftStart = (shift1Start != null) ? shift2Start.Value : "20:00:00";
+			secondShiftStart = (shift2Start?.Value) ?? "20:00:00";
 
 			shiftLoginTimer = new System.Threading.Timer(LoginTimerCallback, null, GetDueTimeForLoginTimer(), Timeout.Infinite);
 
@@ -445,7 +445,7 @@ namespace EBoard
 		private void InitChart(Chart chart, int begin, int end)
 		{
 			chart.ChartAreas[0].AxisX.Minimum = begin - 1;
-			chart.ChartAreas[0].AxisX.Maximum = end;
+			chart.ChartAreas[0].AxisX.Maximum = end + 1;
 			chart.ChartAreas[0].AxisX.Interval = 1;
 			chart.BackColor = Color.Transparent;
 			chart.Legends.Clear();
@@ -524,7 +524,7 @@ namespace EBoard
 			var lastDay = DateTime.DaysInMonth(shift.BeginTime.Year, shift.BeginTime.Month);
 			if (daysInMonth != lastDay)
 			{
-				InitChart(chartCurrMonth2, 19, lastDay);
+				InitChart(chartCurrMonth2, (int)(chartCurrMonth1.ChartAreas[0].AxisX.Maximum), lastDay);
 				daysInMonth = lastDay;
 			}
 
@@ -534,26 +534,27 @@ namespace EBoard
 				if (currentMonth != shift.BeginTime.Month)
 				{
 					alwaysRefresh = true;
-					currentMonth = shift.BeginTime.Month;
 				}
 			}
 
+			currentMonth = shift.BeginTime.Month;
+
 			if (alwaysRefresh)
 			{
-				RefreshChart(chartCurrMonth1, ds);
-				RefreshChart(chartCurrMonth2, ds);
+				RefreshChart(chartCurrMonth1, shift, ds);
+				RefreshChart(chartCurrMonth2, shift, ds);
 				return;
 			}
 
 			// No need to refresh another series if today is not in that period
 			var currDay = shift.BeginTime.Day;
-			if (currDay <= chartCurrMonth1.ChartAreas[0].AxisX.Maximum)
+			if (currDay < chartCurrMonth1.ChartAreas[0].AxisX.Maximum)	// The AsisX.Maximum is larger than the actual day by 1
 			{
-				RefreshChart(chartCurrMonth1, ds);
+				RefreshChart(chartCurrMonth1, shift, ds);
 			}
 			else
 			{
-				RefreshChart(chartCurrMonth2, ds);
+				RefreshChart(chartCurrMonth2, shift, ds);
 			}
 		}
 
@@ -569,7 +570,7 @@ namespace EBoard
 			,{8, "NightWorkers2" }
 		};
 
-		private void RefreshChart(Chart chart, DataSet ds)
+		private void RefreshChart(Chart chart, ShiftStatInfo shift, DataSet ds)
 		{
 			try
 			{
@@ -583,9 +584,9 @@ namespace EBoard
 
 				// Refresh the chart label
 				var axis = chart.ChartAreas[0].AxisX;
-				var begin = axis.Minimum;
-				var end = axis.Maximum;
-				var today = DateTime.Now.Day;
+				var begin = axis.Minimum + 1;
+				var end = axis.Maximum - 1;
+				var today = shift.BeginTime.Day;
 
 				chart.DataSource = ds.Tables[0].Select($"Day>={begin} And Day<={end}");
 
@@ -599,7 +600,7 @@ namespace EBoard
 					{
 						if (today < i)
 						{
-							label.Text = "";    // No need to write the value since the day is later than today
+							label.Text = " ";    // No need to write the value since the day is later than today
 							continue;
 						}
 

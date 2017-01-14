@@ -1,16 +1,16 @@
-USE [OPC]
-GO
 
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 2016/12/24 23:12:03 ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 1/14/2017 7:28:40 PM ******/
 DROP PROCEDURE [dbo].[sp_GetCurrentMonthDataByDay]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 2016/12/24 23:12:03 ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 1/14/2017 7:28:40 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 
 -- =============================================
@@ -26,7 +26,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-	DECLARE @now datetime
+	DECLARE @shiftBegin datetime
 		,@todayStr varchar(10)
 		,@todayInt int
 		,@dateStr char(8)
@@ -36,12 +36,15 @@ BEGIN
 		,@lastDay int			-- Today
 		,@day int
 		,@dayWorkers nvarchar(100)
-		,@shiftId uniqueidentifier
+		,@currShift uniqueidentifier
+
+	DECLARE @shiftId uniqueidentifier
 	
-	SELECT @now = GETDATE()
-	SELECT @todayInt = DATEPART(day, @now)
-	SELECT @dateStr = LEFT(CONVERT(char(10), @now, 111), 8)	
-	SELECT @begin = CONVERT(datetime, LEFT(CONVERT(char(10), @now, 111), 8) + '01', 111)	
+	EXEC sp_GetCurrentShiftId @ShiftId = @currShift OUTPUT
+	SELECT @shiftBegin = BeginTime From ShiftStatMstr Where ShiftId = @currShift
+	SELECT @todayInt = DATEPART(day, @shiftBegin)
+	SELECT @dateStr = LEFT(CONVERT(char(10), @shiftBegin, 111), 8)	
+	SELECT @begin = CONVERT(datetime, LEFT(CONVERT(char(10), @shiftBegin, 111), 8) + '01', 111)	
 	SELECT @end = DATEADD(m, 1, @begin)	
 	SELECT @lastDay = DAY(DATEADD(d, -1, @end))
 		
@@ -71,7 +74,7 @@ BEGIN
 			VALUES(@day, ISNULL(@dayWorkers,'') )
 
 		UPDATE @CurrentMonthRpt SET DayBiogas=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0.0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
+			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
 				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status='A'
 						AND (det.Item='Biogas2GenSubtotal' OR det.Item='Biogas2TorchSubtotal')
 						AND mstr.BeginTime>=@begin AND mstr.BeginTime<@noon)			
@@ -117,6 +120,8 @@ BEGIN
 
 	SELECT (ISNULL(SUM(DayBiogas),0) + ISNULL(SUM(NightBiogas),0)) AS Biogas, (ISNULL(SUM(DayEngeryProduction),0) + ISNULL(SUM(NightEngeryProduction),0)) AS EngeryProduction FROM @CurrentMonthRpt
 END
+
+
 
 
 GO

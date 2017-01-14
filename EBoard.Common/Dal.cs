@@ -403,8 +403,7 @@ namespace EBoard.Common
 			// User dataset for updating User since dataset is able to check if the data is changed or not
 			var sql = $@"SELECT * FROM [User] WHERE UserId=CONVERT(uniqueidentifier,'{user.UserId}')";
 			var ds = new DataSet();
-			var adapter = new SqlDataAdapter();
-			adapter.SelectCommand = new SqlCommand(sql, connection);
+			var adapter = new SqlDataAdapter {SelectCommand = new SqlCommand(sql, connection)};
 			var scb = new SqlCommandBuilder(adapter);
 
 			adapter.Fill(ds);

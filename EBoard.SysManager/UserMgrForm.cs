@@ -119,7 +119,7 @@ namespace EBoard.SysManager
 			catch (Exception ex)
 			{
 				logger.Error(ex, "Failed to save data.");
-				MessageBox.Show($"无法保存数据。{ex.ToString()}");
+				MessageBox.Show($"无法保存数据。{ex}");
 				return false;
 			}
 		}
