@@ -156,6 +156,11 @@ namespace EBoard.Common
 				new SqlDataAdapter(sql, connection).Fill(reportDs);
 				app.WriteData(worksheet, reportDs.Tables[0], true, startRow);
 
+				// 4.2 Data from MonthReportShitDet
+
+				// 4.3 Data from WorkersInShift
+
+				// TODO: Item name in MonitorItem and MonthReportDet not match!
 				// 4.2 Data from MonthReportDet
 				startRow += (reportDs.Tables[0].Rows.Count + 2);
 				var detDs = new DataSet();
