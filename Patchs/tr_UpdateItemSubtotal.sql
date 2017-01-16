@@ -93,6 +93,9 @@ BEGIN
 	If @@ROWCOUNT = 0	-- Record not exist
 		Begin
 			Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shiftId, @realItem, @realValue, @realValue)
+
+			-- Record the abnormal change
+			Insert Into AbnormalChange (ShiftId, ItemName, PreValue, NewValue, UpdateTime, CreateTime) Values (@shiftId, @realItem, -1, @realValue, @newTime, GetDate())
 			Return
 		End
 
