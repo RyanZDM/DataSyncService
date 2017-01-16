@@ -157,15 +157,26 @@ namespace EBoard.Common
 				app.WriteData(worksheet, reportDs.Tables[0], true, startRow);
 
 				// 4.2 Data from MonthReportShitDet
+				startRow += (reportDs.Tables[0].Rows.Count + 2);
+				var shiftDetDs = new DataSet();
+				sql =
+					$@"Select ShiftId,BeginTime,ActualBeginTime,LastUpdateTime,EndTime From MonthReportShiftDet Where ReportId=Cast('{reportId}' As uniqueidentifier) Order By BeginTime";
+				new SqlDataAdapter(sql, connection).Fill(shiftDetDs);
+				app.WriteData(worksheet, shiftDetDs.Tables[0], false, startRow);
 
 				// 4.3 Data from WorkersInShift
-
-				// TODO: Item name in MonitorItem and MonthReportDet not match!
+				startRow += (shiftDetDs.Tables[0].Rows.Count + 2);
+				var workerDs = new DataSet();
+				sql =
+					$@"Select wis.ShiftId,LoginId,LoginName From WorkersInShift wis, MonthReportShiftDet rsd Where wis.ShiftId = rsd.ShiftId And ReportId = Cast('{reportId}' As uniqueidentifier) Order By wis.ShiftId,LoginTime";
+				new SqlDataAdapter(sql, connection).Fill(workerDs);
+				app.WriteData(worksheet, workerDs.Tables[0], false, startRow);
+				
 				// 4.2 Data from MonthReportDet
-				startRow += (reportDs.Tables[0].Rows.Count + 2);
+				startRow += (workerDs.Tables[0].Rows.Count + 2);
 				var detDs = new DataSet();
 				sql =
-					$@"Select ShiftId,Item,DisplayName As ItemName,Subtotal From MonthReportDet,MonitorItem Where Item=ItemId And MonthReportDet.Status='A' And ReportId='{reportId}'";
+					$@"Select Distinct ShiftId,Item,DisplayName As ItemName,Subtotal From MonthReportDet,MonitorItem Where (Item=ItemId Or Item=Alias) And MonthReportDet.Status='A' And ReportId=Cast('{reportId}' As uniqueidentifier) Order by ShiftId,Item";
 				new SqlDataAdapter(sql, connection).Fill(detDs);
 				app.WriteData(worksheet, detDs.Tables[0], false, startRow);
 
@@ -173,7 +184,7 @@ namespace EBoard.Common
 				startRow += (detDs.Tables[0].Rows.Count + 2);
 				var workerDetDs = new DataSet();
 				sql =
-					$@"Select WorkerId,WorkerName,Item,DisplayName As ItemName,Subtotal From MonthWorkerReportDet,MonitorItem Where Item=ItemId And MonthWorkerReportDet.Status='A' And ReportId='{reportId}'";
+					$@"Select Distinct WorkerId,WorkerName,Item,DisplayName As ItemName,Subtotal From MonthWorkerReportDet,MonitorItem Where (Item=ItemId Or Item=Alias) And MonthWorkerReportDet.Status='A' And ReportId=Cast('{reportId}' As uniqueidentifier) Order By WorkerId,Item";
 				new SqlDataAdapter(sql, connection).Fill(workerDetDs);
 				app.WriteData(worksheet, workerDetDs.Tables[0], false, startRow);
 

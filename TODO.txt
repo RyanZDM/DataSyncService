@@ -1,4 +1,14 @@
 TODO:
+
+1. Add column 'Alias' in table MonitorItem
+
+2. Update Alias = ItemId and truncate the subfix '.L' of Alias and DisplayName
+
+3. Add a table MonthReportShiftDet
+	t_MonthReportShiftDet
+
+
+Done by patch:
 1. Update stored procedures:
 	sp_GetCurrentMonthDataByDay
 
