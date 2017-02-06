@@ -160,7 +160,7 @@ namespace EBoard.Common
 				startRow += (reportDs.Tables[0].Rows.Count + 2);
 				var shiftDetDs = new DataSet();
 				sql =
-					$@"Select ShiftId,BeginTime,ActualBeginTime,LastUpdateTime,EndTime From MonthReportShiftDet Where ReportId=Cast('{reportId}' As uniqueidentifier) Order By BeginTime";
+					$@"Select ShiftId,Convert(varchar(10), BeginTime, 111) As Day,Cast(Convert(Varchar(2), BeginTime, 114) As Int) As Hour,BeginTime,ActualBeginTime,LastUpdateTime,EndTime From MonthReportShiftDet Where ReportId=Cast('{reportId}' As uniqueidentifier) Order By BeginTime";
 				new SqlDataAdapter(sql, connection).Fill(shiftDetDs);
 				app.WriteData(worksheet, shiftDetDs.Tables[0], false, startRow);
 
@@ -168,25 +168,46 @@ namespace EBoard.Common
 				startRow += (shiftDetDs.Tables[0].Rows.Count + 2);
 				var workerDs = new DataSet();
 				sql =
-					$@"Select wis.ShiftId,LoginId,LoginName From WorkersInShift wis, MonthReportShiftDet rsd Where wis.ShiftId = rsd.ShiftId And ReportId = Cast('{reportId}' As uniqueidentifier) Order By wis.ShiftId,LoginTime";
+					$@"Select wis.ShiftId,LoginId,LoginName From WorkersInShift wis, MonthReportShiftDet rsd Where wis.ShiftId = rsd.ShiftId And ReportId = Cast('{reportId}' As uniqueidentifier) Order By rsd.BeginTime,wis.ShiftId";
 				new SqlDataAdapter(sql, connection).Fill(workerDs);
 				app.WriteData(worksheet, workerDs.Tables[0], false, startRow);
-				
-				// 4.2 Data from MonthReportDet
-				startRow += (workerDs.Tables[0].Rows.Count + 2);
-				var detDs = new DataSet();
-				sql =
-					$@"Select Distinct ShiftId,Item,DisplayName As ItemName,Subtotal From MonthReportDet,MonitorItem Where (Item=ItemId Or Item=Alias) And MonthReportDet.Status='A' And ReportId=Cast('{reportId}' As uniqueidentifier) Order by ShiftId,Item";
-				new SqlDataAdapter(sql, connection).Fill(detDs);
-				app.WriteData(worksheet, detDs.Tables[0], false, startRow);
 
-				// 4.3 Data from MonthWorkerReportDet
-				startRow += (detDs.Tables[0].Rows.Count + 2);
-				var workerDetDs = new DataSet();
-				sql =
-					$@"Select Distinct WorkerId,WorkerName,Item,DisplayName As ItemName,Subtotal From MonthWorkerReportDet,MonitorItem Where (Item=ItemId Or Item=Alias) And MonthWorkerReportDet.Status='A' And ReportId=Cast('{reportId}' As uniqueidentifier) Order By WorkerId,Item";
-				new SqlDataAdapter(sql, connection).Fill(workerDetDs);
-				app.WriteData(worksheet, workerDetDs.Tables[0], false, startRow);
+				// 4.4.1 Get data by executing sp_GetMonthReportData
+				startRow += (workerDs.Tables[0].Rows.Count + 2);
+				var monthReportDs = new DataSet();
+				var command = new SqlCommand
+				{
+					Connection = connection,
+					CommandType = CommandType.StoredProcedure,
+					CommandText = "sp_GetMonthReportData"
+				};
+				command.Parameters.AddWithValue("@ReportId", reportId);
+
+				var adapter = new SqlDataAdapter(command);
+				adapter.Fill(monthReportDs);
+
+				app.WriteData(worksheet, monthReportDs.Tables[0], false, startRow);
+
+				// TODO 4.4.2 Create named Range
+				var range = worksheet.Range[worksheet.Cells[startRow, 1],
+					worksheet.Cells[startRow + monthReportDs.Tables[0].Rows.Count, monthReportDs.Tables[0].Columns.Count]];
+				workbook.Names.Add("MonthReport", range);
+				
+				//// 4.4 Data from MonthReportDet
+				//startRow += (workerDs.Tables[0].Rows.Count + 2);
+				//var detDs = new DataSet();
+				//sql =
+				//	$@"Select mrs.ShiftId,Item,DisplayName As ItemName,Subtotal From MonthReportDet mrd,MonitorItem mi,MonthReportShiftDet mrs Where mrd.ReportId=mrs.ReportId And mrd.ShiftId=mrs.ShiftId And (Item=ItemId Or Item=Alias) And mrd.Status='A' And mrd.ReportId=Cast('{reportId}' As uniqueidentifier) Order by mrs.BeginTime,Item";
+				//new SqlDataAdapter(sql, connection).Fill(detDs);
+				//app.WriteData(worksheet, detDs.Tables[0], false, startRow);
+
+				//// 4.5 Data from MonthWorkerReportDet
+				//startRow += (detDs.Tables[0].Rows.Count + 2);
+				//var workerDetDs = new DataSet();
+				//sql =
+				//	$@"Select WorkerId,WorkerName,Item,DisplayName As ItemName,Subtotal From MonthWorkerReportDet,MonitorItem Where (Item=ItemId Or Item=Alias) And MonthWorkerReportDet.Status='A' And ReportId=Cast('{reportId}' As uniqueidentifier) Order By WorkerId,Item";
+				//new SqlDataAdapter(sql, connection).Fill(workerDetDs);
+				//app.WriteData(worksheet, workerDetDs.Tables[0], false, startRow);
 
 				workbook.Save();
 				logger.Info($"The Excel file for the report '{year}-{month}/{reportId}' created.");

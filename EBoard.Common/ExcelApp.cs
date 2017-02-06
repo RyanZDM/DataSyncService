@@ -12,7 +12,7 @@ namespace EBoard.Common
 	/// </summary>
 	public class ExcelApp : IDisposable
 	{
-		private static readonly object Nothing = Missing.Value;
+		public static readonly object Nothing = Missing.Value;
 
 		private Excel.Application app;
 

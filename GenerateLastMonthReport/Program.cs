@@ -25,7 +25,8 @@ namespace GenerateLastMonthReport
 		/// </remarks>
 		public static int Main(string[] args)
 		{
-			if ((args.Length == 1) && args[0].Equals("/help", StringComparison.OrdinalIgnoreCase))
+			if ((args.Length == 1) && 
+				(args[0].Equals("/help", StringComparison.OrdinalIgnoreCase) || args[0].Equals("/?")))
 			{
 				ShowHelp();
 				return 0;
