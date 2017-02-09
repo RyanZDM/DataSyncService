@@ -60,7 +60,7 @@ BEGIN
 		From @MonthReport mr, (Select ShiftId,LoginName,(ROW_NUMBER() OVER(PARTITION by ShiftId ORDER BY ShiftId)) As [Row] From WorkersInShift) wk
 			Where mr.ShiftId=wk.ShiftId And wk.Row=2
 
-	Select * from @MonthReport
+	Select ROW_NUMBER() OVER(Order By [Day]) As [Row],[Day],[Shift],Worker1,Worker2,EnergyProduction1,EnergyProduction2,Biogas2GenSubtotal,Biogas2TorchSubtotal from @MonthReport
 END
 
 GO

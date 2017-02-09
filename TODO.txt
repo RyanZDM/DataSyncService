@@ -4,18 +4,21 @@ TODO:
 
 2. Update Alias = ItemId and truncate the subfix '.L' of Alias and DisplayName
 
-3. Add a table MonthReportShiftDet
-	t_MonthReportShiftDet
+3.  Update f_GetWorkerNameByShift, release the cursor
+
+4. sp_GetCurrentShiftId, check status='A', hold lock while getting shift id from ShfitStatMstr
+
+5. Add table MonthReportShiftDet
+
+6. Add sp_GetMonthReportData
 
 
 Done by patch:
 1. Update stored procedures:
-	sp_GetCurrentMonthDataByDay
+	sp_GetCurrentShiftId
 
-2. Add table AbnormalChange, t_AbnormalChange.sql
+2. Update a duplicated shift record status = 'X'
 
-3. Update trigger:
-	tr_UpdateItemSubtotal
 
 
 1.登陆窗口在8:00越过后不自动跳出

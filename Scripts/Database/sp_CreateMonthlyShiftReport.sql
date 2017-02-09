@@ -1,10 +1,8 @@
-
-
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyShiftReport]    Script Date: 1/16/2017 5:07:58 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyShiftReport]    Script Date: 2/9/2017 2:04:16 PM ******/
 DROP PROCEDURE [dbo].[sp_CreateMonthlyShiftReport]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyShiftReport]    Script Date: 1/16/2017 5:07:58 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyShiftReport]    Script Date: 2/9/2017 2:04:16 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -45,5 +43,4 @@ END
 
 
 GO
-
 

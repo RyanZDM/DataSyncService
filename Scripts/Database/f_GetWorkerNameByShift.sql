@@ -1,6 +1,3 @@
-USE [OPC-Site]
-GO
-
 /****** Object:  UserDefinedFunction [dbo].[GetWorkerNameByShift]    Script Date: 2/6/2017 3:57:46 PM ******/
 DROP FUNCTION [dbo].[GetWorkerNameByShift]
 GO
