@@ -1,6 +1,3 @@
-USE [OPC-Site]
-GO
-
 /****** Object:  StoredProcedure [dbo].[sp_GetCurrentShiftId]    Script Date: 2/9/2017 9:32:26 AM ******/
 DROP PROCEDURE [dbo].[sp_GetCurrentShiftId]
 GO
