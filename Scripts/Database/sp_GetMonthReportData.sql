@@ -1,14 +1,14 @@
-
-/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 2/6/2017 4:24:39 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 3/28/2017 2:58:27 PM ******/
 DROP PROCEDURE [dbo].[sp_GetMonthReportData]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 2/6/2017 4:24:39 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 3/28/2017 2:58:27 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 -- =============================================
 -- Author:		ZDM
@@ -33,7 +33,9 @@ BEGIN
 		EnergyProduction1 int,
 		EnergyProduction2 int,
 		Biogas2GenSubtotal int,
-		Biogas2TorchSubtotal int
+		Biogas2TorchSubtotal int,
+		SubtotalRuntime1 int,
+		SubtotalRuntime2 int
 	);
 	
 	Insert Into @MonthReport (ShiftId,[Day],[Shift])
@@ -52,6 +54,12 @@ BEGIN
 	Update @MonthReport Set Biogas2TorchSubtotal=IsNull(Subtotal,0) From @MonthReport mr,MonthReportDet mrd
 		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item='Biogas2TorchSubtotal'
 
+	Update @MonthReport Set SubtotalRuntime1=IsNull(SubtotalRuntime1,0) From @MonthReport mr, MonthReportDet mrd
+		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item='SubtotalRuntime1'
+
+	Update @MonthReport Set SubtotalRuntime2=IsNull(SubtotalRuntime2,0) From @MonthReport mr, MonthReportDet mrd
+		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item='SubtotalRuntime2'
+
 	Update @MonthReport Set Worker1=wk.LoginName
 		From @MonthReport mr, (Select ShiftId,LoginName,(ROW_NUMBER() OVER(PARTITION by ShiftId ORDER BY ShiftId)) As [Row] From WorkersInShift) wk
 			Where mr.ShiftId=wk.ShiftId And wk.Row=1
@@ -60,8 +68,9 @@ BEGIN
 		From @MonthReport mr, (Select ShiftId,LoginName,(ROW_NUMBER() OVER(PARTITION by ShiftId ORDER BY ShiftId)) As [Row] From WorkersInShift) wk
 			Where mr.ShiftId=wk.ShiftId And wk.Row=2
 
-	Select ROW_NUMBER() OVER(Order By [Day]) As [Row],[Day],[Shift],Worker1,Worker2,EnergyProduction1,EnergyProduction2,Biogas2GenSubtotal,Biogas2TorchSubtotal from @MonthReport
+	Select ROW_NUMBER() OVER(Order By [Day]) As [Row],[Day],[Shift],Worker1,Worker2,EnergyProduction1,EnergyProduction2,Biogas2GenSubtotal,Biogas2TorchSubtotal,SubtotalRuntime1,SubtotalRuntime2 from @MonthReport
 END
+
 
 GO
 

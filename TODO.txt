@@ -10,7 +10,7 @@ TODO:
 
 5. Add table MonthReportShiftDet
 
-6. Add sp_GetMonthReportData
+6. Add/modified sp_GetMonthReportData
 
 
 Done by patch:
