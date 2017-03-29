@@ -1,8 +1,8 @@
-/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 3/28/2017 2:58:27 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 3/28/2017 4:37:15 PM ******/
 DROP PROCEDURE [dbo].[sp_GetMonthReportData]
 GO
 
-/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 3/28/2017 2:58:27 PM ******/
+/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 3/28/2017 4:37:15 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -54,10 +54,10 @@ BEGIN
 	Update @MonthReport Set Biogas2TorchSubtotal=IsNull(Subtotal,0) From @MonthReport mr,MonthReportDet mrd
 		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item='Biogas2TorchSubtotal'
 
-	Update @MonthReport Set SubtotalRuntime1=IsNull(SubtotalRuntime1,0) From @MonthReport mr, MonthReportDet mrd
+	Update @MonthReport Set SubtotalRuntime1=IsNull(Subtotal,0) From @MonthReport mr, MonthReportDet mrd
 		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item='SubtotalRuntime1'
 
-	Update @MonthReport Set SubtotalRuntime2=IsNull(SubtotalRuntime2,0) From @MonthReport mr, MonthReportDet mrd
+	Update @MonthReport Set SubtotalRuntime2=IsNull(Subtotal,0) From @MonthReport mr, MonthReportDet mrd
 		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item='SubtotalRuntime2'
 
 	Update @MonthReport Set Worker1=wk.LoginName

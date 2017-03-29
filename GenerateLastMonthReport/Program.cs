@@ -103,9 +103,14 @@ namespace GenerateLastMonthReport
 
 				return 1;
 			}
+			catch (ReportFileAlreadyCreatedException)
+			{
+				Logger.Error("The monthly report for {0} has been created already, directly return.", yearMonth);
+				return -2;
+			}
 			catch (Exception ex)
 			{
-				Logger.Error(ex, "ailed to create Excel for monthly report '{0}'", yearMonth);
+				Logger.Error(ex, "Failed to create Excel for monthly report '{0}'", yearMonth);
 				return -1;
 			}
 		}
