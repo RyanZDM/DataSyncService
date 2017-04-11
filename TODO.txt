@@ -4,14 +4,15 @@ TODO:
 
 2. Update Alias = ItemId and truncate the subfix '.L' of Alias and DisplayName
 
-3.  Update f_GetWorkerNameByShift, release the cursor
+3.  Update f_GetWorkerNameByShift, release the cursor -- done by 0411
 
-4. sp_GetCurrentShiftId, check status='A', hold lock while getting shift id from ShfitStatMstr
+4. sp_GetCurrentShiftId, check status='A', hold lock while getting shift id from ShfitStatMstr  -- done by 0411
 
-5. Add table MonthReportShiftDet
+5. Add table MonthReportShiftDet	-- done by 0411
 
 6. Add/modified sp_GetMonthReportData
 
+7. Modified tr_UpdateItemSubtotal	-- done by 0411
 
 Done by patch:
 1. Update stored procedures:
