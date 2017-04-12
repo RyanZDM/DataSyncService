@@ -121,6 +121,35 @@ COPCItemDef* COPCItemDef::Clone()
 	return pItem;
 }
 
+float GetFromVariant(VARIANT &vValue)
+{
+	switch (vValue.vt)
+	{
+	case VT_R4:
+		return vValue.fltVal;
+	case VT_R8:
+		return (float)vValue.dblVal;
+	case VT_I4:
+	case VT_UI4:
+		return (float)vValue.lVal;
+	case VT_INT:
+	case VT_UINT:
+		return (float)vValue.intVal;
+	case VT_BOOL:
+		return (float)(vValue.boolVal ? 1 : 0);		
+	case VT_I1:
+	case VT_UI1:
+		return (float)vValue.bVal;
+	case VT_I2:
+	case VT_UI2:
+		return (float)vValue.iVal;
+	case VT_DECIMAL:
+		return (float)vValue.lVal;
+	default:
+		return 0.0f;
+	}
+}
+
 INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp, map<LPCWSTR, LPWSTR, StrCompare> &mappings)
 {
 	if (!pTimeStamp || !pDB)
@@ -129,16 +158,22 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	_bstr_t bstrVal;
 	SYSTEMTIME utcTime;
 	SYSTEMTIME localTime;
-
-	CStrUtil::Variant2BSTR(vValue, bstrVal);
+	
 	LPCWSTR pItemID = m_pOPCItemDef->szItemID;
+	float fVal = GetFromVariant(vValue);
+	if (fVal < 0.0 || fVal > 99999999.00)
+	{
+		g_Logger.VLog(L"COPCItemDef::UpdateData() Skip the update value for item [%s] because the value [%.2f] is invalid.", pItemID, fVal);
+		return -1;
+	}
+
 	FileTimeToSystemTime(pTimeStamp, &utcTime);
 	SystemTimeToTzSpecificLocalTime(NULL, &utcTime, &localTime);
 
 	const int MAX_LEN = 1000;
 	wchar_t wszSQL[MAX_LEN];
-	swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Update ItemLatestStatus Set Val='%s', LastUpdate=Convert(datetime,'%d-%d-%d %d:%d:%d'),Quality=%d Where ItemID='%s'",
-		(LPCWSTR)bstrVal,
+	swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Update ItemLatestStatus Set Val='%.2f', LastUpdate=Convert(datetime,'%d-%d-%d %d:%d:%d'),Quality=%d Where ItemID='%s'",
+		fVal,
 		localTime.wYear,
 		localTime.wMonth,
 		localTime.wDay,
@@ -175,6 +210,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	}
 	catch (INT nError)
 	{
+		g_Logger.VForceLog(_T("COPCItemDef::UpdateData() Failed.\r\n%s.\r\n%s"), wszSQL, pDB->GetLastErrormsg());
 		return nError;
 	}
 }

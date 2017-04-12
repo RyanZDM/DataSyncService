@@ -1,4 +1,4 @@
-/****** Object:  Trigger [tr_UpdateItemSubtotal]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Trigger [tr_UpdateItemSubtotal]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[dbo].[tr_UpdateItemSubtotal]'))
 DROP TRIGGER [dbo].[tr_UpdateItemSubtotal]
 GO
@@ -164,611 +164,71 @@ ALTER TABLE [dbo].[GeneralParams] DROP CONSTRAINT [DF__GeneralPa__DispO__375B2DB
 END
 
 GO
-/****** Object:  Index [IX_ItemHistoryData]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Index [IX_ItemHistoryData]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ItemHistoryData]') AND name = N'IX_ItemHistoryData')
 DROP INDEX [IX_ItemHistoryData] ON [dbo].[ItemHistoryData] WITH ( ONLINE = OFF )
 GO
-/****** Object:  Table [dbo].[WorkersInShift]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[WorkersInShift]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[WorkersInShift]') AND type in (N'U'))
 DROP TABLE [dbo].[WorkersInShift]
 GO
-/****** Object:  Table [dbo].[UserInRole]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[UserInRole]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserInRole]') AND type in (N'U'))
 DROP TABLE [dbo].[UserInRole]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[User]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[User]') AND type in (N'U'))
 DROP TABLE [dbo].[User]
 GO
-/****** Object:  Table [dbo].[ShiftStatMstr]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ShiftStatMstr]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShiftStatMstr]') AND type in (N'U'))
 DROP TABLE [dbo].[ShiftStatMstr]
 GO
-/****** Object:  Table [dbo].[ShiftStatDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ShiftStatDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShiftStatDet]') AND type in (N'U'))
 DROP TABLE [dbo].[ShiftStatDet]
 GO
-/****** Object:  Table [dbo].[Role]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[Role]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Role]') AND type in (N'U'))
 DROP TABLE [dbo].[Role]
 GO
-/****** Object:  Table [dbo].[MonthWorkerReportDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthWorkerReportDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MonthWorkerReportDet]') AND type in (N'U'))
 DROP TABLE [dbo].[MonthWorkerReportDet]
 GO
-/****** Object:  Table [dbo].[MonthReportShiftDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthReportShiftDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MonthReportShiftDet]') AND type in (N'U'))
 DROP TABLE [dbo].[MonthReportShiftDet]
 GO
-/****** Object:  Table [dbo].[MonthReportMstr]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthReportMstr]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MonthReportMstr]') AND type in (N'U'))
 DROP TABLE [dbo].[MonthReportMstr]
 GO
-/****** Object:  Table [dbo].[MonthReportDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthReportDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MonthReportDet]') AND type in (N'U'))
 DROP TABLE [dbo].[MonthReportDet]
 GO
-/****** Object:  Table [dbo].[MonitorItem]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonitorItem]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[MonitorItem]') AND type in (N'U'))
 DROP TABLE [dbo].[MonitorItem]
 GO
-/****** Object:  Table [dbo].[ItemLatestStatus]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ItemLatestStatus]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ItemLatestStatus]') AND type in (N'U'))
 DROP TABLE [dbo].[ItemLatestStatus]
 GO
-/****** Object:  Table [dbo].[ItemHistoryData]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ItemHistoryData]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ItemHistoryData]') AND type in (N'U'))
 DROP TABLE [dbo].[ItemHistoryData]
 GO
-/****** Object:  Table [dbo].[GeneralParams]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[GeneralParams]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GeneralParams]') AND type in (N'U'))
 DROP TABLE [dbo].[GeneralParams]
 GO
-/****** Object:  Table [dbo].[AbnormalChange]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[AbnormalChange]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[AbnormalChange]') AND type in (N'U'))
 DROP TABLE [dbo].[AbnormalChange]
 GO
-/****** Object:  UserDefinedFunction [dbo].[GetWorkerNameByShift]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetWorkerNameByShift]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [dbo].[GetWorkerNameByShift]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetMonthReportData]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[sp_GetMonthReportData]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentShiftId]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetCurrentShiftId]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[sp_GetCurrentShiftId]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetCurrentMonthDataByDay]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[sp_GetCurrentMonthDataByDay]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyWorkerReport]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_CreateMonthlyWorkerReport]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[sp_CreateMonthlyWorkerReport]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyShiftReport]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_CreateMonthlyShiftReport]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[sp_CreateMonthlyShiftReport]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyReport]    Script Date: 4/12/2017 7:04:38 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_CreateMonthlyReport]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [dbo].[sp_CreateMonthlyReport]
-GO
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyReport]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_CreateMonthlyReport]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'
-
--- =======================================================
--- Author:		ZDM
--- Create date: 2016-09-26
--- Description:
--- Create the monthly report by Shift and Worker both,
--- in the tables MonthReportMstr, MonthReportDet
--- and WorkerReportDet
--- =======================================================
-CREATE PROCEDURE [dbo].[sp_CreateMonthlyReport]
-	@YearMonth char(6)		-- The format should be looks like ''201602'' for report of Feb. 2016
-	,@ReportId uniqueidentifier OUTPUT
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;	
-		
-	Declare @year char(4)
-	Declare @month nvarchar(2)
-	Declare @firstDay char(2)
-	Declare @shift1StartTime nvarchar(10)
-	Declare @beginTime datetime
-	Declare @endTime datetime
-	Declare @dayOffset int
-	Declare @ret int
-	
-	-- TODO: need to check if already has report created, delete it?
-	Select @ReportId = ReportId From MonthReportMstr Where YearMonth=@YearMonth
-	If @@ROWCOUNT = 1	Return 0
-
-	Select @ReportId = NEWID()
-
-	-- May defined day offset for the begin/end day of monthly report in database
-	Select @year = LEFT(@YearMonth, 4)
-	Select @month = RIGHT(@YearMonth, 2)
-	Select @firstDay = IsNull(Value, ''1'') From GeneralParams Where Category = ''System'' And Name=''FirstDayForMonthReportTime''
-	Select @shift1StartTime =IsNull(Value, ''8:00:00'') From GeneralParams Where Category = ''System'' And Name=''ShiftStartTime1''
-	Select @beginTime = CAST(@year + ''-'' + @month + ''-'' + @firstDay + '' '' + @shift1StartTime AS datetime)
-	Select @endTime = DATEADD(m,1,@beginTime)
-	
-	Begin Tran
-		Insert Into MonthReportMstr (ReportId, YearMonth, BeginTime, EndTime, CreateTime, IsFileCreated, Status)
-				Values(@ReportId, @yearMonth, @beginTime, @endTime, GETDATE(), 0, ''A'')
-		If @@ROWCOUNT <> 1
-		Begin
-			Rollback Tran
-			Return -1
-		End
-
-		Exec @ret = sp_CreateMonthlyShiftReport @ReportId, @beginTime, @endTime
-		If @ret < 0
-		Begin
-			Rollback Tran
-			Return -2
-		End
-
-		Exec @ret = sp_CreateMonthlyWorkerReport @ReportId, @beginTime, @endTime
-		If @ret < 0
-		Begin
-			Rollback Tran
-			Return -3
-		End		
-
-	Commit Tran
-
-	-- Remove the corresponding records from tables ProductionStatMstr, ProductionStatDet and WorkersInProduction
-	-- This will improve the performance on table ProductionStatMstr, ProductionStatDet and WorkersInProduction
-	-- This will not impact the result of the monthly report creation
-
-	-- TODO: Need a flag indicate if to delete the data in tables ShiftStatMstr/ShiftStatDet
-	--Delete ShiftStatDet
-	--		From ShiftStatMstr mstr, ShiftStatDet det
-	--		Where mstr.ShiftId = det.ShiftId And mstr.BeginTime >= @beginTime And mstr.EndTime < @endTime
-
-	--Delete ShiftStatMstr Where BeginTime >= @beginTime And EndTime < @endTime
-	
-	Return 1
-END
-
-
-' 
-END
-GO
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyShiftReport]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_CreateMonthlyShiftReport]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'
-
-
--- =============================================
--- Author:		ZDM
--- Create date: 2016-01-26
--- Description:	Create the monthly report for individual shift
--- =============================================
-CREATE PROCEDURE [dbo].[sp_CreateMonthlyShiftReport] 
-	@ReportId uniqueidentifier,
-	@BeginTime datetime,
-	@EndTime datetime
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
-	Insert Into MonthReportShiftDet (ReportId, ShiftId, BeginTime, ActualBeginTime, LastUpdateTime, EndTime)
-		Select @ReportId, ShiftId, BeginTime, ActualBeginTime, LastUpdateTime, EndTime From ShiftStatMstr
-			Where Status = ''A'' And BeginTime >= @BeginTime And EndTime < @EndTime
-		
-	Insert Into MonthReportDet (ReportId, ShiftId, Item, Subtotal, Status)
-		Select @ReportId, mstr.ShiftId, det.Item, (Sum(IsNull(det.SubTotalLast,0)) - Sum(IsNull(det.SubTotalBegin,0))) As Subtotal, ''A''
-		From ShiftStatMstr mstr, ShiftStatDet det
-		Where mstr.ShiftId = det.ShiftId And mstr.Status = ''A''
-				And mstr.BeginTime >= @BeginTime And mstr.EndTime < @EndTime
-		Group By mstr.ShiftId, det.Item
-
-	Return @@ROWCOUNT
-END
-
-
-
-' 
-END
-GO
-/****** Object:  StoredProcedure [dbo].[sp_CreateMonthlyWorkerReport]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_CreateMonthlyWorkerReport]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'
-
--- =============================================
--- Author:		ZDM
--- Create date: 2016-09-26
--- Description:	Create the monthly report for individual worker
--- =============================================
-CREATE PROCEDURE [dbo].[sp_CreateMonthlyWorkerReport] 
-	@ReportId uniqueidentifier,
-	@BeginTime datetime,
-	@EndTime datetime
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-	
-	-- TODO: need to consider the case that login id is null or empty
-
-	Insert Into MonthWorkerReportDet (ReportId, WorkerId, WorkerName, Item, Subtotal, Status)
-		Select @ReportId, wrk.LoginId, wrk.LoginName, det.Item, (Sum(IsNull(det.SubTotalLast,0)) - Sum(IsNull(det.SubTotalBegin,0))) As Subtotal, ''A''
-			From ShiftStatMstr mstr, ShiftStatDet det, WorkersInShift wrk
-			Where mstr.ShiftId = det.ShiftId And mstr.ShiftId = wrk.ShiftId And  mstr.Status = ''A''
-					And mstr.BeginTime >= @BeginTime And mstr.EndTime < @EndTime
-			Group By wrk.LoginId, wrk.LoginName, det.Item
-
-	Return @@ROWCOUNT
-END
-
-
-' 
-END
-GO
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentMonthDataByDay]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetCurrentMonthDataByDay]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'
-
-
-
--- =============================================
--- Author:		ZDM
--- Create date: 2016-10-12
--- Description:	Get the subtotal of each monitor
--- items by day and shift
--- =============================================
-CREATE PROCEDURE [dbo].[sp_GetCurrentMonthDataByDay]
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
-	DECLARE @shiftBegin datetime
-		,@todayStr varchar(10)
-		,@todayInt int
-		,@dateStr char(8)
-		,@noon datetime
-		,@begin datetime		-- First day of current month
-		,@end datetime			-- By the end of today
-		,@lastDay int			-- Today
-		,@day int
-		,@dayWorkers nvarchar(100)
-		,@currShift uniqueidentifier
-
-	DECLARE @shiftId uniqueidentifier
-	
-	EXEC sp_GetCurrentShiftId @ShiftId = @currShift OUTPUT
-	SELECT @shiftBegin = BeginTime From ShiftStatMstr Where ShiftId = @currShift
-	SELECT @todayInt = DATEPART(day, @shiftBegin)
-	SELECT @dateStr = LEFT(CONVERT(char(10), @shiftBegin, 111), 8)	
-	SELECT @begin = CONVERT(datetime, LEFT(CONVERT(char(10), @shiftBegin, 111), 8) + ''01'', 111)	
-	SELECT @end = DATEADD(m, 1, @begin)	
-	SELECT @lastDay = DAY(DATEADD(d, -1, @end))
-		
-	DECLARE @CurrentMonthRpt TABLE
-	(
-		[Day] int,
-		DayWorkers nvarchar(100),
-		DayBiogas int,
-		DayEngeryProduction int,
-		NightWorkers nvarchar(100),
-		NightBiogas int,
-		NightEngeryProduction int
-	);
-
-	SELECT @day = 1
-	WHILE @day <= @todayInt		-- No need to get the data after today since no data
-	BEGIN
-		SELECT @todayStr = @dateStr + CONVERT(varchar(2), @day)
-		SELECT @begin = CONVERT(datetime, @todayStr, 111)
-		SELECT @end = DATEADD(d, 1, @begin)
-		SELECT @noon = CAST(@todayStr as datetime) + CAST(''12:00:00'' As datetime)	-- Uses 12:00:00 as a flag to check the two shift
-
-		-- Day shift
-		SELECT @dayWorkers=dbo.GetWorkerNameByShift(ShiftId) FROM ShiftStatMstr WHERE BeginTime>=@begin AND BeginTime<@noon
-
-		INSERT INTO @CurrentMonthRpt([Day], DayWorkers)
-			VALUES(@day, ISNULL(@dayWorkers,'''') )
-
-		UPDATE @CurrentMonthRpt SET DayBiogas=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
-				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status=''A''
-						AND (det.Item=''Biogas2GenSubtotal'' OR det.Item=''Biogas2TorchSubtotal'')
-						AND mstr.BeginTime>=@begin AND mstr.BeginTime<@noon)			
-			WHERE  [Day]=@day
-		
-		UPDATE @CurrentMonthRpt SET DayEngeryProduction=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
-				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status=''A''
-						AND (det.Item=''EnergyProduction1'' OR det.Item=''EnergyProduction2'')
-						AND mstr.BeginTime>=@begin AND mstr.BeginTime<@noon)
-			WHERE  [Day]=@day
-
-
-		-- Night shift
-		SELECT @shiftId = (SELECT TOP 1 ShiftId FROM ShiftStatMstr WHERE BeginTime>=@noon AND BeginTime<@end)
-
-		UPDATE @CurrentMonthRpt SET NightWorkers=dbo.GetWorkerNameByShift(@shiftId), NightBiogas=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
-				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status=''A''
-						AND (det.Item=''Biogas2GenSubtotal'' OR det.Item=''Biogas2TorchSubtotal'')
-						AND mstr.BeginTime>=@noon AND mstr.BeginTime<@end)
-			WHERE  [Day]=@day
-
-		UPDATE @CurrentMonthRpt SET NightEngeryProduction=
-			(SELECT ISNULL((SUM(ISNULL(det.SubTotalLast,0)) - SUM(ISNULL(det.SubTotalBegin,0))), 0) FROM ShiftStatDet det, ShiftStatMstr mstr
-				WHERE mstr.ShiftId=det.ShiftId AND mstr.Status=''A''
-						AND (det.Item=''EnergyProduction1'' OR det.Item=''EnergyProduction2'')
-						AND mstr.BeginTime>=@noon AND mstr.BeginTime<@end)
-			WHERE  [Day]=@day
-
-		SELECT @day = @day + 1
-	END
-
-	WHILE @day <= @lastDay
-	BEGIN
-		INSERT INTO @CurrentMonthRpt([Day],DayWorkers,DayBiogas,DayEngeryProduction,NightWorkers,NightBiogas,NightEngeryProduction)
-			VALUES(@day,'''',0,0,'''',0,0)
-
-		SELECT @day = @day + 1
-	END
-	
-	SELECT [Day], DayWorkers, DayBiogas, DayEngeryProduction, NightWorkers, NightBiogas, NightEngeryProduction FROM @CurrentMonthRpt
-
-	SELECT (ISNULL(SUM(DayBiogas),0) + ISNULL(SUM(NightBiogas),0)) AS Biogas, (ISNULL(SUM(DayEngeryProduction),0) + ISNULL(SUM(NightEngeryProduction),0)) AS EngeryProduction FROM @CurrentMonthRpt
-END
-
-
-
-
-' 
-END
-GO
-/****** Object:  StoredProcedure [dbo].[sp_GetCurrentShiftId]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetCurrentShiftId]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'
-
--- ================================================================
--- Author:		ZDM
--- Create date: 2016-11-20
--- Description:	Get the ID of current shift.
---              If the current time is out bound of shift time range
---              Create new shift and return new ID
--- ================================================================
-CREATE PROCEDURE [dbo].[sp_GetCurrentShiftId] 
-	@ShiftId uniqueidentifier OUTPUT
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
-    Declare @currTime datetime
-	Declare @shift1StartTime nvarchar(10)
-	Declare @shift2StartTime nvarchar(10)
-	Declare @today nvarchar(10)
-	Declare @shift1TimeToday datetime
-	Declare @shift2TimeToday datetime	
-	Declare @beginTime datetime
-	Declare @endTime datetime
-
-	Select @today = CONVERT(nvarchar(10), GETDATE(), 23)
-	Select @currTime = GETDATE()
-
-	Begin Tran shiftMstr
-		Select Top 1 @shiftId = ShiftId From ShiftStatMstr With(HoldLock, RowLock) Where Status=''A'' And @currTime >= BeginTime And @currTime < EndTime
-		If (@@ROWCOUNT > 0)
-		Begin
-			Commit Tran shiftMstr
-			return 0
-		End
-
-		-- Need to create new shift
-		Select @shiftId = NEWID()
-		Select @shift1StartTime = RTrim(LTrim(Value)) From GeneralParams Where Category = ''System'' And Name = ''ShiftStartTime1''
-		Select @shift2StartTime = RTrim(LTrim(Value)) From GeneralParams Where Category = ''System'' And Name = ''ShiftStartTime2''
-		If ((@shift1StartTime Is Null) Or (@shift1StartTime = ''''))
-		Begin
-			Select @shift1StartTime = ''8:00:00''		-- Default time
-		End
-
-		If ((@shift2StartTime Is Null) Or (@shift2StartTime = ''''))
-		Begin
-			Select @shift2StartTime = ''20:00:00''		-- Default time
-		End
-
-		Select @shift1TimeToday = CAST(@today as datetime) + CAST(@shift1StartTime As datetime)
-		Select @shift2TimeToday = CAST(@today as datetime) + CAST(@shift2StartTime As datetime)
-
-		If ((@currTime >= @shift1TimeToday) And (@currTime < @shift2TimeToday))
-		Begin
-			Select @beginTime = @shift1TimeToday					-- 8:00:00 today
-			Select @endTime = @shift2TimeToday						-- 20:00:00 today
-		End
-		Else If (@currTime >=@shift2TimeToday)
-		Begin
-			Select @beginTime = @shift2TimeToday					-- 20:00:00 today
-			Select @endTime = DATEADD(d, 1, @shift1TimeToday)		-- 8:00:00 tomorrow
-		End
-		Else	-- @currTime < @shift1TimeToday
-		Begin
-			Select @beginTime = DATEADD(d, -1, @shift2TimeToday)	-- 20:00:00 yestoday
-			Select @endTime = @shift1TimeToday						-- 8:00:00 today
-		End
-
-		Insert Into ShiftStatMstr (ShiftId, BeginTime,ActualBeginTime, EndTime,Status) Values (@shiftId, @beginTime, GETDATE(), @endTime, ''A'')
-	Commit Tran shiftMstr
-
-	Return 0
-END
-
-
-' 
-END
-GO
-/****** Object:  StoredProcedure [dbo].[sp_GetMonthReportData]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetMonthReportData]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'
--- =============================================
--- Author:		ZDM
--- Create date: 20170206
--- Description:	Get monthly data by the shift/item
--- =============================================
-CREATE PROCEDURE [dbo].[sp_GetMonthReportData]
-	@ReportId uniqueidentifier
-AS
-BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-
- 	DECLARE @MonthReport TABLE
-	(
-		ShiftId uniqueidentifier,
-		[Day] nvarchar(10),
-		[Shift] nvarchar(10),
-		Worker1 nvarchar(100),
-		Worker2 nvarchar(100),
-		EnergyProduction1 int,
-		EnergyProduction2 int,
-		Biogas2GenSubtotal int,
-		Biogas2TorchSubtotal int,
-		SubtotalRuntime1 int,
-		SubtotalRuntime2 int
-	);
-	
-	Insert Into @MonthReport (ShiftId,[Day],[Shift])
-		Select ShiftId,Convert(varchar(10), BeginTime, 111), Case When Cast(Convert(Varchar(2), BeginTime, 114) As Int) < 12 Then ''Day'' Else ''Night'' End
-			From MonthReportShiftDet Where ReportId=@ReportId Order By BeginTime
-
-	Update @MonthReport Set EnergyProduction1=IsNull(Subtotal,0) From @MonthReport mr,MonthReportDet mrd
-		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item=''EnergyProduction1''
-
-	Update @MonthReport Set EnergyProduction2=IsNull(Subtotal,0) From @MonthReport mr,MonthReportDet mrd
-		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item=''EnergyProduction2''
-
-	Update @MonthReport Set Biogas2GenSubtotal=IsNull(Subtotal,0) From @MonthReport mr,MonthReportDet mrd
-		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item=''Biogas2GenSubtotal''
-
-	Update @MonthReport Set Biogas2TorchSubtotal=IsNull(Subtotal,0) From @MonthReport mr,MonthReportDet mrd
-		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item=''Biogas2TorchSubtotal''
-
-	Update @MonthReport Set SubtotalRuntime1=IsNull(Subtotal,0) From @MonthReport mr, MonthReportDet mrd
-		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item=''SubtotalRuntime1''
-
-	Update @MonthReport Set SubtotalRuntime2=IsNull(Subtotal,0) From @MonthReport mr, MonthReportDet mrd
-		Where mr.ShiftId=mrd.ShiftId And mrd.ReportId=@ReportId And mrd.Item=''SubtotalRuntime2''
-
-	Update @MonthReport Set Worker1=wk.LoginName
-		From @MonthReport mr, (Select ShiftId,LoginName,(ROW_NUMBER() OVER(PARTITION by ShiftId ORDER BY ShiftId)) As [Row] From WorkersInShift) wk
-			Where mr.ShiftId=wk.ShiftId And wk.Row=1
-
-	Update @MonthReport Set Worker2=wk.LoginName
-		From @MonthReport mr, (Select ShiftId,LoginName,(ROW_NUMBER() OVER(PARTITION by ShiftId ORDER BY ShiftId)) As [Row] From WorkersInShift) wk
-			Where mr.ShiftId=wk.ShiftId And wk.Row=2
-
-	Select ROW_NUMBER() OVER(Order By [Day]) As [Row],[Day],[Shift],Worker1,Worker2,EnergyProduction1,EnergyProduction2,Biogas2GenSubtotal,Biogas2TorchSubtotal,SubtotalRuntime1,SubtotalRuntime2 from @MonthReport
-END
-
-' 
-END
-GO
-/****** Object:  UserDefinedFunction [dbo].[GetWorkerNameByShift]    Script Date: 4/12/2017 7:04:38 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GetWorkerNameByShift]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-BEGIN
-execute dbo.sp_executesql @statement = N'
--- ===============================================================
--- Author:		ZDM
--- Create date: 2016-12-7
--- Description:	Combin name of all workers into one single string
--- ===============================================================
-CREATE FUNCTION [dbo].[GetWorkerNameByShift]
-(
-	@shiftId uniqueidentifier
-)
-RETURNS nvarchar(200)
-AS
-BEGIN
-	DECLARE @worker nvarchar(50)
-	DECLARE @workerList nvarchar(200)
-	SELECT @workerList = ''''
-
-	IF @shiftId IS NULL
-		RETURN ''''
-
-	DECLARE cursorWorker CURSOR FOR
-		SELECT LoginName FROM WorkersInShift WHERE ShiftId=@shiftId 
-
-	OPEN cursorWorker
-	FETCH NEXT FROM cursorWorker INTO @worker
-	WHILE @@FETCH_STATUS = 0
-	BEGIN
-		SELECT @workerList = @workerList + @worker + '',''
-		FETCH NEXT FROM cursorWorker INTO @worker
-	END
-
-	CLOSE cursorWorker;  
-	DEALLOCATE cursorWorker;  
-
-	IF LEN(@workerList) > 0
-		SELECT @workerList = LEFT(@workerList, LEN(@workerList) - 1)
-
-	RETURN @workerList
-
-END
-
-' 
-END
-
-GO
-/****** Object:  Table [dbo].[AbnormalChange]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[AbnormalChange]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -785,7 +245,7 @@ CREATE TABLE [dbo].[AbnormalChange](
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[GeneralParams]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[GeneralParams]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -814,7 +274,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ItemHistoryData]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ItemHistoryData]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -837,7 +297,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ItemLatestStatus]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ItemLatestStatus]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -860,7 +320,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[MonitorItem]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonitorItem]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -889,7 +349,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[MonthReportDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthReportDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -915,7 +375,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[MonthReportMstr]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthReportMstr]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -943,7 +403,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[MonthReportShiftDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthReportShiftDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -965,7 +425,7 @@ CREATE TABLE [dbo].[MonthReportShiftDet](
 ) ON [PRIMARY]
 END
 GO
-/****** Object:  Table [dbo].[MonthWorkerReportDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[MonthWorkerReportDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -992,7 +452,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[Role]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[Role]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1014,7 +474,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ShiftStatDet]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ShiftStatDet]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1038,7 +498,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[ShiftStatMstr]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[ShiftStatMstr]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1063,7 +523,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[User]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1093,7 +553,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[UserInRole]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[UserInRole]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1115,7 +575,7 @@ END
 GO
 SET ANSI_PADDING OFF
 GO
-/****** Object:  Table [dbo].[WorkersInShift]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Table [dbo].[WorkersInShift]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1142,7 +602,7 @@ GO
 SET ANSI_PADDING ON
 
 GO
-/****** Object:  Index [IX_ItemHistoryData]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Index [IX_ItemHistoryData]    Script Date: 4/12/2017 7:16:49 PM ******/
 IF NOT EXISTS (SELECT * FROM sys.indexes WHERE object_id = OBJECT_ID(N'[dbo].[ItemHistoryData]') AND name = N'IX_ItemHistoryData')
 CREATE CLUSTERED INDEX [IX_ItemHistoryData] ON [dbo].[ItemHistoryData]
 (
@@ -1335,7 +795,7 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UseInRole_User]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserInRole]'))
 ALTER TABLE [dbo].[UserInRole] CHECK CONSTRAINT [FK_UseInRole_User]
 GO
-/****** Object:  Trigger [dbo].[tr_UpdateItemSubtotal]    Script Date: 4/12/2017 7:04:38 PM ******/
+/****** Object:  Trigger [dbo].[tr_UpdateItemSubtotal]    Script Date: 4/12/2017 7:16:49 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
