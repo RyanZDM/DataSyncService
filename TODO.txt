@@ -1,31 +1,11 @@
 TODO:
 
-1. Add column 'Alias' in table MonitorItem	-- rollback
-[Alias] [varchar](100) NULL,
+1. Prepare a instruction about how to check the system status and how to troubleshooting
 
-2. Update Alias = ItemId and truncate the subfix '.L' of Alias and DisplayName  -- rollback
-
-3.  Update f_GetWorkerNameByShift, release the cursor -- done by 0411
-
-4. sp_GetCurrentShiftId, check status='A', hold lock while getting shift id from ShfitStatMstr  -- done by 0411
-
-5. Add table MonthReportShiftDet	-- done by 0411
-
-6. Add/modified sp_GetMonthReportData
-Exec CreateSP-FN.sql
-
-7. DataSyncService, update
-
-8. LedSvc.config, EBoard.config
-
-7. Modified tr_UpdateItemSubtotal	-- done by 0411
-
-Done by patch:
-1. Update stored procedures:
-	sp_GetCurrentShiftId
-
-2. Update a duplicated shift record status = 'X'
+2. If need to have one individual service for keep mornitoring the state of DataSyncService?
 
 
 
+
+Existing Issues:
 1.登陆窗口在8:00越过后不自动跳出
