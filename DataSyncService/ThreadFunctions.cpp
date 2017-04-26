@@ -331,12 +331,9 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 		{
 			_tcsftime(szTimeStr, sizeof(szTimeStr) / sizeof(szTimeStr[0]), _T("Run at time: %H:%M:%S"), pTime);
 		}
-		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread started for timer task [%s], interval=%d. %s, Command=[%s]")
+		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread started for timer task [%s].")
 			, dwThreadID
-			, pTask->m_szName.c_str()
-			, pTask->GetInterval()
-			, szTimeStr
-			, pTask->m_szRun.c_str());
+			, pTask->ToString());
 
 		if (pTime)		// Run at fixed time
 		{

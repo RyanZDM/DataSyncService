@@ -51,7 +51,7 @@ INT CTimerTaskManager::GetTimerTasks(vector<CTimerTask*> &vTasks)
 		}
 
 		pTask->SetFixedDay(po.GetInt(szSection.c_str(), _T("RunAtFixedDay"), 0));
-		pTask->SetDelay(po.GetInt(szSection.c_str(), _T("RunAtFixedDay"), 0));
+		pTask->SetDelay(po.GetInt(szSection.c_str(), _T("Delay"), 0));
 		pTask->SetInterval(po.GetInt(szSection.c_str(), _T("Interval"), 0));
 		pTask->m_bEnabled = po.GetBool(szSection.c_str(), _T("Enable"), FALSE);
 

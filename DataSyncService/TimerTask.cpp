@@ -35,3 +35,32 @@ void CTimerTask::CopyTime(tm *pTime, const tm &time)
 	m_ptmRunAtFixedTime->tm_min = time.tm_min;
 	m_ptmRunAtFixedTime->tm_sec = time.tm_sec;
 }
+
+LPCTSTR CTimerTask::ToString()
+{
+	m_szDescription.clear();
+		
+	TCHAR szInterval[50];
+	TCHAR szDelay[50];
+	TCHAR szRunAtFixedDay[10];
+
+	_itot_s(m_nInterval, szInterval, sizeof(szInterval) / sizeof(szInterval[0]), 10);
+	_itot_s(m_nDelay, szDelay, sizeof(szDelay) / sizeof(szDelay[0]), 10);
+	_itot_s(m_nRunAtFixedDay, szRunAtFixedDay, sizeof(szRunAtFixedDay) / sizeof(szRunAtFixedDay[0]), 10);	
+
+	m_szDescription.append(_T("Task: {Name:")).append(m_szName)
+		.append(_T("}{Enabled:")).append(m_bEnabled ? _T("True") : _T("False"))
+		.append(_T("}{Delay:")).append(szDelay)
+		.append(_T("}{Interval:")).append(szInterval)
+		.append(_T("}{RunAtFixedDay:")).append(szRunAtFixedDay)		
+		.append(_T("}{Run:")).append(m_szRun).append(_T("}"));
+
+	if (m_ptmRunAtFixedTime)
+	{	
+		TCHAR szTime[50];
+		_stprintf_s(szTime, _T("%d:%d:%d"), m_ptmRunAtFixedTime->tm_hour, m_ptmRunAtFixedTime->tm_min, m_ptmRunAtFixedTime->tm_sec);
+		m_szDescription.append(_T("{RunAtFixedTime:")).append(szTime).append(_T("}"));
+	}
+	return m_szDescription.c_str();
+}
+

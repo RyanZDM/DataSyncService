@@ -18,6 +18,7 @@ public:
 	void SetInterval(INT nInterval) { m_nInterval = (nInterval > 0) ? nInterval : 0; }
 	tm* GetRunAtFixedTimePtr() { return m_ptmRunAtFixedTime; }
 	void SetRunAtFixedTime(const tm &time);
+	LPCTSTR ToString();
 
 	CTimerTask();
 	~CTimerTask();
@@ -27,6 +28,7 @@ private:
 	INT					m_nDelay;				// Delay how many seconds to run timer when service started
 	INT					m_nRunAtFixedDay;		// The day of month
 	tm *				m_ptmRunAtFixedTime;	// Only care about the time part
+	basic_string<TCHAR>	m_szDescription;
 
 	void CopyTime(tm *pTime, const tm &time);
 };
