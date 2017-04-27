@@ -134,13 +134,13 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
+    <Text Include="TimerTasks.ini">
+      <Filter>Configuration Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="DataSyncService.rgs">
       <Filter>Resource Files</Filter>
-    </None>
-    <None Include="TimerTasks.ini">
-      <Filter>Configuration Files</Filter>
     </None>
     <None Include="DataSyncService.ini">
       <Filter>Configuration Files</Filter>

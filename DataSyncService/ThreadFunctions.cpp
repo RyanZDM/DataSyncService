@@ -348,15 +348,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 				return 0;
 			}
 
-			// Run timely, delay n seconds first
-			if (pTask->GetDelay() > 0)
-			{
-				// To make sure the thread can exit immediately when the application is about to exit
-				if (WaitForSingleObject(g_hExitEvent, pTask->GetDelay() * 1000) != WAIT_TIMEOUT)
-				{
-					return 0;
-				}
-			}
+			// Run timely
 			RunTaskTimely(pTask->m_szRun.c_str(), pTask->GetInterval() * 1000);
 		}
 
@@ -452,18 +444,17 @@ void RunTaskTimely(LPCTSTR pcszCommand, DWORD dwInterval)
 {
 	while (TRUE == g_bKeepWork)
 	{
-		RunTask(pcszCommand);
-
 		// Sleep
-		if (TRUE == g_bKeepWork)
+		if (dwInterval > 0)
 		{
 			// To make sure the thread can exit immediately when the application is about to exit
-			if (WaitForSingleObject(g_hExitEvent, dwInterval) != WAIT_TIMEOUT)
+			if (WaitForSingleObject(g_hExitEvent, dwInterval * 1000) != WAIT_TIMEOUT)
 			{
 				break;
 			}
 		}
 
+		RunTask(pcszCommand);
 	}	// end while (TRUE == g_bKeepWork)
 }
 

@@ -120,45 +120,37 @@ DWORD CTimerTaskManager::GetWaitSeconds(tm &tmFixedTime, INT nFixedDay)
 	localtime_s(&localTime, &now);
 
 	// The last day of each month may be different. eg. 2.28, 3.31, 4.30
-	INT lastDayOfMonth = CTimerTaskManager::GetLastDayOfMonth(localTime.tm_mon);
-	nFixedDay = min(nFixedDay, lastDayOfMonth);
+	const INT LastDayOfMonth = CTimerTaskManager::GetLastDayOfMonth(localTime.tm_mon);
+	nFixedDay = min(nFixedDay, LastDayOfMonth);
 
 	// Check if the fixed time has passed today first
 	tmFixedTime.tm_year = localTime.tm_year;
 	tmFixedTime.tm_mon = localTime.tm_mon;
-	tmFixedTime.tm_mday = localTime.tm_mday;
+	tmFixedTime.tm_mday = (nFixedDay <= 0) ? localTime.tm_mday : nFixedDay;		// nFixedDay <=0 means every day
 	time_t target = mktime(&tmFixedTime);
 	DOUBLE seconds = difftime(target, now);
 
-	BOOL timePassedToday = (seconds < 0);
-	if (nFixedDay <= 0)	// Fixed time every day. Run at fixed time today or tomorrow if the specified time has passed
+	if (seconds < 0)
 	{
-		if (timePassedToday)
+		if (nFixedDay <= 0)	// Fixed time every day. Run at fixed time today or tomorrow if the specified time has passed
 		{
 			// Delay one day		
 			target += 24 * 60 * 60;
 		}
-	}
-	else				// Run at fixed time and fixed day of every month
-	{
-		BOOL dayPassedToday = nFixedDay < localTime.tm_mday;
-		if (dayPassedToday || (timePassedToday && (nFixedDay == localTime.tm_mday)))
+		else				// Run at fixed time and fixed day of every month
 		{
 			// Delay to next month if time or day passed
 			INT month = tmFixedTime.tm_mon + 1;
 			tmFixedTime.tm_mon = (month < 12) ? month : 0;		// start from 0
 			tmFixedTime.tm_year = (month < 12) ? localTime.tm_year : localTime.tm_year + 1;
-		}
-		else
-		{
-			// Today
-			tmFixedTime.tm_mday = nFixedDay;
+
+			target = mktime(&tmFixedTime);
 		}
 
-		target = mktime(&tmFixedTime);
+		seconds = difftime(target, now);
 	}
 
-	return (DWORD)difftime(target, now);
+	return (DWORD)seconds;
 }
 
 // The year is the actual value - 1900

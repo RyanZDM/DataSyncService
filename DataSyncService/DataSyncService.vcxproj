@@ -182,10 +182,10 @@
       <FileType>Text</FileType>
     </None>
     <None Include="DataSyncService.rgs" />
-    <None Include="TimerTasks.ini">
+    <Text Include="TimerTasks.ini">
       <DeploymentContent>true</DeploymentContent>
       <FileType>Text</FileType>
-    </None>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="DataSyncService.idl" />

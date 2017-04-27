@@ -57,3 +57,4 @@ InstallUtil.InstallLog
 Scripts/Output/*
 EBoardSetup/EBoardSetup/Express/*
 Led-Demo/Demo/bin/*
+DataSyncService/DataSyncService.vcxproj.filters
