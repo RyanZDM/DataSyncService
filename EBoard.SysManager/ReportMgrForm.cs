@@ -28,19 +28,34 @@ namespace EBoard.SysManager
 			connection = DbFactory.GetConnection();
 			reporter = new Reporter(connection);
 
-			var nodeToSelect = InitTree();
+			RefreshData();
+		}
+
+		private void RefreshData(string reportId = null)
+		{
+			var original = Cursor.Current;
+			Cursor = Cursors.WaitCursor;
+
+			var nodeToSelect = InitTree(reportId);
 			if (nodeToSelect != null)
 			{
 				treeView1.SelectedNode = nodeToSelect;
 			}
 
-			//reporter.CreateReportFile(2016, 11);
+			Cursor = original;
 		}
 		
-		private TreeNode InitTree()
+		private TreeNode InitTree(string reportId = null)
 		{
+			// Will also check if need to enable the button for ceating last month report
+			var lastMonth = DateTime.Now.AddMonths(-1);
+			var yearForLastMonth = lastMonth.Year;
+			var monthForLastMonth = lastMonth.Month;
+			var lastMonthReportCreated = false;
+
 			TreeNode nodeToSelect = null;
-			
+			treeView1.Nodes.Clear();
+
 			var rootNode = treeView1.Nodes.Add("月报表");
 
 			var reportList = reporter.GetMonthltReportList();
@@ -49,13 +64,31 @@ namespace EBoard.SysManager
 				var yearNode = rootNode.Nodes.Add(year.ToString(), year.ToString());
 				foreach (var month in reportList[year].Keys)
 				{
+					if ((year == yearForLastMonth) && (month == monthForLastMonth))
+					{
+						lastMonthReportCreated = true;
+					}
+
 					var monthNode = yearNode.Nodes.Add(reportList[year][month], month.ToString());
 					monthNode.Tag = monthNode.Name;     // Report Id
-					if (nodeToSelect == null)
-						nodeToSelect = monthNode;       // Select the first node
+														
+					// Select the last node or if the node specified by reportId
+					if (string.IsNullOrEmpty(reportId))
+					{
+						nodeToSelect = monthNode;
+					}
+					else
+					{
+						if (string.Equals(reportId, monthNode.Name, StringComparison.InvariantCultureIgnoreCase))
+						{
+							nodeToSelect = monthNode;
+						}
+					}
 				}
 			}
 
+			buttonCreateLastMonth.Enabled = !lastMonthReportCreated;
+			
 			return nodeToSelect;
 
 		}
@@ -211,7 +244,12 @@ namespace EBoard.SysManager
 
 		private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+			var original = Cursor.Current;
+			Cursor = Cursors.WaitCursor;
+
 			RetrieveMonthReport();
+
+			Cursor = original;
 		}
 
 		private void treeView1_BeforeSelect(object sender, TreeViewCancelEventArgs e)
@@ -238,6 +276,8 @@ namespace EBoard.SysManager
 
 			buttonCreateFile.Enabled = false;
 
+			var original = Cursor.Current;
+			Cursor = Cursors.WaitCursor;
 			try
 			{
 				reporter.CreateReportFile(reportId);
@@ -249,7 +289,8 @@ namespace EBoard.SysManager
 				logger.Error(ex, "Error occurred while creating report file.");
 				MessageBox.Show($"创建报表文件时出错。{ex}");
 			}
-			
+
+			Cursor = original;
 		}
 
 		private void buttonOpenFile_Click(object sender, EventArgs e)
@@ -276,6 +317,56 @@ namespace EBoard.SysManager
 					return;
 				}
 			}
+		}
+
+		private void buttonCreateLastMonth_Click(object sender, EventArgs e)
+		{
+			var original = Cursor.Current;
+			Cursor = Cursors.WaitCursor;
+
+			buttonCreateLastMonth.Enabled = false;
+			CreateLastMonthReport();
+
+			Cursor = original;
+		}
+
+		private void CreateLastMonthReport()
+		{
+			// Create the report of last month if has not creae yet
+			var lastMonth = DateTime.Now.AddMonths(-1);
+			var year = lastMonth.Year;
+			var month = lastMonth.Month;
+			string reportId = null;
+
+			try
+			{
+				var connection = DbFactory.GetConnection();
+				var reporter = new Reporter(connection);
+				reportId = reporter.CreateMonthlyReport(year, month);
+
+			}
+			catch (ReportFileAlreadyCreatedException faa)
+			{
+				logger.Warn(faa.Message);
+				MessageBox.Show($"[{year}-{month}]月报Excel文件已经创建创建了，不能重复创建。", "警告");
+			}
+			catch (FileNotFoundException fnf)
+			{
+				logger.Error(fnf, "Error occurred while creating monthly report.");
+				MessageBox.Show($"月报模板没有找到。\r\n{fnf.Message}", "错误");
+			}
+			catch (Exception ex)
+			{
+				logger.Error(ex, $"Error occurred while creating monthly report for {year}-{month}.");
+				MessageBox.Show($"[{year}-{month}]月报创建出错，请重试。\r\n{ex.ToString()}", "错误");
+			}
+
+			RefreshData(reportId);
+		}
+
+		private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			RefreshData();
 		}
 	}
 }

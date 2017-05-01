@@ -319,8 +319,56 @@ namespace EBoard.Common
 
 			return reportList;
 		}
+
+		/// <summary>
+		/// Creates the monthly report
+		/// </summary>
+		/// <param name="year"></param>
+		/// <param name="month"></param>
+		/// <param name="createExcel">Indicates if automatically create Excel for the monthly report</param>
+		/// <returns></returns>
+		public string CreateMonthlyReport(int year, int month, bool createExcel = true)
+		{
+			var yearMonth = $"{year}{month:d2}";
+			logger.Info("Will create the monthly report for {0}.", yearMonth);
+
+			var cmd = new SqlCommand("sp_CreateMonthlyReport", connection)
+			{
+				CommandType = CommandType.StoredProcedure
+			};
+
+			cmd.Parameters.AddWithValue("@YearMonth", yearMonth);
+
+			var reportIdParam = cmd.Parameters.Add(new SqlParameter
+			{
+				ParameterName = "@ReportId",
+				SqlDbType = SqlDbType.UniqueIdentifier,
+				Direction = ParameterDirection.Output
+			});
+
+			var returnParam = cmd.Parameters.Add(new SqlParameter
+			{
+				ParameterName = "@return",
+				SqlDbType = SqlDbType.Int,
+				Direction = ParameterDirection.ReturnValue
+			});
+
+			cmd.ExecuteNonQuery();
+
+			var reportId = reportIdParam.Value.ToString();
+			var result = (int)returnParam.Value;
+
+			logger.Info("Create the monthly report for {0}, result={1}, ReportId='{2}'", yearMonth, result, reportId);
+
+			// Create Excel file
+			if (createExcel)
+				CreateReportFile(reportId);
+
+			return reportId;
+		}
 	}
-	
+
+	#region Exceptions
 	public class ReportNotCreatYetException : Exception
 	{
 		public ReportNotCreatYetException(string msg) : base(msg) { }
@@ -335,5 +383,5 @@ namespace EBoard.Common
 	{
 		public ReportFileAlreadyCreatedException(string msg) : base(msg) { }
 	}
-	
+	#endregion
 }

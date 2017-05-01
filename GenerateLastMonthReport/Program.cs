@@ -3,12 +3,15 @@ using EBoard.Common;
 using System.Data.SqlClient;
 using System.Data;
 using NLog;
+using System.Linq;
 
 namespace GenerateLastMonthReport
 {
 	internal class Program
 	{
 		private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+		private static bool autoCreateReport;
 
 		private static bool notCreateExcel;
 
@@ -39,6 +42,9 @@ namespace GenerateLastMonthReport
 			{
 				switch (args[i].Trim().ToLower())
 				{
+					case "/auto":
+						autoCreateReport = true;
+						break;
 					case "/year":
 						if (i + 1 < args.Length)
 						{
@@ -60,28 +66,60 @@ namespace GenerateLastMonthReport
 				}
 			}
 
-			// The year and month must be specified both
-			if (year.HasValue ^ month.HasValue)
+			if (autoCreateReport)
 			{
-				Logger.Error("Must specify the year and month both, or do not specif them at all.");
-				return -1;
-			}
+				// Ignore all other arguments
+				// Under auto mode, will check the settings in db when to create monthly report
+				// Do nothing if the predefined time has not arrived yet, will create monthly
+				// report for last month if the current time passed predefined time 
+				var dal = new Dal(DbFactory.GetConnection());
+				var param = dal.GetGeneralParameters().FirstOrDefault(s => string.Equals("System", s.Category, StringComparison.InvariantCultureIgnoreCase) && string.Equals("CreateMonthReportTime", s.Name, StringComparison.InvariantCultureIgnoreCase));
+				if (param == null)
+				{
+					Logger.Error("Did not find the settings fro creating monthly report.");
+					return -2;
+				}
 
-			if (!year.HasValue)
-			{
-				// Create the report of last month if no arguments specified
+				var now = DateTime.Now;
+				var day = int.Parse(param.Value);
+				var targetDay = new DateTime(now.Year, now.Month, day);
+				if (now < targetDay)
+				{
+					Logger.Trace($"Skip to create monthly report since the predefined time has not arrived yet. [{targetDay}]");
+					return 0;
+				}
+
+				// Create the report of last month if has not creae yet
 				var lastMonth = DateTime.Now.AddMonths(-1);
 				year = lastMonth.Year;
 				month = lastMonth.Month;
+				return CreateMonthlyReport(year.Value, month.Value);
 			}
-
-			if (createExcelOnly)
+			else
 			{
-				return CreateExcel(year.Value, month.Value);
+				// The year and month must be specified both
+				if (year.HasValue ^ month.HasValue)
+				{
+					Logger.Error("Must specify the year and month both, or do not specif them at all.");
+					return -1;
+				}
+
+				if (!year.HasValue)
+				{
+					// Create the report of last month if no arguments specified
+					var lastMonth = DateTime.Now.AddMonths(-1);
+					year = lastMonth.Year;
+					month = lastMonth.Month;
+				}
+
+				if (createExcelOnly)
+				{
+					return CreateExcel(year.Value, month.Value);
+				}
+
+				// Create report
+				return CreateMonthlyReport(year.Value, month.Value);
 			}
-			
-			// Create report
-			return CreateMonthlyReport(year.Value, month.Value);
 		}
 
 		private static int CreateExcel(int year, int month)
@@ -117,7 +155,7 @@ namespace GenerateLastMonthReport
 
 		private static void ShowHelp()
 		{
-			Console.Out.WriteLine("Usage: /year <year> /month <month> /NotCreateExcel /CreateExcelOnly\r\n\t- year/month: Indicate the year and month of the report to create.\r\n\t- /NotCreateExcel: Not create Excel while creating monthly report.\r\n\t- /CreateExcelOnly: Create Excel for a existed monthly report.");
+			Console.Out.WriteLine("Usage: /auto /year <year> /month <month> /NotCreateExcel /CreateExcelOnly\r\n\t- auto: Automatically create monthly report.\r\n\t- year/month: Indicate the year and month of the report to create.\r\n\t- /NotCreateExcel: Not create Excel while creating monthly report.\r\n\t- /CreateExcelOnly: Create Excel for a existed monthly report.");
 		}
 
 		private static int CreateMonthlyReport(int year, int month)
@@ -128,47 +166,8 @@ namespace GenerateLastMonthReport
 				Logger.Info("Will create the monthly report for {0}.", yearMonth);
 
 				var connection = DbFactory.GetConnection();
-				var cmd = new SqlCommand("sp_CreateMonthlyReport", connection)
-				{
-					CommandType = CommandType.StoredProcedure
-				};
-
-				cmd.Parameters.AddWithValue("@YearMonth", yearMonth);
-
-				var reportIdParam = cmd.Parameters.Add(new SqlParameter
-				{
-					ParameterName = "@ReportId",
-					SqlDbType = SqlDbType.UniqueIdentifier,
-					Direction = ParameterDirection.Output
-				});
-
-				var returnParam = cmd.Parameters.Add(new SqlParameter
-				{
-					ParameterName = "@return",
-					SqlDbType = SqlDbType.Int,
-					Direction = ParameterDirection.ReturnValue
-				});
-
-				cmd.ExecuteNonQuery();
-
-				var reportId = reportIdParam.Value.ToString();
-				var result = (int)returnParam.Value;
-
-				Logger.Info("Create the monthly report for {0}, result={1}, ReportId='{2}'", yearMonth, result, reportId);
-
-				var sql = $@"Select IsFIleCreated From MonthReportMstr Where ReportId=Cast('{reportId}' As uniqueidentifier)";
-				var isFileCreated = (bool)(new SqlCommand(sql, connection).ExecuteScalar());
-				Logger.Info("Excel file of monthly report for {0} {1}.", yearMonth, isFileCreated ? "is created" : "is not created yet");
-
-				if (isFileCreated)
-					return 1;
-
-				if (notCreateExcel)
-					return 1;
-
-				// Create Excel file
 				var reporter = new Reporter(connection);
-				reporter.CreateReportFile(reportId);
+				reporter.CreateMonthlyReport(year, month, !notCreateExcel);
 				
 				return 1;
 			}

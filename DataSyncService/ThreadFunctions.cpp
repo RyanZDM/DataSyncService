@@ -404,6 +404,9 @@ void RunTask(LPCTSTR pcszCommand)
 			}
 			else
 			{
+				// Get the argumens
+				LPCTSTR pArguments = pcszCommand + _tcslen(szProgram);
+
 				// Remove file name part
 				for (INT pos = _tcslen(path) - 1; pos > 0; pos--)
 				{
@@ -414,7 +417,7 @@ void RunTask(LPCTSTR pcszCommand)
 					}
 				}
 
-				_stprintf_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), _T("%s\\%s"), path, pcszCommand);
+				_stprintf_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), _T("\"%s\\%s\" %s"), path, szProgram, pArguments);
 				CStrUtil::GetProgramFromCommandString(szCommand, szProgram, MAX_PATH);
 				if (_taccess(szProgram, 0) == -1)
 				{
