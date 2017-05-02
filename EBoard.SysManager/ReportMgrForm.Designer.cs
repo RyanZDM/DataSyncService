@@ -84,9 +84,10 @@
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.operationToolStripMenuItem});
-			this.menuStrip1.Location = new System.Drawing.Point(966, 0);
+			this.menuStrip1.Location = new System.Drawing.Point(1245, 0);
 			this.menuStrip1.Name = "menuStrip1";
-			this.menuStrip1.Size = new System.Drawing.Size(52, 25);
+			this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
+			this.menuStrip1.Size = new System.Drawing.Size(59, 27);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
@@ -97,14 +98,14 @@
 			this.operationToolStripMenuItem.MergeAction = System.Windows.Forms.MergeAction.Insert;
 			this.operationToolStripMenuItem.MergeIndex = 1;
 			this.operationToolStripMenuItem.Name = "operationToolStripMenuItem";
-			this.operationToolStripMenuItem.Size = new System.Drawing.Size(44, 21);
+			this.operationToolStripMenuItem.Size = new System.Drawing.Size(49, 23);
 			this.operationToolStripMenuItem.Text = "操作";
 			// 
 			// refreshToolStripMenuItem
 			// 
 			this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
 			this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(121, 22);
+			this.refreshToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
 			this.refreshToolStripMenuItem.Text = "刷新";
 			this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
 			// 
@@ -135,7 +136,8 @@
 			this.splitContainerLR1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.splitContainerLR1.Location = new System.Drawing.Point(1, 30);
+			this.splitContainerLR1.Location = new System.Drawing.Point(1, 38);
+			this.splitContainerLR1.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainerLR1.Name = "splitContainerLR1";
 			// 
 			// splitContainerLR1.Panel1
@@ -145,16 +147,18 @@
 			// splitContainerLR1.Panel2
 			// 
 			this.splitContainerLR1.Panel2.Controls.Add(this.splitContainerUD);
-			this.splitContainerLR1.Size = new System.Drawing.Size(1017, 542);
-			this.splitContainerLR1.SplitterDistance = 162;
+			this.splitContainerLR1.Size = new System.Drawing.Size(1302, 636);
+			this.splitContainerLR1.SplitterDistance = 207;
+			this.splitContainerLR1.SplitterWidth = 5;
 			this.splitContainerLR1.TabIndex = 2;
 			// 
 			// treeView1
 			// 
 			this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.treeView1.Location = new System.Drawing.Point(0, 0);
+			this.treeView1.Margin = new System.Windows.Forms.Padding(4);
 			this.treeView1.Name = "treeView1";
-			this.treeView1.Size = new System.Drawing.Size(162, 542);
+			this.treeView1.Size = new System.Drawing.Size(207, 636);
 			this.treeView1.TabIndex = 0;
 			this.treeView1.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeSelect);
 			this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
@@ -163,6 +167,7 @@
 			// 
 			this.splitContainerUD.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainerUD.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerUD.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainerUD.Name = "splitContainerUD";
 			this.splitContainerUD.Orientation = System.Windows.Forms.Orientation.Horizontal;
 			// 
@@ -173,14 +178,16 @@
 			// splitContainerUD.Panel2
 			// 
 			this.splitContainerUD.Panel2.Controls.Add(this.splitContainerLRDet);
-			this.splitContainerUD.Size = new System.Drawing.Size(851, 542);
-			this.splitContainerUD.SplitterDistance = 170;
+			this.splitContainerUD.Size = new System.Drawing.Size(1090, 636);
+			this.splitContainerUD.SplitterDistance = 199;
+			this.splitContainerUD.SplitterWidth = 5;
 			this.splitContainerUD.TabIndex = 0;
 			// 
 			// splitContainerMstr
 			// 
 			this.splitContainerMstr.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainerMstr.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerMstr.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainerMstr.Name = "splitContainerMstr";
 			// 
 			// splitContainerMstr.Panel1
@@ -193,8 +200,9 @@
 			this.splitContainerMstr.Panel2.Controls.Add(this.buttonOpenFile);
 			this.splitContainerMstr.Panel2.Controls.Add(this.buttonCreateLastMonth);
 			this.splitContainerMstr.Panel2.Controls.Add(this.buttonCreateFile);
-			this.splitContainerMstr.Size = new System.Drawing.Size(851, 170);
-			this.splitContainerMstr.SplitterDistance = 726;
+			this.splitContainerMstr.Size = new System.Drawing.Size(1090, 199);
+			this.splitContainerMstr.SplitterDistance = 928;
+			this.splitContainerMstr.SplitterWidth = 5;
 			this.splitContainerMstr.TabIndex = 0;
 			// 
 			// labelGeneral
@@ -204,8 +212,9 @@
 			this.labelGeneral.BackColor = System.Drawing.Color.Gray;
 			this.labelGeneral.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.labelGeneral.Location = new System.Drawing.Point(0, 0);
+			this.labelGeneral.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelGeneral.Name = "labelGeneral";
-			this.labelGeneral.Size = new System.Drawing.Size(726, 30);
+			this.labelGeneral.Size = new System.Drawing.Size(928, 38);
 			this.labelGeneral.TabIndex = 1;
 			this.labelGeneral.Text = "  月报信息";
 			this.labelGeneral.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -224,12 +233,13 @@
 			this.dataGridViewMstr.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.item,
             this.value});
-			this.dataGridViewMstr.Location = new System.Drawing.Point(0, 33);
+			this.dataGridViewMstr.Location = new System.Drawing.Point(0, 41);
+			this.dataGridViewMstr.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewMstr.Name = "dataGridViewMstr";
 			this.dataGridViewMstr.ReadOnly = true;
 			this.dataGridViewMstr.RowTemplate.Height = 23;
 			this.dataGridViewMstr.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewMstr.Size = new System.Drawing.Size(726, 137);
+			this.dataGridViewMstr.Size = new System.Drawing.Size(928, 158);
 			this.dataGridViewMstr.TabIndex = 0;
 			// 
 			// item
@@ -251,9 +261,10 @@
 			// buttonOpenFile
 			// 
 			this.buttonOpenFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOpenFile.Location = new System.Drawing.Point(14, 121);
+			this.buttonOpenFile.Location = new System.Drawing.Point(23, 138);
+			this.buttonOpenFile.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonOpenFile.Name = "buttonOpenFile";
-			this.buttonOpenFile.Size = new System.Drawing.Size(94, 23);
+			this.buttonOpenFile.Size = new System.Drawing.Size(118, 29);
 			this.buttonOpenFile.TabIndex = 1;
 			this.buttonOpenFile.Text = "打开Excel";
 			this.buttonOpenFile.UseVisualStyleBackColor = true;
@@ -263,9 +274,10 @@
 			// 
 			this.buttonCreateLastMonth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCreateLastMonth.Enabled = false;
-			this.buttonCreateLastMonth.Location = new System.Drawing.Point(14, 20);
+			this.buttonCreateLastMonth.Location = new System.Drawing.Point(23, 12);
+			this.buttonCreateLastMonth.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCreateLastMonth.Name = "buttonCreateLastMonth";
-			this.buttonCreateLastMonth.Size = new System.Drawing.Size(94, 23);
+			this.buttonCreateLastMonth.Size = new System.Drawing.Size(118, 29);
 			this.buttonCreateLastMonth.TabIndex = 0;
 			this.buttonCreateLastMonth.Text = "创建上月报表";
 			this.buttonCreateLastMonth.UseVisualStyleBackColor = true;
@@ -274,9 +286,10 @@
 			// buttonCreateFile
 			// 
 			this.buttonCreateFile.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonCreateFile.Location = new System.Drawing.Point(14, 92);
+			this.buttonCreateFile.Location = new System.Drawing.Point(23, 102);
+			this.buttonCreateFile.Margin = new System.Windows.Forms.Padding(4);
 			this.buttonCreateFile.Name = "buttonCreateFile";
-			this.buttonCreateFile.Size = new System.Drawing.Size(94, 23);
+			this.buttonCreateFile.Size = new System.Drawing.Size(118, 29);
 			this.buttonCreateFile.TabIndex = 0;
 			this.buttonCreateFile.Text = "创建Excel";
 			this.buttonCreateFile.UseVisualStyleBackColor = true;
@@ -286,6 +299,7 @@
 			// 
 			this.splitContainerLRDet.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.splitContainerLRDet.Location = new System.Drawing.Point(0, 0);
+			this.splitContainerLRDet.Margin = new System.Windows.Forms.Padding(4);
 			this.splitContainerLRDet.Name = "splitContainerLRDet";
 			// 
 			// splitContainerLRDet.Panel1
@@ -297,8 +311,9 @@
 			// 
 			this.splitContainerLRDet.Panel2.Controls.Add(this.labelWorkerDet);
 			this.splitContainerLRDet.Panel2.Controls.Add(this.dataGridViewWorkerReport);
-			this.splitContainerLRDet.Size = new System.Drawing.Size(851, 368);
-			this.splitContainerLRDet.SplitterDistance = 411;
+			this.splitContainerLRDet.Size = new System.Drawing.Size(1090, 432);
+			this.splitContainerLRDet.SplitterDistance = 526;
+			this.splitContainerLRDet.SplitterWidth = 5;
 			this.splitContainerLRDet.TabIndex = 0;
 			// 
 			// labelShiftDet
@@ -308,8 +323,9 @@
 			this.labelShiftDet.BackColor = System.Drawing.Color.Gray;
 			this.labelShiftDet.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.labelShiftDet.Location = new System.Drawing.Point(0, 0);
+			this.labelShiftDet.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelShiftDet.Name = "labelShiftDet";
-			this.labelShiftDet.Size = new System.Drawing.Size(411, 29);
+			this.labelShiftDet.Size = new System.Drawing.Size(526, 36);
 			this.labelShiftDet.TabIndex = 1;
 			this.labelShiftDet.Text = "  按工班统计";
 			this.labelShiftDet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -325,12 +341,13 @@
 			this.dataGridViewReportDet.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ItemId,
             this.ItemValue});
-			this.dataGridViewReportDet.Location = new System.Drawing.Point(0, 32);
+			this.dataGridViewReportDet.Location = new System.Drawing.Point(0, 40);
+			this.dataGridViewReportDet.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewReportDet.Name = "dataGridViewReportDet";
 			this.dataGridViewReportDet.ReadOnly = true;
 			this.dataGridViewReportDet.RowTemplate.Height = 23;
 			this.dataGridViewReportDet.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewReportDet.Size = new System.Drawing.Size(411, 336);
+			this.dataGridViewReportDet.Size = new System.Drawing.Size(526, 392);
 			this.dataGridViewReportDet.TabIndex = 0;
 			// 
 			// ItemId
@@ -354,8 +371,9 @@
 			this.labelWorkerDet.BackColor = System.Drawing.Color.Gray;
 			this.labelWorkerDet.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
 			this.labelWorkerDet.Location = new System.Drawing.Point(0, 0);
+			this.labelWorkerDet.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
 			this.labelWorkerDet.Name = "labelWorkerDet";
-			this.labelWorkerDet.Size = new System.Drawing.Size(436, 29);
+			this.labelWorkerDet.Size = new System.Drawing.Size(558, 36);
 			this.labelWorkerDet.TabIndex = 1;
 			this.labelWorkerDet.Text = "  按值班人员统计";
 			this.labelWorkerDet.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -371,12 +389,13 @@
 			this.dataGridViewWorkerReport.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ItemName,
             this.SubtotalValue});
-			this.dataGridViewWorkerReport.Location = new System.Drawing.Point(0, 32);
+			this.dataGridViewWorkerReport.Location = new System.Drawing.Point(0, 40);
+			this.dataGridViewWorkerReport.Margin = new System.Windows.Forms.Padding(4);
 			this.dataGridViewWorkerReport.Name = "dataGridViewWorkerReport";
 			this.dataGridViewWorkerReport.ReadOnly = true;
 			this.dataGridViewWorkerReport.RowTemplate.Height = 23;
 			this.dataGridViewWorkerReport.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.dataGridViewWorkerReport.Size = new System.Drawing.Size(436, 336);
+			this.dataGridViewWorkerReport.Size = new System.Drawing.Size(558, 392);
 			this.dataGridViewWorkerReport.TabIndex = 0;
 			// 
 			// ItemName
@@ -395,16 +414,16 @@
 			// 
 			// ReportMgrForm
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(1017, 573);
+			this.ClientSize = new System.Drawing.Size(1302, 674);
 			this.Controls.Add(this.splitContainerLR1);
 			this.Controls.Add(this.toolStrip1);
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
-			this.Margin = new System.Windows.Forms.Padding(3);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "ReportMgrForm";
-			this.Text = "ReportMgrForm";
+			this.Text = "报表管理";
 			this.Load += new System.EventHandler(this.ReportMgrForm_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();

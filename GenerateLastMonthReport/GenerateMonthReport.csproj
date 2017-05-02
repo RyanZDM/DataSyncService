@@ -7,8 +7,8 @@
     <ProjectGuid>{3CFB6975-96E2-48E8-B63E-FFAD7433D594}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GenerateLastMonthReport</RootNamespace>
-    <AssemblyName>GenerateLastMonthReport</AssemblyName>
+    <RootNamespace>GenerateMonthReport</RootNamespace>
+    <AssemblyName>GenerateMonthReport</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

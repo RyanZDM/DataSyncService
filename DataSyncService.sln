@@ -18,7 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EBoard.SysManager", "EBoard
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LedSyncService", "LedSyncService\LedSyncService.csproj", "{A2908260-AC1F-482F-81C3-6E6D4CE5B04E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateLastMonthReport", "GenerateLastMonthReport\GenerateLastMonthReport.csproj", "{3CFB6975-96E2-48E8-B63E-FFAD7433D594}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateMonthReport", "GenerateLastMonthReport\GenerateMonthReport.csproj", "{3CFB6975-96E2-48E8-B63E-FFAD7433D594}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

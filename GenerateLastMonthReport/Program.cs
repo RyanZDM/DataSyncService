@@ -1,11 +1,10 @@
 ﻿using System;
-using EBoard.Common;
 using System.Data.SqlClient;
-using System.Data;
-using NLog;
 using System.Linq;
+using EBoard.Common;
+using NLog;
 
-namespace GenerateLastMonthReport
+namespace GenerateMonthReport
 {
 	internal class Program
 	{
@@ -68,6 +67,9 @@ namespace GenerateLastMonthReport
 
 			if (autoCreateReport)
 			{
+				// temp
+				Logger.Info("Auto create mode.");
+
 				// Ignore all other arguments
 				// Under auto mode, will check the settings in db when to create monthly report
 				// Do nothing if the predefined time has not arrived yet, will create monthly
