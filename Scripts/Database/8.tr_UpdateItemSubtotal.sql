@@ -1,13 +1,15 @@
-/****** Object:  Trigger [tr_UpdateItemSubtotal]    Script Date: 4/14/2017 10:36:20 AM ******/
+/****** Object:  Trigger [tr_UpdateItemSubtotal]    Script Date: 9/6/2017 4:59:04 PM ******/
 DROP TRIGGER [dbo].[tr_UpdateItemSubtotal]
 GO
 
-/****** Object:  Trigger [dbo].[tr_UpdateItemSubtotal]    Script Date: 4/14/2017 10:36:20 AM ******/
+/****** Object:  Trigger [dbo].[tr_UpdateItemSubtotal]    Script Date: 9/6/2017 4:59:04 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 
 -- ================================================================
@@ -48,9 +50,15 @@ BEGIN
 	Select @needAccumulate = IsNull(NeedAccumulate,0) From MonitorItem Where ItemID = @item
 	If @needAccumulate = 0 Return
 	
+	-- Ignore the H value if the item is RunTime
+	If ((@suffix = '.H') And (Left(@item, Len(@item) - 3) = 'SubtotalRuntime')) Return
+	
 	If ((@suffix = '.H') Or (@suffix = '.L'))
 		-- Need to combine the value of .H and .L to one single value. Assume the value of .H is a integer
 		-- For example: xxx.H = 12, xxx.L = 345, then the real value is 12345
+		
+		-- TODO Need to check if always calculate the CORRECT value!
+		-- TODO May need to ignore the H value for RunTime
 		Begin
 			Select @realItem = Left(@item, Len(@item) - 2)
 			If (@suffix = '.H')
@@ -63,7 +71,7 @@ BEGIN
 					Else	-- Not found the value of xxx.L
 						Select @realValue = @val
 				End
-			Else
+			Else		-- Suffix = '.L'
 				Begin
 					Select @anotherSuffix = '.H'
 					Select @anotherItem = @realItem + @anotherSuffix		-- xxx.H
@@ -82,8 +90,16 @@ BEGIN
 	
 	EXEC sp_GetCurrentShiftId @ShiftId = @shiftId OUTPUT
 
-	Update ShiftStatMstr Set LastUpdateTime = @newTime Where ShiftId = @shiftId
+	-- Log if the @realValue is negative
+	If @realItem < 0
+		Begin
+			-- 5001 means that the value is negative, skip it
+			Insert Into AbnormalChange (ShiftId, ItemName, PreValue, NewValue, UpdateTime, CreateTime) Values (@shiftId, @realItem, -5001, @realValue, @newTime, GetDate())
+			Return
+		End
 
+	Update ShiftStatMstr Set LastUpdateTime = @newTime Where ShiftId = @shiftId
+	
 	Declare @subtotalBegin int
 	Declare @newSubtotalBegin int
 	Declare @subtotalLast int
@@ -102,9 +118,10 @@ BEGIN
 		Begin
 			Update ShiftStatDet Set SubTotalLast = @realValue Where ShiftId = @shiftId And Item = @realItem
 		End
-	Else							-- The subtotal value must be reset, need to r-calculte the SubtotalBegin
+	Else							-- The subtotal value must be reset, need to re-calculate the SubtotalBegin
+		-- TDOO Seems sometimes there are one or two invalide value which should be ignored, the question is that how to recognize it
 		Begin
-			Select @newSubtotalBegin = @subtotalBegin - @subtotalLast	-- It is a neg value
+			Select @newSubtotalBegin = @subtotalBegin - @subtotalLast	-- It is a negative value
 			Update ShiftStatDet Set SubTotalBegin = @newSubtotalBegin, SubTotalLast = @realValue Where ShiftId = @shiftId And Item = @realItem
 
 			-- Record the abnormal change
@@ -112,6 +129,8 @@ BEGIN
 			Insert Into AbnormalChange (ShiftId, ItemName, PreValue, NewValue, UpdateTime, CreateTime) Values (@shiftId, @realItem, @subtotalLast, @realValue, @newTime, GetDate())
 		End	
 END
+
+
 
 
 GO
