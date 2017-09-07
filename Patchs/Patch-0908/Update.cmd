@@ -9,6 +9,7 @@ sqlcmd -E -d OPC -S .\WINCC -i UpdateParams.sql -o c:\log\Patch0908.log
 @echo Patch applied. >> C:\log\Patch0908.log
 
 Echo Patch applied.
-Pause
+
+Timeout 10
 
 :End
