@@ -756,6 +756,8 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 	OPCITEMSTATE *pValues = NULL;
 	HRESULT *pErrors = NULL;
 	TCHAR buf[500];
+	TString szFailedItems;
+	TString szIgnoredItems;
 	try
 	{
 		if (S_OK != (m_hLastHResult = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
@@ -764,7 +766,6 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 				throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
 		
-		TString szFailedItems;
 		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
 		{
 			COPCItemDef *pItem = (COPCItemDef*)*vi;
@@ -778,7 +779,9 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			{
 				if (!IsQualityGood(pValues[0]))
 				{
-					g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() The quality of item [%s] is not good [%d], ignore it."), W2CT(pItem->m_pOPCItemDef->szItemID), pValues[0].wQuality);
+					TCHAR buf[100];
+					CStrUtil::_Sprintf(buf, sizeof(buf) / sizeof(buf[0]), _T("%s/%d;"), W2CT(pItem->m_pOPCItemDef->szItemID), pValues[0].wQuality);
+					szIgnoredItems.append(buf);
 					// TODO: notfiy on UI?
 					continue;
 				}
@@ -804,10 +807,12 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			}
 			else
 			{
-				_stprintf_s(buf, sizeof(buf)/sizeof(buf[0]), _T("%s, hr = %x, error = %x;"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
+				TString szErr1;
+				CStrUtil::FormatMsg(NULL, szErr1, (INT)m_hLastHResult);
+				TString szErr2;
+				if (pErrors) CStrUtil::FormatMsg(NULL, szErr2, (INT)pErrors[0]);
+				_stprintf_s(buf, sizeof(buf) / sizeof(buf[0]), _T("--%s; hr = %x %s Error = %x %s\r\n"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, szErr1.c_str(), pErrors ? pErrors[0] : 0, szErr2.c_str());
 				szFailedItems.append(buf);
-
-				//g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() for Item=%s, hr=%x, error=%x"), W2T(pItem->m_pOPCItemDef->szItemID), m_hLastHResult, pErrors ? pErrors[0] : 0);
 			}
 			
 			if (pValues)
@@ -831,6 +836,11 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), szFailedItems.c_str());
 		}
 
+		if (szIgnoredItems.size() > 0)
+		{
+			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() The quality of following items are not good, ignore it:\r\n%s"), szIgnoredItems.c_str());
+		}
+
 		return nCount;
 	}
 	catch (...)
@@ -851,6 +861,17 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 		{
 			pISync->Release();
 			pISync = NULL;
+		}
+
+		if (szFailedItems.size() > 0)
+		{
+			// TODO Suppres the log output if keep get the same error
+			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), szFailedItems.c_str());
+		}
+
+		if (szIgnoredItems.size() > 0)
+		{
+			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() The quality of following items are not good, ignore it:\r\n%s"), szIgnoredItems.c_str());
 		}
 
 		throw;
