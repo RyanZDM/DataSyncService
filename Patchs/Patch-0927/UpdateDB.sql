@@ -75,25 +75,22 @@ Else
 Select Top 1 @shift23_2 = ShiftId From ShiftStatMstr Where ActualBeginTime >= '2017-09-23 20:00:00' And ActualBeginTime <= '2017-09-24 8:00:00'
 If (@@ROWCOUNT = 0)
 	Begin
-		Select @shift23_2 = NEWID()
+		Select @shift23_2 = Cast('0FF4ABEC-A61D-4520-B088-ECB5ED484A82' as uniqueidentifier)
 		Insert Into ShiftStatMstr (ShiftId, BeginTime,ActualBeginTime, EndTime, LastUpdateTime,Status) Values (@shift23_2, '2017-09-23 20:00:00', '2017-09-23 20:00:00', '2017-09-24 8:00:00', '2017-09-24 8:00:00', 'A')
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'Biogas2GenSubtotal', @preBiogas2Gen, @preBiogas2Gen + @biogas23_2_1)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'Biogas2TorchSubtotal', @preBiogas2Torch, @preBiogas2Torch + @biogas23_2_2)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'EnergyProduction1', @preEnergy1, @preEnergy1 + @energy23_2_1)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'EnergyProduction2', @preEnergy2, @preEnergy2 + @energy23_2_2)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'SubtotalRuntime1', @preRuntime1, @preRuntime1 + 12)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'SubtotalRuntime2', @preRuntime2, @preRuntime2 + 12)
 	End
 Else
 	Begin
 		Update ShiftStatMstr Set LastUpdateTime = '2017-09-24 8:00:00' Where ShiftId = @shift23_2
-		Update ShiftStatDet Set SubTotalBegin = @preBiogas2Gen, SubTotalLast = @preBiogas2Gen + @biogas23_2_1 Where ShiftId = @shift23_2 And Item = 'Biogas2GenSubtotal'
-		Update ShiftStatDet Set SubTotalBegin = @preBiogas2Torch, SubTotalLast = @preBiogas2Torch + @biogas23_2_2 Where ShiftId = @shift23_2 And Item = 'Biogas2TorchSubtotal'
-		Update ShiftStatDet Set SubTotalBegin = @preEnergy1, SubTotalLast = @preEnergy1 + @energy23_2_1 Where ShiftId = @shift23_2 And Item = 'EnergyProduction1'
-		Update ShiftStatDet Set SubTotalBegin = @preEnergy2, SubTotalLast = @preEnergy2 + @energy23_2_2 Where ShiftId = @shift23_2 And Item = 'EnergyProduction2'
-		Update ShiftStatDet Set SubTotalBegin = @preRuntime1, SubTotalLast = @preRuntime1 + 12 Where ShiftId = @shift23_2 And Item = 'SubtotalRuntime1'
-		Update ShiftStatDet Set SubTotalBegin = @preRuntime2, SubTotalLast = @preRuntime2 + 12 Where ShiftId = @shift23_2 And Item = 'SubtotalRuntime2'
+		Delete ShiftStatDet Where ShiftId = @shift23_2
 	End
+
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'Biogas2GenSubtotal', @preBiogas2Gen, @preBiogas2Gen + @biogas23_2_1)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'Biogas2TorchSubtotal', @preBiogas2Torch, @preBiogas2Torch + @biogas23_2_2)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'EnergyProduction1', @preEnergy1, @preEnergy1 + @energy23_2_1)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'EnergyProduction2', @preEnergy2, @preEnergy2 + @energy23_2_2)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'SubtotalRuntime1', @preRuntime1, @preRuntime1 + 12)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift23_2, 'SubtotalRuntime2', @preRuntime2, @preRuntime2 + 12)
+
 
 -- For 9.24 Shift #1
 Select @preBiogas2Gen = IsNull((Select SubTotalLast From ShiftStatDet Where ShiftId = @shift23_2 And Item = 'Biogas2GenSubtotal'), 0)
@@ -106,25 +103,21 @@ Select @preRuntime2 = IsNull((Select SubTotalLast From ShiftStatDet Where ShiftI
 Select Top 1 @shift24_1 = ShiftId From ShiftStatMstr Where ActualBeginTime >= '2017-09-24 8:00:00' And ActualBeginTime <= '2017-09-24 20:00:00'
 If (@@ROWCOUNT = 0)
 	Begin
-		Select @shift24_1 = NEWID()
+		Select @shift24_1 = Cast('A7134D95-A023-4CF1-8925-DA83D2864BF0' as uniqueidentifier)
 		Insert Into ShiftStatMstr (ShiftId, BeginTime,ActualBeginTime, EndTime, LastUpdateTime,Status) Values (@shift24_1, '2017-09-24 8:00:00', '2017-09-24 8:00:00', '2017-09-24 20:00:00', '2017-09-24 20:00:00', 'A')
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'Biogas2GenSubtotal', @preBiogas2Gen, @preBiogas2Gen + @biogas24_1_1)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'Biogas2TorchSubtotal', @preBiogas2Torch, @preBiogas2Torch + @biogas24_1_2)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'EnergyProduction1', @preEnergy1, @preEnergy1 + @energy24_1_1)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'EnergyProduction2', @preEnergy2, @preEnergy2 + @energy24_1_2)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'SubtotalRuntime1', @preRuntime1, @preRuntime1 + 12)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'SubtotalRuntime2', @preRuntime2, @preRuntime2 + 12)
 	End
 Else
 	Begin
 		Update ShiftStatMstr Set LastUpdateTime = '2017-09-24 20:00:00' Where ShiftId = @shift24_1
-		Update ShiftStatDet Set SubTotalBegin = @preBiogas2Gen, SubTotalLast = @preBiogas2Gen + @biogas24_1_1 Where ShiftId = @shift24_1 And Item = 'Biogas2GenSubtotal'
-		Update ShiftStatDet Set SubTotalBegin = @preBiogas2Torch, SubTotalLast = @preBiogas2Torch + @biogas24_1_2 Where ShiftId = @shift24_1 And Item = 'Biogas2TorchSubtotal'
-		Update ShiftStatDet Set SubTotalBegin = @preEnergy1, SubTotalLast = @preEnergy1 + @energy24_1_1 Where ShiftId = @shift24_1 And Item = 'EnergyProduction1'
-		Update ShiftStatDet Set SubTotalBegin = @preEnergy2, SubTotalLast = @preEnergy2 + @energy24_1_2 Where ShiftId = @shift24_1 And Item = 'EnergyProduction2'
-		Update ShiftStatDet Set SubTotalBegin = @preRuntime1, SubTotalLast = @preRuntime1 + 12 Where ShiftId = @shift24_1 And Item = 'SubtotalRuntime1'
-		Update ShiftStatDet Set SubTotalBegin = @preRuntime2, SubTotalLast = @preRuntime2 + 12 Where ShiftId = @shift24_1 And Item = 'SubtotalRuntime2'
+		Delete ShiftStatDet Where ShiftId = @shift24_1
 	End
+
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'Biogas2GenSubtotal', @preBiogas2Gen, @preBiogas2Gen + @biogas24_1_1)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'Biogas2TorchSubtotal', @preBiogas2Torch, @preBiogas2Torch + @biogas24_1_2)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'EnergyProduction1', @preEnergy1, @preEnergy1 + @energy24_1_1)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'EnergyProduction2', @preEnergy2, @preEnergy2 + @energy24_1_2)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'SubtotalRuntime1', @preRuntime1, @preRuntime1 + 12)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_1, 'SubtotalRuntime2', @preRuntime2, @preRuntime2 + 12)
 
 -- For 9.24 Shift #2
 Select @preBiogas2Gen = IsNull((Select SubTotalLast From ShiftStatDet Where ShiftId = @shift24_1 And Item = 'Biogas2GenSubtotal'), 0)
@@ -137,25 +130,21 @@ Select @preRuntime2 = IsNull((Select SubTotalLast From ShiftStatDet Where ShiftI
 Select Top 1 @shift24_2 = ShiftId From ShiftStatMstr Where ActualBeginTime >= '2017-09-24 20:00:00' And ActualBeginTime <= '2017-09-25 8:00:00'
 If (@@ROWCOUNT = 0)
 	Begin
-		Select @shift24_2 = NEWID()
+		Select @shift24_2 = Cast('2B5530C2-C235-4A07-B021-BF2F33E59694' as uniqueidentifier)
 		Insert Into ShiftStatMstr (ShiftId, BeginTime,ActualBeginTime, EndTime, LastUpdateTime,Status) Values (@shift24_2, '2017-09-24 20:00:00', '2017-09-24 20:00:00', '2017-09-25 8:00:00', '2017-09-25 8:00:00', 'A')
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'Biogas2GenSubtotal', @preBiogas2Gen, @preBiogas2Gen + @biogas24_2_1)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'Biogas2TorchSubtotal', @preBiogas2Torch, @preBiogas2Torch + @biogas24_2_2)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'EnergyProduction1', @preEnergy1, @preEnergy1 + @energy24_2_1)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'EnergyProduction2', @preEnergy2, @preEnergy2 + @energy24_2_2)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'SubtotalRuntime1', @preRuntime1, @preRuntime1 + 12)
-		Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'SubtotalRuntime2', @preRuntime2, @preRuntime2 + 12)
 	End
 Else
 	Begin
 		Update ShiftStatMstr Set LastUpdateTime = '2017-09-25 8:00:00' Where ShiftId = @shift24_2
-		Update ShiftStatDet Set SubTotalBegin = @preBiogas2Gen, SubTotalLast = @preBiogas2Gen + @biogas24_2_1 Where ShiftId = @shift24_2 And Item = 'Biogas2GenSubtotal'
-		Update ShiftStatDet Set SubTotalBegin = @preBiogas2Torch, SubTotalLast = @preBiogas2Torch + @biogas24_2_2 Where ShiftId = @shift24_2 And Item = 'Biogas2TorchSubtotal'
-		Update ShiftStatDet Set SubTotalBegin = @preEnergy1, SubTotalLast = @preEnergy1 + @energy24_2_1 Where ShiftId = @shift24_2 And Item = 'EnergyProduction1'
-		Update ShiftStatDet Set SubTotalBegin = @preEnergy2, SubTotalLast = @preEnergy2 + @energy24_2_2 Where ShiftId = @shift24_2 And Item = 'EnergyProduction2'
-		Update ShiftStatDet Set SubTotalBegin = @preRuntime1, SubTotalLast = @preRuntime1 + 12 Where ShiftId = @shift24_2 And Item = 'SubtotalRuntime1'
-		Update ShiftStatDet Set SubTotalBegin = @preRuntime2, SubTotalLast = @preRuntime2 + 12 Where ShiftId = @shift24_2 And Item = 'SubtotalRuntime2'
+		Delete ShiftStatDet Where ShiftId = @shift24_2
 	End
+
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'Biogas2GenSubtotal', @preBiogas2Gen, @preBiogas2Gen + @biogas24_2_1)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'Biogas2TorchSubtotal', @preBiogas2Torch, @preBiogas2Torch + @biogas24_2_2)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'EnergyProduction1', @preEnergy1, @preEnergy1 + @energy24_2_1)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'EnergyProduction2', @preEnergy2, @preEnergy2 + @energy24_2_2)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'SubtotalRuntime1', @preRuntime1, @preRuntime1 + 12)
+Insert Into ShiftStatDet (ShiftId, Item, SubTotalBegin, SubTotalLast) Values(@shift24_2, 'SubtotalRuntime2', @preRuntime2, @preRuntime2 + 12)
 
 -- For 9.25 Shift #1
 Select Top 1 @shift25_1 = ShiftId From ShiftStatMstr Where ActualBeginTime >= '2017-09-24 20:00:00' And ActualBeginTime <= '2017-09-25 8:00:00'
