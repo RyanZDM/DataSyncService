@@ -12,8 +12,9 @@ namespace LedSyncService
 	{
 		private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-		const int LedWidth = 160;
-		const int LedHeight = 80;
+		private int ledWidth = 160;
+
+		private int ledHeight = 80;
 		/// <summary>
 		/// The height of title for showing factory name
 		/// </summary>
@@ -126,6 +127,25 @@ namespace LedSyncService
 
 			var dal = new Dal(connection);
 			var parameters = dal.GetGeneralParameters();
+
+			var widthParam =
+				parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
+				                               && string.Equals(p.Name, "LedWidth", StringComparison.OrdinalIgnoreCase));
+			if (widthParam != null)
+			{
+				ledWidth = int.Parse(widthParam.Value);
+				logger.Info("Found the setting of LedWidth for updating LED in database. {0}", widthParam.Value);
+			}
+
+			var heightParam =
+				parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
+											   && string.Equals(p.Name, "LedHeight", StringComparison.OrdinalIgnoreCase));
+			if (heightParam != null)
+			{
+				ledHeight = int.Parse(heightParam.Value);
+				logger.Info("Found the setting of LedHeight for updating LED in database. {0}", heightParam.Value);
+			}
+
 			var intervalParam = parameters.FirstOrDefault(p => string.Equals(p.Category, "System", StringComparison.OrdinalIgnoreCase)
 															&& string.Equals(p.Name, "IntervalForUpdatingLed", StringComparison.OrdinalIgnoreCase));
 			// Update the retry interval
@@ -167,7 +187,9 @@ namespace LedSyncService
 			}
 
 			ledIP = param.Value;
-			logger.Info("The IP of LED is: {0}.", param.Value);
+			logger.Info(
+				"Uses the settings for LED Service: IP/{0}, Width/{1}, Height/{2}, Color/{3}, Interval/{4}, Title/[{5}]\r\nInfoTemplate:\r\n{6}.",
+				ledIP, ledWidth, ledHeight, 2, intervalParam, titleParam, infoParam);
 
 			//定义一通讯参数结构体变量用于对设定的LED通讯，具体对此结构体元素赋值说明见COMMUNICATIONINFO结构体定义部份注示
 			communicationInfo = new LedDll.COMMUNICATIONINFO();
@@ -177,7 +199,7 @@ namespace LedSyncService
 			communicationInfo.IpStr = ledIP;    //给IpStr赋值LED控制卡的IP
 			communicationInfo.LedNumber = 1;    //LED屏号为1，注意socket通讯和232通讯不识别屏号，默认赋1就行了，485必需根据屏的实际屏号进行赋值
 
-			var result = LedDll.LV_SetBasicInfo(ref communicationInfo, 2, LedWidth, LedHeight);      //设置屏参，屏的颜色为2即为双基色，64为屏宽点数，32为屏高点数，具体函数参数说明见函数声明注示
+			var result = LedDll.LV_SetBasicInfo(ref communicationInfo, 2, ledWidth, ledHeight);      //设置屏参，屏的颜色为2即为双基色，64为屏宽点数，32为屏高点数，具体函数参数说明见函数声明注示
 			if (result != 0)                                                            //如果失败则可以调用LV_GetError获取中文错误信息
 			{
 				var errMsg = LedDll.LS_GetError(result);
@@ -195,7 +217,7 @@ namespace LedSyncService
 		private int CreateProgram()
 		{
 			//根据传的参数创建节目句柄，屏宽点数，屏高点数，2是屏的颜色，注意此处屏宽高及颜色参数必需与设置屏参的屏宽高及颜色一致，否则发送时会提示错误
-			var hProgram = LedDll.LV_CreateProgram(LedWidth, LedHeight, 2);
+			var hProgram = LedDll.LV_CreateProgram(ledWidth, ledHeight, 2);
 			if (hProgram > 0)
 			{
 				logger.Debug("Program handle [{0}] created.", hProgram);
@@ -228,7 +250,7 @@ namespace LedSyncService
 				var areaRect1 = new LedDll.AREARECT();   //区域坐标属性结构体变量
 				areaRect1.left = 0;
 				areaRect1.top = 0;
-				areaRect1.width = LedWidth;
+				areaRect1.width = ledWidth;
 				areaRect1.height = TitleHeight;
 
 				LedDll.LV_AddImageTextArea(hProgram, 1, 1, ref areaRect1, 0);
@@ -255,8 +277,8 @@ namespace LedSyncService
 				var areaRect2 = new LedDll.AREARECT();
 				areaRect2.left = 0;
 				areaRect2.top = TitleHeight;
-				areaRect2.width = LedWidth;
-				areaRect2.height = LedHeight - TitleHeight;
+				areaRect2.width = ledWidth;
+				areaRect2.height = ledHeight - TitleHeight;
 
 				LedDll.LV_AddImageTextArea(hProgram, 1, 2, ref areaRect2, 0);
 				logger.Debug("ImageTextArea #2 was added to program 1. L/T/W/H:{0}/{1}/{2}/{3}.",
