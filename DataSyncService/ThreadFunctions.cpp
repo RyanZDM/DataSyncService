@@ -173,8 +173,10 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					{
 						if (bLastOPCConnectFlag)
 						{
-							g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x. This log won't be output again until next time connected to database.\n%s")
-								, OPCClient.GetLastHResult(), dwThreadID, pMsg);
+							TString szErr;
+							CStrUtil::FormatMsg(NULL, szErr, (INT)OPCClient.GetLastHResult());
+							g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x %s. This log won't be output again until next time connected to database.\n%s")
+								, dwThreadID, OPCClient.GetLastHResult(), szErr.c_str(), pMsg);
 
 							// Update this flag indicates that no need log one more time
 							bLastDBConnectFlag = FALSE;
@@ -213,8 +215,10 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				if (bLastDBConnectFlag)
 				{
 					bLastDBConnectFlag = FALSE;
-					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x. This log won't be output again until next time connected to database.\n%s")
-						, dwThreadID, OPCClient.GetLastHResult(), db.GetLastErrormsg());
+					TString szErr;
+					CStrUtil::FormatMsg(NULL, szErr, (INT)OPCClient.GetLastHResult());
+					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x %s. This log won't be output again until next time connected to database.\n%s")
+						, dwThreadID, OPCClient.GetLastHResult(), szErr.c_str(), db.GetLastErrormsg());
 				}
 			}
 		}
