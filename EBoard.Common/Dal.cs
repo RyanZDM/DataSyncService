@@ -110,7 +110,7 @@ namespace EBoard.Common
 		public ShiftStatInfo GetShiftStatInfo(DateTime? lastUpdate = null)
 		{
 			var ds = new DataSet();
-			var sql = @"Select a.ItemId, CAST(a.Val As int) as Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId";
+			var sql = @"Select a.ItemId, CAST(a.Val As int) as Val, a.LastUpdate, a.Quality, b.Address From ItemLatestStatus a,MonitorItem b Where a.ItemID=b.ItemId And b.Status='A'";
 			var adapter = new SqlDataAdapter(sql, connection);
 			adapter.Fill(ds, "ItemLatestStatus");
 
@@ -168,8 +168,7 @@ namespace EBoard.Common
 
 			// Get total run time of generator from ShiftStatDet table, no need to subtract
 			sql =
-				$@"SELECT Item,IsNull(det.SubTotalLast,0) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{shiftId}' AS uniqueidentifier) And Item In ('{ShiftStatInfo
-					.SubtotalRuntime1ColName}','{ShiftStatInfo.SubtotalRuntime2ColName}')";
+				$@"SELECT Item,IsNull(det.SubTotalLast,0) As SubTotalLast FROM ShiftStatDet det, ShiftStatMstr mstr Where mstr.ShiftId=det.ShiftId and mstr.ShiftId=CAST('{shiftId}' AS uniqueidentifier) And Item Like '{ShiftStatInfo.SubtotalRuntimeColNames}'";
 			new SqlDataAdapter(sql, connection).Fill(ds, "TotalRunTime");
 			var totalRuntimeTable = ds.Tables["TotalRunTime"];
 			totalRuntimeTable.AsEnumerable().ToList().ForEach(row =>

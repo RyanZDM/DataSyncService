@@ -333,7 +333,7 @@ namespace EBoard
 				BeginInvoke((MethodInvoker)(() => RefreshData(data)));
 				return;
 			}
-
+			#region Varibles
 			int? 
 					//biogas2Torch = null,
 					//biogas2Gen = null,
@@ -341,20 +341,31 @@ namespace EBoard
 					biogas2GenSubtotal = null,
 					subtotalRuntime1 = null,
 					subtotalRuntime2 = null,
+					subtotalRuntime3 = null,
 					energyProduction1 = null,
 					energyProduction2 = null,
+					energyProduction3 = null,
 					//generatorPower1 = null,
 					//generatorPower2 = null,
+					//generatorPower3 = null,
 					totalRuntime1 = null,
-					totalRuntime2 = null;
-			bool? generator1Running = null,
-				generator2Running = null;
+					totalRuntime2 = null,
+					totalRuntime3 = null;
+
+			bool? 
+				generator1Running = null,
+				generator2Running = null,
+				generator3Running = null;
+			#endregion
 
 			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator1RunningColName))
 				generator1Running = data.MonitorItems[ShiftStatInfo.Generator1RunningColName] != 0;
 
 			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator2RunningColName))
 				generator2Running = data.MonitorItems[ShiftStatInfo.Generator2RunningColName] != 0;
+
+			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator3RunningColName))
+				generator3Running = data.MonitorItems[ShiftStatInfo.Generator3RunningColName] != 0;
 
 			/// 1. instantaneous values
 			// 1.1 Biogas
@@ -386,12 +397,18 @@ namespace EBoard
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction2ColName))
 				energyProduction2 = data.StatInfo[ShiftStatInfo.EnergyProduction2ColName];
 
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.EnergyProduction3ColName))
+				energyProduction3 = data.StatInfo[ShiftStatInfo.EnergyProduction3ColName];
+
 			// 2.3 subtotal runtime of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime1ColName))
 				subtotalRuntime1 = data.StatInfo[ShiftStatInfo.SubtotalRuntime1ColName];
 						
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime2ColName))
 				subtotalRuntime2 = data.StatInfo[ShiftStatInfo.SubtotalRuntime2ColName];
+
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.SubtotalRuntime3ColName))
+				subtotalRuntime3 = data.StatInfo[ShiftStatInfo.SubtotalRuntime3ColName];
 
 			// 2.4 total runtime
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime1ColName))
@@ -400,10 +417,14 @@ namespace EBoard
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime2ColName))
 				totalRuntime2 = data.StatInfo[ShiftStatInfo.TotalRuntime2ColName];
 
+			if (data.StatInfo.ContainsKey(ShiftStatInfo.TotalRuntime3ColName))
+				totalRuntime3 = data.StatInfo[ShiftStatInfo.TotalRuntime3ColName];
+
 			// Update labels on GUI
 			// 2.4
 			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
+			//TODO labelTotalRuntime3.Text = totalRuntime3.HasValue ? totalRuntime3.ToString() : "";
 
 			// 2.1
 			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() + UnitM3 : "";
@@ -413,12 +434,14 @@ namespace EBoard
 			// 2.2
 			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() + UnitKWh : "";
 			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() + UnitKWh : "";
-			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0)).ToString() + UnitKWh;
+			//TODO labelEnergyProduction3.Text = energyProduction3.HasValue ? energyProduction3.ToString() + UnitKWh : "";
+			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0) + (energyProduction3 ?? 0)).ToString() + UnitKWh;
 
 			// 2.3
 			labelRuntime1.Text = subtotalRuntime1.HasValue ? subtotalRuntime1.ToString() : "";
 			labelRuntime2.Text = subtotalRuntime2.HasValue ? subtotalRuntime2.ToString() : "";
-			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0) + (subtotalRuntime2 ?? 0)).ToString();
+			//TODO labelRuntime3.Text = subtotalRuntime3.HasValue ? subtotalRuntime3.ToString() : "";
+			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0) + (subtotalRuntime2 ?? 0) + (subtotalRuntime3 ?? 0)).ToString();
 		}
 
 		private void UpdateWorksOnGUI()
