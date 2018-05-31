@@ -25,7 +25,7 @@ namespace LedSyncService
 			var shiftId = GetCurrentShiftId();
 
 			var sql =
-				$@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{shiftId}' As uniqueidentifier) And Item In ('EnergyProduction1', 'EnergyProduction2')";
+				$@"Select IsNull(Sum(IsNull(SubTotalBegin, 0)), 0) As Start, IsNull(Sum(IsNull(SubTotalLast, 0)), 0) As Total From ShiftStatDet Where ShiftId =Cast('{shiftId}' As uniqueidentifier) And Item Like 'EnergyProduction%'";
 			var cmd = new SqlCommand(sql, connection);
 			using (var reader = cmd.ExecuteReader())
 			{

@@ -352,22 +352,22 @@ namespace EBoard
 					totalRuntime2 = null,
 					totalRuntime3 = null;
 
-			bool? 
-				generator1Running = null,
-				generator2Running = null,
-				generator3Running = null;
+			//bool? 
+			//	generator1Running = null,
+			//	generator2Running = null,
+			//	generator3Running = null;
 			#endregion
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator1RunningColName))
-				generator1Running = data.MonitorItems[ShiftStatInfo.Generator1RunningColName] != 0;
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator1RunningColName))
+			//	generator1Running = data.MonitorItems[ShiftStatInfo.Generator1RunningColName] != 0;
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator2RunningColName))
-				generator2Running = data.MonitorItems[ShiftStatInfo.Generator2RunningColName] != 0;
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator2RunningColName))
+			//	generator2Running = data.MonitorItems[ShiftStatInfo.Generator2RunningColName] != 0;
 
-			if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator3RunningColName))
-				generator3Running = data.MonitorItems[ShiftStatInfo.Generator3RunningColName] != 0;
+			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.Generator3RunningColName))
+			//	generator3Running = data.MonitorItems[ShiftStatInfo.Generator3RunningColName] != 0;
 
-			/// 1. instantaneous values
+			// 1. instantaneous values
 			// 1.1 Biogas
 			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.Biogas2TorchColName))
 			//	biogas2Torch = data.MonitorItems[ShiftStatInfo.Biogas2TorchColName];
@@ -382,7 +382,7 @@ namespace EBoard
 			//if (data.MonitorItems.ContainsKey(ShiftStatInfo.GeneratorPower2ColName))
 			//	generatorPower2 = data.MonitorItems[ShiftStatInfo.GeneratorPower2ColName];
 
-			/// 2. accumulated values
+			// 2. accumulated values
 			// 2.1 Subtotal biogas of current shift
 			if (data.StatInfo.ContainsKey(ShiftStatInfo.Biogas2TorchSubtotalColName))
 				biogas2TorchSubtotal = data.StatInfo[ShiftStatInfo.Biogas2TorchSubtotalColName];
@@ -424,23 +424,23 @@ namespace EBoard
 			// 2.4
 			labelTotalRuntime1.Text = totalRuntime1.HasValue ? totalRuntime1.ToString() : "";
 			labelTotalRuntime2.Text = totalRuntime2.HasValue ? totalRuntime2.ToString() : "";
-			//TODO labelTotalRuntime3.Text = totalRuntime3.HasValue ? totalRuntime3.ToString() : "";
+			labelTotalRuntime3.Text = totalRuntime3.HasValue ? totalRuntime3.ToString() : "";
 
 			// 2.1
-			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() + UnitM3 : "";
-			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal.ToString() + UnitM3 : "";
-			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0) + (biogas2GenSubtotal ?? 0)).ToString() + UnitM3;
+			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal + UnitM3 : "";
+			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal + UnitM3 : "";
+			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0) + (biogas2GenSubtotal ?? 0)) + UnitM3;
 
 			// 2.2
-			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() + UnitKWh : "";
-			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() + UnitKWh : "";
-			//TODO labelEnergyProduction3.Text = energyProduction3.HasValue ? energyProduction3.ToString() + UnitKWh : "";
-			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0) + (energyProduction3 ?? 0)).ToString() + UnitKWh;
+			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1 + UnitKWh : "";
+			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2 + UnitKWh : "";
+			labelEnergyProduction3.Text = energyProduction3.HasValue ? energyProduction3 + UnitKWh : "";
+			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0) + (energyProduction3 ?? 0)) + UnitKWh;
 
 			// 2.3
 			labelRuntime1.Text = subtotalRuntime1.HasValue ? subtotalRuntime1.ToString() : "";
 			labelRuntime2.Text = subtotalRuntime2.HasValue ? subtotalRuntime2.ToString() : "";
-			//TODO labelRuntime3.Text = subtotalRuntime3.HasValue ? subtotalRuntime3.ToString() : "";
+			labelRuntime3.Text = subtotalRuntime3.HasValue ? subtotalRuntime3.ToString() : "";
 			labelRuntimeTotal.Text = ((subtotalRuntime1 ?? 0) + (subtotalRuntime2 ?? 0) + (subtotalRuntime3 ?? 0)).ToString();
 		}
 
@@ -601,8 +601,8 @@ namespace EBoard
 				if (ds.Tables.Count > 1 && ds.Tables[1].Rows.Count > 0)
 				{
 					var sumRow = ds.Tables[1].Rows[0];
-					labelBiogasMonth.Text = ((int)sumRow["Biogas"]).ToString() + UnitM3;
-					labelEnergyProductionMonth.Text = ((int)sumRow["EngeryProduction"]).ToString() + UnitKWh;
+					labelBiogasMonth.Text = ((int)sumRow["Biogas"]) + UnitM3;
+					labelEnergyProductionMonth.Text = ((int)sumRow["EngeryProduction"]) + UnitKWh;
 				}
 
 				// Refresh the chart label
