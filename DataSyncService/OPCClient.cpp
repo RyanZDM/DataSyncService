@@ -194,9 +194,9 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 		else
 		{
 			// No record was affected, need to insert a new record
-			swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Insert Into ItemLatestStatus (ItemID,Val,LastUpdate,Quality) Values ('%s', '%s', Convert(datetime, '%d-%d-%d %d:%d:%d'), %d)",
+			swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Insert Into ItemLatestStatus (ItemID,Val,LastUpdate,Quality) Values ('%s', '%.2f', Convert(datetime, '%d-%d-%d %d:%d:%d'), %d)",
 				mappings[pItemID],
-				(LPCTSTR)bstrVal,
+				fVal,
 				localTime.wYear,
 				localTime.wMonth,
 				localTime.wDay,
@@ -210,6 +210,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	}
 	catch (INT nError)
 	{
+		// TODO: record the ItemId in log, or support the multiple byte string in log
 		g_Logger.VForceLog(_T("COPCItemDef::UpdateData() Failed.\r\n%s.\r\n%s"), wszSQL, pDB->GetLastErrormsg());
 		return nError;
 	}
