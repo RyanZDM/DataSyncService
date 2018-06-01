@@ -15,10 +15,10 @@ namespace EBoard
 	public partial class MainForm : Form
 	{
 		#region Variables and properties
-		private readonly Logger logger = LogManager.GetCurrentClassLogger();
-
 		private const string UnitM3 = @" M³";
 		private const string UnitKWh = " kWh";
+		private readonly Logger logger = LogManager.GetCurrentClassLogger();
+
 		private const int WorkersInShift = 2;
 		private const int DefaultRefreshInterval = 2000;
 
@@ -427,15 +427,15 @@ namespace EBoard
 			labelTotalRuntime3.Text = totalRuntime3.HasValue ? totalRuntime3.ToString() : "";
 
 			// 2.1
-			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal + UnitM3 : "";
-			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal + UnitM3 : "";
-			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0) + (biogas2GenSubtotal ?? 0)) + UnitM3;
+			labelBiogas2Torch.Text = biogas2TorchSubtotal.HasValue ? biogas2TorchSubtotal.ToString() : "";
+			labelBiogas2Gen.Text = biogas2GenSubtotal.HasValue ? biogas2GenSubtotal.ToString() : "";
+			labelBiogasTotal.Text = ((biogas2TorchSubtotal ?? 0) + (biogas2GenSubtotal ?? 0)).ToString();
 
 			// 2.2
-			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1 + UnitKWh : "";
-			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2 + UnitKWh : "";
-			labelEnergyProduction3.Text = energyProduction3.HasValue ? energyProduction3 + UnitKWh : "";
-			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0) + (energyProduction3 ?? 0)) + UnitKWh;
+			labelEnergyProduction1.Text = energyProduction1.HasValue ? energyProduction1.ToString() : "";
+			labelEnergyProduction2.Text = energyProduction2.HasValue ? energyProduction2.ToString() : "";
+			labelEnergyProduction3.Text = energyProduction3.HasValue ? energyProduction3.ToString() : "";
+			labelEnergyProductionTotal.Text = ((energyProduction1 ?? 0) + (energyProduction2 ?? 0) + (energyProduction3 ?? 0)).ToString();
 
 			// 2.3
 			labelRuntime1.Text = subtotalRuntime1.HasValue ? subtotalRuntime1.ToString() : "";

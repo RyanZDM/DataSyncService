@@ -155,6 +155,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	if (!pTimeStamp || !pDB)
 		return E_INVALIDARG;
 
+	
 	_bstr_t bstrVal;
 	SYSTEMTIME utcTime;
 	SYSTEMTIME localTime;
@@ -210,8 +211,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	}
 	catch (INT nError)
 	{
-		// TODO: record the ItemId in log, or support the multiple byte string in log
-		g_Logger.VForceLog(_T("COPCItemDef::UpdateData() Failed.\r\n%s.\r\n%s"), wszSQL, pDB->GetLastErrormsg());
+		g_Logger.VForceLog(L"COPCItemDef::UpdateData() Failed.\r\n%s.\r\n%s", wszSQL, pDB->GetLastErrormsgW());
 		return nError;
 	}
 }
@@ -798,7 +798,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 					}
 					else
 					{
-						g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata() on %s, return=%d,"), W2CT(pItem->m_pOPCItemDef->szItemID), nAffectedRows);
+						g_Logger.VForceLog(L"COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata() on %s, return=%d,", pItem->m_pOPCItemDef->szItemID, nAffectedRows);
 					}
 				}
 				else

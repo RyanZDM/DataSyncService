@@ -238,6 +238,8 @@ public:
 	INT Blob2Variant(char *pBuf, DWORD dwBufLen, _variant_t &Variant);				// 生成Blob的Variant数组，成功返回0	
 	INT GetLastErrorCode();															// 获得最后一次错误码	
 	LPCTSTR GetLastErrormsg();														// 获得最后一次错误消息
+	LPCSTR GetLastErrormsgA();
+	LPCWSTR GetLastErrormsgW();
 	
 	_ConnectionPtr m_pConnection;													// 数据库连接指针
 

@@ -381,6 +381,26 @@ LPCTSTR CDBUtil::GetLastErrormsg()
 	return m_szLastErrorMsg.c_str();
 }
 
+LPCSTR CDBUtil::GetLastErrormsgA()
+{
+#ifdef UNICODE
+	USES_CONVERSION;
+	return T2A(m_szLastErrorMsg.c_str());
+#else
+	return W2A(m_szLastErrorMsg.c_str());
+#endif // UNICODE
+}
+
+LPCWSTR CDBUtil::GetLastErrormsgW()
+{
+#ifdef UNICODE
+	return m_szLastErrorMsg.c_str();
+#else
+	USES_CONVERSION;
+	return A2W(m_szLastErrorMsg.c_str());
+#endif // UNICODE
+}
+
 /**************************************************************************
  * 如果异常的类型是_com_error，将错误描述提取出来
  * void CDBUtil::IndicateComErrorException(_com_error&		cComErr,
