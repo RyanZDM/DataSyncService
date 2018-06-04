@@ -160,7 +160,7 @@ public:
 class COPCItemDef
 {
 public:
-	INT UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp, map<LPCWSTR, LPWSTR, StrCompare> &mappings);
+	INT UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp);
 	COPCItemDef* Clone();
 	operator OPCITEMDEF*() { return m_pOPCItemDef; }
 	COPCItemDef() { Init(TRUE); }
@@ -174,8 +174,9 @@ public:
 public:
 	OPCITEMDEF	*m_pOPCItemDef;
 	OPCHANDLE	m_hServer;
+	wstring		m_wszInternalItemId;
 
-private:
+private:	
 	void Init(BOOL bInitItemMgtPtr = TRUE);
 };
 
@@ -223,7 +224,6 @@ private:
 	DWORD					m_dwCookieDataSink20;
 	vector<LPWSTR>			m_vOPCServerList;
 	vector<COPCItemDef*>	m_vItems;
-	map<LPCWSTR, LPWSTR, StrCompare>	m_ItemMappings;
 	CDBUtil					*m_pDB;
 	HRESULT					m_hLastHResult;
 };

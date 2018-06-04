@@ -37,6 +37,8 @@ COPCItemDef::COPCItemDef(OPCITEMDEF *pItem)
 
 	if (m_pOPCItemDef)
 		m_pOPCItemDef->hClient = (OPCHANDLE)this;
+
+	m_wszInternalItemId.clear();
 }
 
 COPCItemDef::COPCItemDef(LPCWSTR pAccessPath, LPCWSTR pItemID, BOOL bActive/*= TRUE*/, VARTYPE vtRequestedDataType/*= VT_EMPTY*/)
@@ -79,6 +81,8 @@ void COPCItemDef::Init(BOOL bInitItemMgtPtr)
 	{
 		m_pOPCItemDef = NULL;
 	}
+
+	m_wszInternalItemId.clear();
 }
 
 void COPCItemDef::Clear()
@@ -150,7 +154,7 @@ float GetFromVariant(VARIANT &vValue)
 	}
 }
 
-INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp, map<LPCWSTR, LPWSTR, StrCompare> &mappings)
+INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIME *pTimeStamp)
 {
 	if (!pTimeStamp || !pDB)
 		return E_INVALIDARG;
@@ -164,7 +168,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	float fVal = GetFromVariant(vValue);
 	if (fVal < 0.0 || fVal > 99999999.00)
 	{
-		g_Logger.VLog(L"COPCItemDef::UpdateData() Skip the update value for item [%s] because the value [%.2f] is invalid.", pItemID, fVal);
+		g_Logger.VLog(L"COPCItemDef::UpdateData() Skip the update value for item [%s]/[%s] because the value [%.2f] is invalid.", m_wszInternalItemId.c_str(), pItemID, fVal);
 		return -1;
 	}
 
@@ -182,7 +186,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 		localTime.wMinute,
 		localTime.wSecond,
 		wQuality,
-		mappings[pItemID]);		// Assume the element must be contained in m_ItemMappings
+		m_wszInternalItemId.c_str());
 
 	try
 	{
@@ -196,7 +200,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 		{
 			// No record was affected, need to insert a new record
 			swprintf_s(wszSQL, sizeof(wszSQL) / sizeof(wszSQL[0]), L"Insert Into ItemLatestStatus (ItemID,Val,LastUpdate,Quality) Values ('%s', '%.2f', Convert(datetime, '%d-%d-%d %d:%d:%d'), %d)",
-				mappings[pItemID],
+				m_wszInternalItemId.c_str(),
 				fVal,
 				localTime.wYear,
 				localTime.wMonth,
@@ -211,7 +215,8 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	}
 	catch (INT nError)
 	{
-		g_Logger.VForceLog(L"COPCItemDef::UpdateData() Failed.\r\n%s.\r\n%s", wszSQL, pDB->GetLastErrormsgW());
+		//g_Logger.VForceLog(L"COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata() on %s, return=%d,", pItem->m_pOPCItemDef->szItemID, nAffectedRows);
+		g_Logger.VForceLog(L"COPCItemDef::UpdateData() Failed on.\r\n%s.\r\n%s", wszSQL, pDB->GetLastErrormsgW());
 		return nError;
 	}
 }
@@ -547,7 +552,6 @@ void COPCClient::Clear()
 
 	ClearVector(m_vOPCServerList);
 	ClearVector(m_vItems);
-	ClearMap(m_ItemMappings, TRUE);
 }
 
 INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
@@ -566,7 +570,6 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 	HRESULT *pErrors = NULL;
 	OPCITEMRESULT *pResults = NULL;
 
-	ClearMap(m_ItemMappings, TRUE);
 	TString szErrMsg;
 	for (INT i = 0; i < nCount; i++)
 	{
@@ -587,18 +590,11 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 		pItem->vtRequestedDataType = pItemInfo->vtRequestedDataType;
 		pItem->wReserved = 0;
 
-		if (S_OK == AddItem(new COPCItemDef(pItem), TRUE))
+		COPCItemDef *pItemDef = new COPCItemDef(pItem);		// It would be destroyed in the Clear() method
+		pItemDef->m_wszInternalItemId = pItem->szItemID;
+		if (S_OK == AddItem(pItemDef, TRUE))
 		{
 			nRet++;
-
-			// Add ItemId and Address into the mappings
-			LPWSTR pAddr = new wchar_t[dwLen + 1];
-			lstrcpynW(pAddr, pName, dwLen + 1);
-
-			dwLen = wcslen(pItemInfo->pItemID);
-			LPWSTR pItemId = new wchar_t[dwLen + 1];
-			lstrcpynW(pItemId, T2W(pItemInfo->pItemID), dwLen + 1);
-			m_ItemMappings.insert({ pAddr, pItemId });
 		}
 		else
 		{
@@ -791,14 +787,10 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 
 				if (bUpdateDB)
 				{
-					int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp), m_ItemMappings);
+					int nAffectedRows = pItem->UpdateData(m_pDB, pValues[0].vDataValue, pValues[0].wQuality, &(pValues[0].ftTimeStamp));
 					if (nAffectedRows > 0)
 					{
 						nCount++;
-					}
-					else
-					{
-						g_Logger.VForceLog(L"COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata() on %s, return=%d,", pItem->m_pOPCItemDef->szItemID, nAffectedRows);
 					}
 				}
 				else
