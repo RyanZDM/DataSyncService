@@ -168,7 +168,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	float fVal = GetFromVariant(vValue);
 	if (fVal < 0.0 || fVal > 99999999.00)
 	{
-		g_Logger.VLog(L"COPCItemDef::UpdateData() Skip the update value for item [%s]/[%s] because the value [%.2f] is invalid.", m_wszInternalItemId.c_str(), pItemID, fVal);
+		g_Logger.VLog(L"[%s] Skip the update value for item [%s]/[%s] because the value [%.2f] is invalid.", __FUNCTIONW__, m_wszInternalItemId.c_str(), pItemID, fVal);
 		return -1;
 	}
 
@@ -216,7 +216,7 @@ INT COPCItemDef::UpdateData(CDBUtil *pDB, VARIANT vValue, WORD wQuality, FILETIM
 	catch (INT nError)
 	{
 		//g_Logger.VForceLog(L"COPCClient::ReadAndUpdateItemValue() Failed to call COPCItemDef.Updata() on %s, return=%d,", pItem->m_pOPCItemDef->szItemID, nAffectedRows);
-		g_Logger.VForceLog(L"COPCItemDef::UpdateData() Failed on.\r\n%s.\r\n%s", wszSQL, pDB->GetLastErrormsgW());
+		g_Logger.VForceLog(L"[%s] Failed on.\r\n%s.\r\n%s", __FUNCTIONW__, wszSQL, pDB->GetLastErrormsgW());
 		return nError;
 	}
 }
@@ -233,7 +233,7 @@ COPCClient::COPCClient(INT nMinGoodQuality) : m_nMinGoodQuality(nMinGoodQuality)
 	m_dwCookieDataSink20 = 0;
 
 	if (FAILED(CoInitialize(NULL)))
-		g_Logger.Log(_T("COPCClient::COPCClient(): Failed to call CoInitialze"));
+		g_Logger.VLog(_T("[%s] Failed to call CoInitialze"), __TFUNCTION__);
 }
 
 COPCClient::~COPCClient()
@@ -260,14 +260,14 @@ vector<LPWSTR> & COPCClient::GetOPCServerList(CATID catID)
 	{
 		// Get component category manager:		
 		if (S_OK != (m_hLastHResult = CoCreateInstance(CLSID_StdComponentCategoriesMgr, NULL, CLSCTX_SERVER, IID_ICatInformation, (LPVOID*)&pCat)))
-			throw _T("COPCClient::GetOPCServerList(): Failed to call CoCreateInstance for CLSID_StdComponentCategoriesMgr");
+			throw _T("[COPCClient::GetOPCServerList] Failed to call CoCreateInstance for CLSID_StdComponentCategoriesMgr");
 
 		// Enumerate registered components:
 		IEnumCLSID *pEnum = NULL;
 		CATID catIDs[1];
 		catIDs[0] = catID;		// TODO we can add some more category items such as DA 1.0, DA 3.0
 		if (S_OK != (m_hLastHResult = pCat->EnumClassesOfCategories(sizeof(catIDs) / sizeof(catIDs[0]), catIDs, 0, NULL, &pEnum)))
-			throw _T("COPCClient::GetOPCServerList(): Failed to call EnumClassesOfCategories");
+			throw _T("[COPCClient::GetOPCServerList] Failed to call EnumClassesOfCategories");
 
 		GUID guid;
 		ULONG ulFetched = 0;
@@ -279,7 +279,7 @@ vector<LPWSTR> & COPCClient::GetOPCServerList(CATID catID)
 				if (pProgID)
 					CoTaskMemFree(pProgID);
 
-				throw _T("COPCClient::GetOPCServerList(): Failed to call ProgIDFromCLSID");
+				throw _T("[COPCClient::GetOPCServerList] Failed to call ProgIDFromCLSID");
 			}
 
 			size_t nSize = wcslen(pProgID);
@@ -311,7 +311,7 @@ IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
 	try
 	{
 		if (S_OK != (m_hLastHResult = CLSIDFromProgID(progID, &OPCCLSID)))
-			throw _T("COPCClient::Connect(): Failed to call CLSIDFromProgID");
+			throw _T("[COPCClient::Connect] Failed to call CLSIDFromProgID");
 
 		MULTI_QI multiQIs[2];
 		memset(multiQIs, 0, sizeof(multiQIs));
@@ -323,15 +323,15 @@ IOPCServer * COPCClient::Connect(LPCOLESTR progID, COSERVERINFO *pCoServerInfo)
 			pCoServerInfo,
 			sizeof(multiQIs) / sizeof(MULTI_QI),
 			multiQIs)))
-			throw _T("COPCClient::Connect(): Failed to call CoCreateInstanceEx for OPC Server");
+			throw _T("[COPCClient::Connect] Failed to call CoCreateInstanceEx for OPC Server");
 
 		if ((S_OK != multiQIs[0].hr) || !multiQIs[0].pItf)
-			throw _T("COPCClient::Connect(): Failed to get pointer to IOPCServer");
+			throw _T("[COPCClient::Connect] Failed to get pointer to IOPCServer");
 
 		m_pServer = (IOPCServer*)multiQIs[0].pItf;
 
 		if ((S_OK != multiQIs[1].hr) || !multiQIs[1].pItf)
-			throw _T("COPCClient::Connect(): Failed to get pointer to IConnectionPointContainer");
+			throw _T("[COPCClient::Connect] Failed to get pointer to IConnectionPointContainer");
 
 		m_pConnectionPointContainer = (IConnectionPointContainer*)multiQIs[1].pItf;
 
@@ -445,7 +445,7 @@ LPGROUPINFO COPCClient::AddGroup(LPGROUPINFO pInfo, BOOL bNoReleaseOutside)
 		m_pGroup = NULL;
 
 		CHECK_CONNECT(m_hLastHResult);
-		throw _T("COPCClient::AddGroup(): Failed to call IOPCServer.AddGroup.");
+		throw _T("[COPCClient::AddGroup] Failed to call IOPCServer.AddGroup.");
 	}
 
 	return m_pGroup;
@@ -504,7 +504,7 @@ HRESULT COPCClient::RemoveGroup(LPGROUPINFO pGroup)
 
 		if (S_OK != (m_hLastHResult = pGroup->pOPCItemMgt->RemoveItems(dwCount, phServer, &pErrors)))
 		{
-			g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCItemMgt.RemoveItems. HRESULT=%x"), m_hLastHResult);
+			g_Logger.VLog(_T("[%s] Failed to call IOPCItemMgt.RemoveItems. HRESULT=%x"), __TFUNCTION__, m_hLastHResult);
 		}
 		else
 		{
@@ -512,7 +512,7 @@ HRESULT COPCClient::RemoveGroup(LPGROUPINFO pGroup)
 			{
 				if (FAILED(pErrors[i]))
 				{
-					g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): IOPCItemMgt.RemoveItems() succeed, but the item #%d cannot be removed. HRESULT=%x"), i, pErrors[i]);
+					g_Logger.VLog(_T("[%s] IOPCItemMgt.RemoveItems() succeed, but the item #%d cannot be removed. HRESULT=%x"), __TFUNCTION__, i, pErrors[i]);
 				}
 			}
 		}
@@ -531,7 +531,7 @@ HRESULT COPCClient::RemoveGroup(LPGROUPINFO pGroup)
 	}
 	else
 	{
-		g_Logger.VLog(_T("COPCClient::RemoveAllGroups(): Failed to call IOPCServer.RemoveGroup. HRESULT=%x"), m_hLastHResult);
+		g_Logger.VLog(_T("[%s] Failed to call IOPCServer.RemoveGroup. HRESULT=%x"), __TFUNCTION__, m_hLastHResult);
 	}
 
 	return m_hLastHResult;
@@ -591,7 +591,7 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 		pItem->wReserved = 0;
 
 		COPCItemDef *pItemDef = new COPCItemDef(pItem);		// It would be destroyed in the Clear() method
-		pItemDef->m_wszInternalItemId = pItem->szItemID;
+		pItemDef->m_wszInternalItemId = pItemInfo->pItemID;
 		if (S_OK == AddItem(pItemDef, TRUE))
 		{
 			nRet++;
@@ -604,7 +604,7 @@ INT COPCClient::AddItems(const vector<LPITEMINFO> &vList)
 
 	if (szErrMsg.size() > 0)
 	{
-		g_Logger.VForceLog(_T("Failed to add monitor item(s): %s"), szErrMsg.c_str());
+		g_Logger.VForceLog(_T("[%s] Failed to add monitor item(s): %s"), __TFUNCTION__, szErrMsg.c_str());
 	}
 
 	return nCount;
@@ -625,7 +625,7 @@ HRESULT COPCClient::AddItem(COPCItemDef *pItem, BOOL bNoReleaseOutside)
 	OPCITEMRESULT *pResults = NULL;
 	if (S_OK != (hr = m_pGroup->pOPCItemMgt->AddItems(1, pItem->m_pOPCItemDef, &pResults, &pErrors)) || !pResults)
 	{
-		g_Logger.VLog(_T("COPCClient::AddItem(): Failed to call IOPCItemMgt.AddItems on %s. HRESULT=%x"), W2CT(pItem->m_pOPCItemDef->szItemID), hr);
+		g_Logger.VLog(_T("[%s] Failed to call IOPCItemMgt.AddItems on %s. HRESULT=%x"), __TFUNCTION__, W2CT(pItem->m_pOPCItemDef->szItemID), hr);
 		if (!bNoReleaseOutside)
 			delete pActItem;
 	}
@@ -663,7 +663,7 @@ DWORD COPCClient::AddCallback()
 	if (FAILED(m_hLastHResult = m_pConnectionPointContainer->FindConnectionPoint(IID_IOPCDataCallback, &pCP)))
 	{
 		m_dwCookieDataSink20 = 0;
-		throw _T("COPCClient::AddCallback: Failed to call IConnectionPointContainer.FindConnectionPoint");
+		throw _T("[COPCClient::AddCallback] Failed to call IConnectionPointContainer.FindConnectionPoint");
 	}
 
 	// If we succeeded to get connection point interface, create
@@ -684,7 +684,7 @@ DWORD COPCClient::AddCallback()
 	{
 		m_dwCookieDataSink20 = 0;
 		pCP->Release();
-		throw _T("COPCClient::AddCallback: Failed to call IConnectionPoint.Advise");
+		throw _T("[COPCClient::AddCallback] Failed to call IConnectionPoint.Advise");
 	}
 
 	return m_dwCookieDataSink20;
@@ -711,12 +711,12 @@ void COPCClient::RemoveCallback()
 	__try
 	{
 		if (S_OK != (m_hLastHResult = m_pConnectionPointContainer->FindConnectionPoint(IID_IOPCDataCallback, &pCP)))
-			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPointContainer.FindConnectionPoint.");
+			throw _T("[COPCClient::RemoveCallback] Failed to call IConnectionPointContainer.FindConnectionPoint.");
 
 		m_hLastHResult = pCP->Unadvise(m_dwCookieDataSink20);
 
 		if (S_OK != m_hLastHResult)
-			throw _T("COPCClient::RemoveCallback(): Failed to call IConnectionPoint.Unadvise.");
+			throw _T("[COPCClient::RemoveCallback] Failed to call IConnectionPoint.Unadvise.");
 	}
 	__finally
 	{
@@ -760,7 +760,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 		if (S_OK != (m_hLastHResult = m_pGroup->pOPCItemMgt->QueryInterface(IID_IOPCSyncIO, (void**)&pISync)))
 		{
 			CHECK_CONNECT(m_hLastHResult)
-				throw _T("COPCClient::ReadAndUpdateItemValue(): Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
+				throw _T("[COPCClient::ReadAndUpdateItemValue] Failed to call IOPCItemMgt.QueryInterface for IID_IOPCSyncIO");
 		}
 		
 		for (vector<COPCItemDef*>::const_iterator vi = pvList->begin(); vi != pvList->end(); vi++)
@@ -768,7 +768,7 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			COPCItemDef *pItem = (COPCItemDef*)*vi;
 			if (!pItem)
 			{
-				g_Logger.ForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to get pointer to COPCItemDef from vector."));
+				g_Logger.ForceLog(_T("[COPCClient::ReadAndUpdateItemValue] Failed to get pointer to COPCItemDef from vector."));
 				continue;
 			}
 			
@@ -776,8 +776,8 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 			{
 				if (!IsQualityGood(pValues[0]))
 				{
-					TCHAR buf[100];
-					CStrUtil::_Sprintf(buf, sizeof(buf) / sizeof(buf[0]), _T("%s/%d;"), W2CT(pItem->m_pOPCItemDef->szItemID), pValues[0].wQuality);
+					wchar_t buf[100];
+					CStrUtil::_Sprintf(buf, sizeof(buf) / sizeof(buf[0]), _T("%s/%s/%d;"), pItem->m_wszInternalItemId, pItem->m_pOPCItemDef->szItemID, pValues[0].wQuality);
 					szIgnoredItems.append(buf);
 					// TODO: notfiy on UI?
 					continue;
@@ -826,12 +826,12 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 		if (szFailedItems.size() > 0)
 		{
 			// TODO Suppres the log output if keep get the same error
-			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), szFailedItems.c_str());
+			g_Logger.VForceLog(_T("[%s] Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), __TFUNCTION__, szFailedItems.c_str());
 		}
 
 		if (szIgnoredItems.size() > 0)
 		{
-			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() The quality of following items are not good, ignore it:\r\n%s"), szIgnoredItems.c_str());
+			g_Logger.VForceLog(_T("[%s] The quality of following items are not good, ignore it:\r\n%s"), __TFUNCTION__, szIgnoredItems.c_str());
 		}
 
 		return nCount;
@@ -859,12 +859,12 @@ INT COPCClient::ReadAndUpdateItemValue(const vector<COPCItemDef*> *pvList, BOOL 
 		if (szFailedItems.size() > 0)
 		{
 			// TODO Suppres the log output if keep get the same error
-			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), szFailedItems.c_str());
+			g_Logger.VForceLog(_T("[%s] Failed to call IOPCSyncIO.Read() on some monitor items:\r\n%s"), __TFUNCTION__, szFailedItems.c_str());
 		}
 
 		if (szIgnoredItems.size() > 0)
 		{
-			g_Logger.VForceLog(_T("COPCClient::ReadAndUpdateItemValue() The quality of following items are not good, ignore it:\r\n%s"), szIgnoredItems.c_str());
+			g_Logger.VForceLog(_T("[%s] The quality of following items are not good, ignore it:\r\n%s"), __TFUNCTION__, szIgnoredItems.c_str());
 		}
 
 		throw;

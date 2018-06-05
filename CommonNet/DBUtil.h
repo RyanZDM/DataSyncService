@@ -95,73 +95,73 @@ typedef std::basic_string<TCHAR> TString;
 class CConnEvent : public ConnectionEventsVt
 {
 private:
-      ULONG   m_cRef;
+	  ULONG   m_cRef;
 	  BOOL	*m_pIsConnected;
    public:
-      CConnEvent(BOOL *pIsConnected = NULL) { m_cRef = 0; m_pIsConnected = pIsConnected; };
-      ~CConnEvent() {};
+	  CConnEvent(BOOL *pIsConnected = NULL) { m_cRef = 0; m_pIsConnected = pIsConnected; };
+	  ~CConnEvent() {};
 	  void SetStatePtr(BOOL *pIsConnected);
 
 
-      STDMETHODIMP QueryInterface(REFIID riid, void ** ppv);
-      STDMETHODIMP_(ULONG) AddRef(void);
-      STDMETHODIMP_(ULONG) Release(void);
+	  STDMETHODIMP QueryInterface(REFIID riid, void ** ppv);
+	  STDMETHODIMP_(ULONG) AddRef(void);
+	  STDMETHODIMP_(ULONG) Release(void);
 
-      STDMETHODIMP raw_InfoMessage( 
-         struct Error *pError,
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
-      
-      STDMETHODIMP raw_BeginTransComplete( 
-         LONG TransactionLevel,
-         struct Error *pError,
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
-      
+	  STDMETHODIMP raw_InfoMessage( 
+		 struct Error *pError,
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
+	  
+	  STDMETHODIMP raw_BeginTransComplete( 
+		 LONG TransactionLevel,
+		 struct Error *pError,
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
+	  
    STDMETHODIMP raw_CommitTransComplete( 
-         struct Error *pError,
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
-      
-      STDMETHODIMP raw_RollbackTransComplete( 
-         struct Error *pError,
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
-      
-      STDMETHODIMP raw_WillExecute( 
-         BSTR *Source,
-         CursorTypeEnum *CursorType,
-         LockTypeEnum *LockType,
-         long *Options,
-         EventStatusEnum *adStatus,
-         struct _Command *pCommand,
-         struct _Recordset *pRecordset,
-         struct _Connection *pConnection);
-      
-      STDMETHODIMP raw_ExecuteComplete( 
-         LONG RecordsAffected,
-         struct Error *pError,
-         EventStatusEnum *adStatus,
-         struct _Command *pCommand,
-         struct _Recordset *pRecordset,
-         struct _Connection *pConnection);
-      
+		 struct Error *pError,
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
+	  
+	  STDMETHODIMP raw_RollbackTransComplete( 
+		 struct Error *pError,
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
+	  
+	  STDMETHODIMP raw_WillExecute( 
+		 BSTR *Source,
+		 CursorTypeEnum *CursorType,
+		 LockTypeEnum *LockType,
+		 long *Options,
+		 EventStatusEnum *adStatus,
+		 struct _Command *pCommand,
+		 struct _Recordset *pRecordset,
+		 struct _Connection *pConnection);
+	  
+	  STDMETHODIMP raw_ExecuteComplete( 
+		 LONG RecordsAffected,
+		 struct Error *pError,
+		 EventStatusEnum *adStatus,
+		 struct _Command *pCommand,
+		 struct _Recordset *pRecordset,
+		 struct _Connection *pConnection);
+	  
    STDMETHODIMP raw_WillConnect( 
-         BSTR *ConnectionString,
-         BSTR *UserID,
-         BSTR *Password,
-         long *Options,
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
-      
-      STDMETHODIMP raw_ConnectComplete( 
-         struct Error *pError,
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
-      
-      STDMETHODIMP raw_Disconnect( 
-         EventStatusEnum *adStatus,
-         struct _Connection *pConnection);
+		 BSTR *ConnectionString,
+		 BSTR *UserID,
+		 BSTR *Password,
+		 long *Options,
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
+	  
+	  STDMETHODIMP raw_ConnectComplete( 
+		 struct Error *pError,
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
+	  
+	  STDMETHODIMP raw_Disconnect( 
+		 EventStatusEnum *adStatus,
+		 struct _Connection *pConnection);
 };
 
 class CDBUtil  

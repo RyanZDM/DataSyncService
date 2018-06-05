@@ -43,7 +43,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	LPCWSTR pProgID = g_SysParams.GetOPCServerProgID();
 	if (!pProgID || (wcslen(pProgID) < 1))
 	{
-		g_Logger.ForceLog(_T("Error calling OPCClient::Connect(), the OPC server program ID is NULL."));
+		g_Logger.VForceLog(_T("[%s] Error calling OPCClient::Connect(), the OPC server program ID is NULL."), __TFUNCTION__);
 		return E_INVALIDARG;
 	}
 
@@ -68,7 +68,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	if (!pServer)
 		return -1;
 
-	g_Logger.VForceLog(L"%d: Connected to OPC server [%s].", GetCurrentThreadId(), pProgID);
+	g_Logger.VForceLog(L"[%s] Connected to OPC server [%s].", __FUNCTIONW__, pProgID);
 
 	// Add group to OPC server
 	wchar_t wszGroup[50] = { L'\0' };
@@ -78,7 +78,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	if (!OPCClient.AddGroup(pGroup, TRUE))
 	{
 		OPCClient.Disconnect();
-		g_Logger.VForceLog(L"Failed to add group [%s] to OPC server [%s]", wszGroup, pProgID);
+		g_Logger.VForceLog(L"[%s] Failed to add group [%s] to OPC server [%s]", __FUNCTIONW__, wszGroup, pProgID);
 		return -2;
 	}
 
@@ -88,13 +88,13 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	if (nItemCount < 0)
 	{
 		OPCClient.Disconnect();
-		g_Logger.VForceLog(L"Failed to call CSysParams.GetItemList(). Return=%d", nItemCount);
+		g_Logger.VForceLog(L"[%s] Failed to call CSysParams.GetItemList(). Return=%d", __FUNCTIONW__, nItemCount);
 		return -3;
 	}
 	else if (0 == nItemCount)
 	{
 		OPCClient.Disconnect();
-		g_Logger.VForceLog(L"No items found in database. No action required.");
+		g_Logger.VForceLog(L"[%s] No items found in database. No action required.", __FUNCTIONW__);
 		return -4;
 	}
 
@@ -108,7 +108,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 	else if (0 == nAddedItems)
 	{
 		OPCClient.Disconnect();
-		g_Logger.VForceLog(L"Failed to add item group [%s]. No action required.", wszGroup);
+		g_Logger.VForceLog(L"[%s] Failed to add item group [%s]. No action required.", __FUNCTIONW__, wszGroup);
 		return -4;
 	}
 
@@ -119,7 +119,7 @@ INT Init(CDBUtil &db, COPCClient &OPCClient)
 		msg.append(p->pItemID).append(_T("//")).append(p->pAddress).append(_T(","));
 		delete p;
 	}
-	g_Logger.VForceLog(_T("[%d] monitor item(s) found in database, [%d] item(s) were added successfully.\n%s"), nItemCount, nAddedItems, msg.c_str());
+	g_Logger.VForceLog(_T("[%s] %d monitor item(s) found in database, %d item(s) were added successfully.\n%s"), __TFUNCTION__, nItemCount, nAddedItems, msg.c_str());
 
 	return nAddedItems;
 }
@@ -132,9 +132,8 @@ unsigned __stdcall OPCDataSyncThread(void*)
 {
 	HANDLE hExitEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	g_vhThreadExitEvents.push_back(hExitEvent);
-
-	DWORD dwThreadID = GetCurrentThreadId();
-	g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Thread started."), dwThreadID);
+		
+	g_Logger.VForceLog(_T("[%s] OPCDataSyncThread Thread started."), __TFUNCTION__);
 
 	//// Delete all records in table ItemLatestStatus each time the service is started
 	//CMyDB myDB;
@@ -154,7 +153,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 			{
 				// Log only when successfully connnected to db first time or reconnected after a connection broken
 				if (bDbConnectionBroke)
-					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Database connected."), dwThreadID);
+					g_Logger.VForceLog(_T("[%s] Database connected."), __TFUNCTION__);
 
 				bLastDBConnectFlag = TRUE;
 				bDbConnectionBroke = FALSE;
@@ -175,8 +174,8 @@ unsigned __stdcall OPCDataSyncThread(void*)
 						{
 							TString szErr;
 							CStrUtil::FormatMsg(NULL, szErr, (INT)OPCClient.GetLastHResult());
-							g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x %s. This log won't be output again until next time connected to database.\n%s")
-								, dwThreadID, OPCClient.GetLastHResult(), szErr.c_str(), pMsg);
+							g_Logger.VForceLog(_T("[%s] Cannot connect to database, sleep and try again, HRESULT=%x %s. This log won't be output again until next time connected to database.\n%s")
+								, __TFUNCTION__, OPCClient.GetLastHResult(), szErr.c_str(), pMsg);
 
 							// Update this flag indicates that no need log one more time
 							bLastDBConnectFlag = FALSE;
@@ -204,8 +203,8 @@ unsigned __stdcall OPCDataSyncThread(void*)
 							bDbConnectionBroke = TRUE;
 						}
 
-						g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] %d item(s) to be read, but only %d item(s) read successfully.")
-							, dwThreadID, nItemCnt, nRet);
+						g_Logger.VForceLog(_T("[%s] %d item(s) to be read, but only %d item(s) read successfully.")
+							, __TFUNCTION__, nItemCnt, nRet);
 					}
 				}	// end if (pGroup)				
 			}
@@ -217,14 +216,14 @@ unsigned __stdcall OPCDataSyncThread(void*)
 					bLastDBConnectFlag = FALSE;
 					TString szErr;
 					CStrUtil::FormatMsg(NULL, szErr, (INT)OPCClient.GetLastHResult());
-					g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Cannot connect to database, sleep and try again, HRESULT=%x %s. This log won't be output again until next time connected to database.\n%s")
-						, dwThreadID, OPCClient.GetLastHResult(), szErr.c_str(), db.GetLastErrormsg());
+					g_Logger.VForceLog(_T("[%s] Cannot connect to database, sleep and try again, HRESULT=%x %s. This log won't be output again until next time connected to database.\n%s")
+						, __TFUNCTION__, OPCClient.GetLastHResult(), szErr.c_str(), db.GetLastErrormsg());
 				}
 			}
 		}
 		catch (LPCTSTR pMsg)
 		{
-			g_Logger.ForceLog(pMsg);
+			g_Logger.VForceLog(_T("[%s] %s"), __TFUNCTION__, pMsg);
 		}
 		catch (INT nCode)		// Throw int only when the connection is broken
 		{
@@ -233,20 +232,20 @@ unsigned __stdcall OPCDataSyncThread(void*)
 				if (bLastOPCConnectFlag)
 				{
 					bLastOPCConnectFlag = FALSE;
-					g_Logger.VForceLog(L"[OPCDataSyncThread:%d] The connection to OPC server [%s] break down. Will re-connect. This log won't be output again until next time connected to OPC server."
-						, dwThreadID, g_SysParams.GetOPCServerProgID());
+					g_Logger.VForceLog(L"[%s] The connection to OPC server [%s] break down. Will re-connect. This log won't be output again until next time connected to OPC server."
+						, __FUNCTIONW__, g_SysParams.GetOPCServerProgID());
 				}
 			}
 			else
 			{
-				g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again. Return=%d.\n%s")
-					, dwThreadID, nCode, db.GetLastErrormsg());
+				g_Logger.VForceLog(_T("[%s] Error occurred during the read operation, sleep and try again. Return=%d.\n%s")
+					, __TFUNCTION__, nCode, db.GetLastErrormsg());
 			}
 		}
 		catch (...)
 		{
-			g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Error occurred during the read operation, sleep and try again.\n%s")
-				, dwThreadID, db.GetLastErrormsg());
+			g_Logger.VForceLog(_T("[%s] Error occurred during the read operation, sleep and try again.\n%s")
+				, __TFUNCTION__, db.GetLastErrormsg());
 		}
 
 		// Sleep
@@ -272,7 +271,7 @@ unsigned __stdcall OPCDataSyncThread(void*)
 
 	}	// end while (TRUE == g_bKeepWork)
 
-	g_Logger.VForceLog(_T("[OPCDataSyncThread:%d] Thread exit."), dwThreadID);
+	g_Logger.VForceLog(_T("[%s] Thread exit."), __TFUNCTION__);
 	SetEvent(hExitEvent);
 	return 0;
 }
@@ -315,14 +314,13 @@ INT SetupTimelyTasks()
 unsigned __stdcall TimerTaskThread(void* pParameter)
 {
 	HANDLE hExitEvent = NULL;
-	DWORD dwThreadID = GetCurrentThreadId();
 	CTimerTask *pTask = (CTimerTask*)pParameter;
 
 	__try
 	{
 		if ((!pTask) || !pTask->m_bEnabled)
 		{
-			g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread will not start since the task is NULL or disabled."), dwThreadID);
+			g_Logger.VForceLog(_T("[%s] Thread will not start since the task is NULL or disabled."), __TFUNCTION__);
 			return -1;
 		}
 
@@ -335,9 +333,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 		{
 			_tcsftime(szTimeStr, sizeof(szTimeStr) / sizeof(szTimeStr[0]), _T("Run at time: %H:%M:%S"), pTime);
 		}
-		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread started for timer task [%s].")
-			, dwThreadID
-			, pTask->ToString());
+		g_Logger.VForceLog(_T("[%s] Thread started for timer task [%s]."), __TFUNCTION__, pTask->ToString());
 
 		if (pTime)		// Run at fixed time
 		{
@@ -365,7 +361,7 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 			delete pTask;
 		}
 
-		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Thread exit."), dwThreadID);
+		g_Logger.VForceLog(_T("[%s] Thread exit."), __TFUNCTION__);
 		if (hExitEvent)
 			SetEvent(hExitEvent);
 	}
@@ -373,12 +369,11 @@ unsigned __stdcall TimerTaskThread(void* pParameter)
 
 void RunTask(LPCTSTR pcszCommand)
 {
-	DWORD dwThreadID = GetCurrentThreadId();
 	try
 	{
 		if (!pcszCommand || _tcslen(pcszCommand) == 0)
 		{
-			g_Logger.VLog(_T("RunTask failed because the argument is null or empty."));
+			g_Logger.VLog(_T("[%s] RunTask failed because the argument is null or empty."), __TFUNCTION__);
 			return;
 		}
 
@@ -394,7 +389,7 @@ void RunTask(LPCTSTR pcszCommand)
 			_tcscpy_s(szCommand, sizeof(szCommand) / sizeof(szCommand[0]), pcszCommand);
 			if (_taccess(szProgram, 0) == -1)
 			{
-				g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szProgram);
+				g_Logger.VForceLog(_T("[%s] The program '%s' does not exist."), __TFUNCTION__, szProgram);
 				// Do not exit in case it is in the system path
 			}
 		}
@@ -425,7 +420,7 @@ void RunTask(LPCTSTR pcszCommand)
 				CStrUtil::GetProgramFromCommandString(szCommand, szProgram, MAX_PATH);
 				if (_taccess(szProgram, 0) == -1)
 				{
-					g_Logger.VForceLog(_T("RunTask: The program '%s' does not exist."), szProgram);
+					g_Logger.VForceLog(_T("[%s] The program '%s' does not exist."), __TFUNCTION__, szProgram);
 					// Do not exit in case it is in the system path
 				}
 			}
@@ -435,15 +430,15 @@ void RunTask(LPCTSTR pcszCommand)
 		INT nRet = _tsystem(szCommand);
 		time_t end = time(nullptr);
 
-		g_Logger.VLog(_T("Ran timer task in %d seconds, command = [%s], return=%d."), (INT)difftime(end, begin), szCommand, nRet);
+		g_Logger.VLog(_T("[%s] Ran timer task in %d seconds, command = [%s], return=%d."), __TFUNCTION__, (INT)difftime(end, begin), szCommand, nRet);
 	}
 	catch (INT nCode)		// Throw int only when the connection is broken
 	{
-		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Error occurred in the timer task, sleep and try again. Return=%d\n\rCommand=[%s]"), dwThreadID, nCode, pcszCommand);
+		g_Logger.VForceLog(_T("[%s] Error occurred in the timer task, sleep and try again. Return=%d\n\rCommand=[%s]"), __TFUNCTION__, nCode, pcszCommand);
 	}
 	catch (...)
 	{
-		g_Logger.VForceLog(_T("[TimerTaskThread:%d] Error occurred in the timer task, sleep and try again.\n\rCommand=[%s]"), dwThreadID, pcszCommand);
+		g_Logger.VForceLog(_T("[%s] Error occurred in the timer task, sleep and try again.\n\rCommand=[%s]"), __TFUNCTION__, pcszCommand);
 	}
 }
 

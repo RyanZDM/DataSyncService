@@ -1,0 +1,9 @@
+10. Stop all 2 SVC and EBoard0.exe
+20. Backup whole files
+30. Backup DB
+40. Modify DB
+50. Update all DLLs and EXEs
+60. Modify the 0.exe0.config files
+70. Rebuild and adjust the UI layout
+80. Clear logs
+90. Push code changes to Git

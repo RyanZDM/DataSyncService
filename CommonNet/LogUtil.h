@@ -22,6 +22,12 @@
 #include <wtypes.h>
 #include <STDIO.H>
 
+#ifdef  UNICODE
+#define __TFUNCTION__		__FUNCTIONW__
+#else
+#define __TFUNCTION__	__FUNCTION__
+#endif /* UNICODE */
+
 //#define MAX_FILESIZE	65535
 static const DWORD MAX_FILESIZE  = 1048576;		// 1024 * 1024
 static const DWORD MAX_BUFSIZE   = 5000;
@@ -40,16 +46,16 @@ public:
 		}
 
 		DWORD dwWaitResult = WaitForSingleObject(m_hMutex,  dwMilliseconds); 
-        switch (dwWaitResult) 
-        {
-            // The thread got ownership of the mutex
-            case WAIT_OBJECT_0: 
-                return TRUE;
+		switch (dwWaitResult) 
+		{
+			// The thread got ownership of the mutex
+			case WAIT_OBJECT_0: 
+				return TRUE;
 				 
-            // The thread got ownership of an abandoned mutex
-            case WAIT_ABANDONED: 
-                return FALSE;				
-        }
+			// The thread got ownership of an abandoned mutex
+			case WAIT_ABANDONED: 
+				return FALSE;				
+		}
 
 		return FALSE; 
 	};

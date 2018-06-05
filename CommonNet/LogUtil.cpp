@@ -234,7 +234,7 @@ void CLogUtil::Initialize()
 	m_pFile					= NULL;
 	m_dwMilliseconds		= INFINITE;
 	m_bNewLineAfterTimeStr	= FALSE;
-	m_bShowThreadID			= FALSE;
+	m_bShowThreadID			= TRUE;
 
 	// For Tip message
 	m_bShowTipMsg			= FALSE;
@@ -291,19 +291,19 @@ BOOL CLogUtil::Lock(DWORD dwMilliseconds)
 	if (!m_hEvent)
 		return TRUE;	// If create m_hMutex failed, we do NOT use lock operation
 
-    DWORD dwWaitResult = WaitForSingleObject(m_hEvent, dwMilliseconds); 
-    switch (dwWaitResult) 
-    {
-        // The thread got mutex ownership.
-        case WAIT_OBJECT_0: 
-            return TRUE;
+	DWORD dwWaitResult = WaitForSingleObject(m_hEvent, dwMilliseconds); 
+	switch (dwWaitResult) 
+	{
+		// The thread got mutex ownership.
+		case WAIT_OBJECT_0: 
+			return TRUE;
 			
-        //case WAIT_TIMEOUT:	// Cannot get mutex ownership due to time-out.
-        //case WAIT_ABANDONED:	// Got ownership of the abandoned mutex object.
+		//case WAIT_TIMEOUT:	// Cannot get mutex ownership due to time-out.
+		//case WAIT_ABANDONED:	// Got ownership of the abandoned mutex object.
 			
 		default:
 			return FALSE;
-    }
+	}
 }
 
 BOOL CLogUtil::Unlock()

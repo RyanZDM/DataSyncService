@@ -34,7 +34,7 @@ CSysParams::~CSysParams()
 	if (m_hMutex)
 		CloseHandle(m_hMutex);
 
-	g_Logger.ForceLog(_T("The mutex for CSysParams has been released."));
+	g_Logger.VForceLog(_T("[%s] The mutex for CSysParams has been released."), __TFUNCTION__);
 }
 
 void CSysParams::InitMutex()
@@ -45,9 +45,9 @@ void CSysParams::InitMutex()
 	wsprintf(szName, _T("_DA_SYS_PARAMTERS_%d"), nRandom);
 	m_hMutex = CreateMutex(NULL, FALSE, szName);
 	if (m_hMutex)
-g_Logger.VLog(_T("[CSysParams::InitMutex] Mutex has been created: %s"), szName);
+		g_Logger.VLog(_T("[%s] Mutex has been created: %s"), __TFUNCTION__, szName);
 	else
-		g_Logger.ForceLog(_T("[CSysParams::InitMutex] CreateMutex failed. GetLastError=%d"), GetLastError());
+		g_Logger.VForceLog(_T("[%s] CreateMutex failed. GetLastError=%d"), __TFUNCTION__, GetLastError());
 }
 
 BOOL CSysParams::Lock(DWORD dwMilliseconds)
