@@ -61,8 +61,6 @@ namespace EBoard.Common
 
 						userList.Add(reader.GetDateTime(2), user);
 					}
-
-					reader.Close();
 				}
 			}
 
@@ -612,10 +610,12 @@ namespace EBoard.Common
 		}
 	}
 
+	[Serializable]
 	public class OpcCommunicationBrokeException : Exception
 	{
 	}
 
+	[Serializable]
 	public class UserNotFoundException :Exception
 	{
 		public UserNotFoundException(string msg) : base(msg) { }

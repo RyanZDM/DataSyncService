@@ -59,6 +59,7 @@
     <Compile Include="Encryptor.cs" />
     <Compile Include="ExcelApp.cs" />
     <Compile Include="GeneralParamter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="LoginDlg.cs">
       <SubType>Form</SubType>
     </Compile>

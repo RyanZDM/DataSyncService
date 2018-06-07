@@ -313,8 +313,6 @@ namespace EBoard.Common
 					
 					reportList[year][month] = reportId;
 				}
-
-				reader.Close();
 			}
 
 			return reportList;
@@ -369,16 +367,19 @@ namespace EBoard.Common
 	}
 
 	#region Exceptions
+	[Serializable]
 	public class ReportNotCreatYetException : Exception
 	{
 		public ReportNotCreatYetException(string msg) : base(msg) { }
 	}
 	
+	[Serializable]
 	public class ReportNotFoundException : Exception
 	{
 		public ReportNotFoundException(string msg) : base(msg) { }
 	}
 	
+	[Serializable]
 	public class ReportFileAlreadyCreatedException : Exception
 	{
 		public ReportFileAlreadyCreatedException(string msg) : base(msg) { }

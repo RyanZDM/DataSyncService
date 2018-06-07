@@ -37,8 +37,6 @@ namespace LedSyncService
 
 				data.TotalEnergyGenerated = (int)(reader.GetValue(1));
 				data.CurrentEnergyGenerated = data.TotalEnergyGenerated - (int)(reader.GetValue(0));
-
-				reader.Close();
 			}
 
 			sql =
@@ -54,8 +52,6 @@ namespace LedSyncService
 
 				data.TotalBiogasUsed = (int)(reader.GetValue(1));
 				data.CurrentBiogasUsed = data.TotalBiogasUsed - (int)(reader.GetValue(0));
-
-				reader.Close();
 			}
 
 			return data;

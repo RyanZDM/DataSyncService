@@ -18,6 +18,9 @@ namespace EBoard
 			if (disposing && (components != null))
 			{
 				components.Dispose();
+
+				refreshDataTimer.Dispose();
+				shiftLoginTimer.Dispose();
 			}
 			base.Dispose(disposing);
 		}

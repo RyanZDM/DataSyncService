@@ -1,4 +1,5 @@
 // DataSyncService.cpp : Implementation of WinMain
+// Note: uncomment the following #define for checking memory leak
 //#define _MEMORY_LEAK_CHECK_
 
 #include "stdafx.h"
